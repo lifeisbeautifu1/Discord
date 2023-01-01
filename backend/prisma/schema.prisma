@@ -8,21 +8,38 @@ datasource db {
 }
 
 model User {
-    id        Int      @id @default(autoincrement())
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updated   DateTime @updatedAt
 
-    email    String
+    email    String  @unique
     password String
-    username String
+    username String  @unique
+    imageUrl String?
+
+    bookmarks Bookmark[]
+
+    @@map("users")
+}
+
+model Session {
+    id        String   @id
+    sid       String   @unique
+    data      String
+    expiresAt DateTime
 }
 
 model Bookmark {
-    id        Int      @id @default(autoincrement())
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updated   DateTime @updatedAt
 
     title       String
     description String?
     link        String?
+
+    userId String @unique
+    user   User   @relation(fields: [userId], references: [id])
+
+    @@map("bookmarks")
 }
