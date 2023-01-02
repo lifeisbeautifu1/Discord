@@ -14,11 +14,17 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.userService.findUserByEmail(email);
 
-    if (!user) throw new BadRequestException("Incorrect email");
+    if (!user)
+      throw new BadRequestException({
+        email: "Incorrect email",
+      });
 
     const isMatch = await argon.verify(user.password, password);
 
-    if (!isMatch) throw new BadRequestException("Incorrect password");
+    if (!isMatch)
+      throw new BadRequestException({
+        password: "Incorrect password",
+      });
 
     delete user.password;
 

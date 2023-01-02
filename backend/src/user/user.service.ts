@@ -15,7 +15,9 @@ export class UserService {
     });
 
     if (existingUsername) {
-      throw new BadRequestException("Username already taken");
+      throw new BadRequestException({
+        username: "Username already taken",
+      });
     }
 
     const existingEmail = await this.prisma.user.findUnique({
@@ -25,7 +27,9 @@ export class UserService {
     });
 
     if (existingEmail) {
-      throw new BadRequestException("Email already taken");
+      throw new BadRequestException({
+        email: "Email already taken",
+      });
     }
 
     const hash = await argon.hash(dto.password);
