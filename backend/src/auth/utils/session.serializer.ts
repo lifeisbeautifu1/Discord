@@ -25,6 +25,7 @@ export class SessionSerializer extends PassportSerializer {
         imageUrl: true,
       },
     });
+    // Will be appended to req.user
     done(null, user);
   }
 }

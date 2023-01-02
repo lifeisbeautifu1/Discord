@@ -1,21 +1,24 @@
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { PrismaSessionStore } from "@quixo3/prisma-session-store";
-import { PrismaClient } from "@prisma/client";
+import IoRedis from "ioredis";
+import * as connectRedis from "connect-redis";
 import * as session from "express-session";
 import * as passport from "passport";
+
+const RedisStore = connectRedis(session);
+
+const redisClient = new IoRedis("redis://localhost:6379");
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(
     new ValidationPipe({
-      // whiteList: true means remove unnecessary fields
+      // whiteList: true means remove unnecessary fields from dtos
       whitelist: true,
     }),
   );
-  const prisma = new PrismaClient();
 
   app.use(
     session({
@@ -23,14 +26,11 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 1000 * 60,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 1000 * 60 * 60 * 24 * 365,
       },
-      // Storing sessions in our postgres database
-      store: new PrismaSessionStore(prisma, {
-        checkPeriod: 2 * 60 * 1000, //ms
-        dbRecordIdIsSessionId: true,
-        dbRecordIdFunction: undefined,
-      }),
+      store: new RedisStore({ client: redisClient }),
     }),
   );
   app.use(passport.initialize());

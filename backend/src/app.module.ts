@@ -10,8 +10,8 @@ import { UserModule } from "./user/user.module";
       isGlobal: true,
     }),
     AuthModule,
-    UserModule,
     PrismaModule,
+    UserModule,
   ],
   providers: [],
 })

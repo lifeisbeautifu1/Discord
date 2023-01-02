@@ -10,7 +10,7 @@ datasource db {
 model User {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
-    updated   DateTime @updatedAt
+    updatedAt DateTime @updatedAt
 
     email    String  @unique
     password String
@@ -22,17 +22,10 @@ model User {
     @@map("users")
 }
 
-model Session {
-    id        String   @id
-    sid       String   @unique
-    data      String
-    expiresAt DateTime
-}
-
 model Bookmark {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
-    updated   DateTime @updatedAt
+    updatedAt DateTime @updatedAt
 
     title       String
     description String?

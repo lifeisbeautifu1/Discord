@@ -1,5 +1,9 @@
-version: '3.8'
+version: "3.8"
 services:
+  redis:
+    image: redis:6.0
+    ports:
+      - 6379:6379
   dev-db:
     image: postgres:13
     ports:
@@ -8,7 +12,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: nest
-    networks:
-      - freecodecamp
-networks:
-  freecodecamp:
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: ghcr.io/joeferner/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
