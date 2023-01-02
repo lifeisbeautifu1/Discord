@@ -1,4 +1,8 @@
 import Head from "next/head";
+import Link from "next/link";
+import { FiDownload } from "react-icons/fi";
+import { BsTwitter, BsInstagram, BsFacebook, BsYoutube } from "react-icons/bs";
+import { gintoFont } from "./_app";
 
 export default function Home() {
   return (
@@ -9,7 +13,252 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>hello world</main>
+      <div className="bg-[#404eed] text-white relative">
+        <header className="flex justify-center">
+          <nav className="relative px-[40px] w-full max-w-[1260px] z-10 flex h-[80px] items-center justify-between">
+            <Link href="/">
+              <img
+                src="/logos/small_logo_white_RGB.svg"
+                width={124}
+                height={36}
+              />
+            </Link>
+            <ul className="flex items-center font-semibold">
+              <li className="hover:underline m-2.5 p-2.5">
+                <Link href="/">Download</Link>
+              </li>
+              <li className="hover:underline m-2.5 p-2.5">
+                <Link href="/">Nitro</Link>
+              </li>
+              <li className="hover:underline m-2.5 p-2.5">
+                <Link href="/">Discover</Link>
+              </li>
+              <li className="hover:underline m-2.5 p-2.5">
+                <Link href="/">Safety</Link>
+              </li>
+              <li className="hover:underline m-2.5 p-2.5">
+                <Link href="/">Support</Link>
+              </li>
+              <li className="hover:underline m-2.5 p-2.5">
+                <Link href="/">Blog</Link>
+              </li>
+              <li className="hover:underline m-2.5 p-2.5">
+                <Link href="/">Careers</Link>
+              </li>
+            </ul>
+            <Link
+              href="/login"
+              className="px-4 py-2 rounded-3xl text-sm hover:shadow-button bg-white text-[#23272a] font-medium transition hover:text-brand"
+            >
+              Login
+            </Link>
+          </nav>
+        </header>
+        <div className="flex flex-col relative z-10 items-center max-w-6xl mx-auto pt-[120px] pb-[160px]">
+          <h1
+            className={gintoFont.className}
+            style={{ fontWeight: 700, fontSize: 56 }}
+          >
+            Imagine a place...
+          </h1>
+          <p className="mt-10 text-xl max-w-3xl text-center">
+            ...where you can belong to a school club, a gaming group, or a
+            worldwide art community. Where just you and a handful of friends can
+            spend time together. A place that makes it easy to talk every day
+            and hang out more often.
+          </p>
+          <div className="flex items-center space-x-6 mt-6">
+            <button className="py-4 px-8 rounded-[28px] font-medium text-xl bg-white text-[#23272a] hover:shadow-button flex items-center transition hover:text-brand">
+              <FiDownload className="text-2xl mr-3" />
+              Download for Mac
+            </button>
+            <button className="py-4 px-8 rounded-[28px] font-medium text-xl bg-[#23272a] text-white hover:shadow-button transition hover:black-hover">
+              Open Discord in your browser
+            </button>
+          </div>
+        </div>
+        <div className="absolute inset-0 w-full h-full">
+          <img
+            src="/images/clouds.svg"
+            className="absolute z-0 bottom-0 left-1/2 ml-[-1280px] max-w-[2560px] top-auto"
+          />
+          <img
+            src="/images/boot.svg"
+            className="absolute z-0 bottom-0 left-1/2 ml-[-1000px]"
+          />
+          <img
+            src="/images/chill.svg"
+            className="absolute z-0 bottom-0 left-1/2 ml-[370px]"
+          />
+        </div>
+      </div>
+
+      <main className="text-[#23272a]">
+        <div className="flex flex-col items-center">
+          <div className="py-[120px] px-[40px] max-w-[1260px] w-full grid grid-cols-12 space-x-5">
+            <img src="/images/group.svg" alt="group" className="col-span-7" />
+            <div className="weird flex flex-col justify-center">
+              <h2 className="text-[48px] leading-[120%] font-extrabold">
+                Create an invite-only place where you belong
+              </h2>
+              <p className="text-xl mt-5 leading-[1.625]">
+                Discord servers are organized into topic-based channels where
+                you can collaborate, share, and just talk about your day without
+                clogging up a group chat.
+              </p>
+            </div>
+          </div>
+          <div className="bg-[#f6f6f6] w-full flex flex-col items-center">
+            <div className="py-[120px] px-[40px] max-w-[1260px] w-full grid grid-cols-12 space-x-5">
+              <img
+                src="/images/voice.svg"
+                alt="group"
+                className="weird-3 order-2"
+              />
+              <div className="weird-2 flex flex-col justify-center order-1">
+                <h2 className="text-[48px] leading-[120%] font-extrabold">
+                  Where hanging out is easy
+                </h2>
+                <p className="text-xl mt-5 leading-[1.625]">
+                  Grab a seat in a voice channel when you’re free. Friends in
+                  your server can see you’re around and instantly pop in to talk
+                  without having to call.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="py-[120px] px-[40px] max-w-[1260px] w-full grid grid-cols-12 space-x-5">
+            <img src="/images/graggle.svg" alt="group" className="col-span-7" />
+            <div className="weird flex flex-col justify-center">
+              <h2 className="text-[48px] leading-[120%] font-extrabold">
+                From few to a fandom
+              </h2>
+              <p className="text-xl mt-5 leading-[1.625]">
+                Get any community running with moderation tools and custom
+                member access. Give members special powers, set up private
+                channels, and more.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-[#f6f6f6] w-full flex flex-col items-center text-center">
+          <div className="py-[120px] pb-[80px] px-[40px] max-w-[1260px] w-full grid grid-cols-12">
+            <div className="weird-4">
+              <h2
+                className={gintoFont.className}
+                style={{ fontWeight: 700, fontSize: 40, lineHeight: "95%" }}
+              >
+                RELIABLE TECH FOR STAYING CLOSE
+              </h2>
+              <p className="mt-5 leading-[1.625] font-calc">
+                Low-latency voice and video feels like you’re in the same room.
+                Wave hello over video, watch friends stream their games, or
+                gather up and have a drawing session with screen share.
+              </p>
+            </div>
+            <img
+              src="/images/call.svg"
+              alt="call"
+              className="col-span-12 w-full !max-w-[auto]"
+            />
+          </div>
+          <div className="px-[40px] max-w-[1260px] w-full text-center flex flex-col items-center space-y-5 mb-[120px] relative">
+            <div className="absolute top-0 w-full flex justify-center">
+              <img src="/images/sparkles.svg" alt="sparkles" />
+            </div>
+            <h2 className="text-[32px] z-10 font-bold">
+              Ready to start your journey?
+            </h2>
+            <button className="py-4 px-8 rounded-[28px] font-medium text-xl bg-brand text-white hover:shadow-button flex items-center transition hover:bg-brand/90">
+              <FiDownload className="text-2xl mr-3" />
+              Download for Mac
+            </button>
+          </div>
+        </div>
+      </main>
+      <footer className="bg-[#23272a] flex justify-center">
+        <div className="px-[40px] pt-20 pb-16 w-full max-w-[1260px]">
+          <div className="flex justify-between space-x-5 pb-10 border-b border-brand">
+            <div className="uppercase text-brand space-y-5 mr-28">
+              <h2
+                className={gintoFont.className}
+                style={{ fontWeight: 700, fontSize: 32 }}
+              >
+                Imagine a place
+              </h2>
+              <ul className="flex items-center space-x-4 text-[22px]">
+                <li className="text-white cursor-pointer">
+                  <BsTwitter />
+                </li>
+                <li className="text-white cursor-pointer">
+                  <BsInstagram />
+                </li>
+                <li className="text-white cursor-pointer">
+                  <BsFacebook />
+                </li>
+                <li className="text-white cursor-pointer">
+                  <BsYoutube />
+                </li>
+              </ul>
+            </div>
+            <div className="flex w-full text-white flex-wrap space-x-4 justify-between mt-5">
+              <ul className="flex flex-col space-y-2">
+                <h2 className="text-brand">Product</h2>
+                <li className="cursor-pointer hover:underline">Download</li>
+                <li className="cursor-pointer hover:underline">Nitro</li>
+                <li className="cursor-pointer hover:underline">Status</li>
+              </ul>
+              <ul className="flex flex-col space-y-2">
+                <h2 className="text-brand">Company</h2>
+                <li className="cursor-pointer hover:underline">About</li>
+                <li className="cursor-pointer hover:underline">Jobs</li>
+                <li className="cursor-pointer hover:underline">Branding</li>
+                <li className="cursor-pointer hover:underline">Newsroom</li>
+              </ul>
+              <ul className="flex flex-col space-y-2">
+                <h2 className="text-brand">Resources</h2>
+                <li className="cursor-pointer hover:underline">College</li>
+                <li className="cursor-pointer hover:underline">Support</li>
+                <li className="cursor-pointer hover:underline">Safety</li>
+                <li className="cursor-pointer hover:underline">Blog</li>
+                <li className="cursor-pointer hover:underline">Feedback</li>
+                <li className="cursor-pointer hover:underline">Developers</li>
+                <li className="cursor-pointer hover:underline">StreamKit</li>
+                <li className="cursor-pointer hover:underline">Creators</li>
+              </ul>
+              <ul className="flex flex-col space-y-2">
+                <h2 className="text-brand">Policies</h2>
+                <li className="cursor-pointer hover:underline">Terms</li>
+                <li className="cursor-pointer hover:underline">Privacy</li>
+                <li className="cursor-pointer hover:underline">
+                  Cookie settings
+                </li>
+                <li className="cursor-pointer hover:underline">Guidelines</li>
+                <li className="cursor-pointer hover:underline">
+                  Acknowledgements
+                </li>
+                <li className="cursor-pointer hover:underline">Licenses</li>
+                <li className="cursor-pointer hover:underline">Moderation</li>
+              </ul>
+            </div>
+          </div>
+          <div className="flex items-center justify-between mt-10">
+            <Link href="/">
+              <img
+                src="/logos/small_logo_white_RGB.svg"
+                width={124}
+                height={36}
+              />
+            </Link>
+            <Link
+              href="/signup"
+              className="px-4 py-2 rounded-3xl text-sm hover:shadow-button bg-brand text-white font-medium transition hover:bg-brand/90"
+            >
+              Sign up
+            </Link>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }
