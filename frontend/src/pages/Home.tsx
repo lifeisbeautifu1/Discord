@@ -1,7 +1,6 @@
-import React from "react";
-import { useAppSelector } from "../../app/hooks";
-import { selectUser } from "../../features/auth/auth";
-import { useAuthorized } from "../../hooks/useAuthorized";
+import { useAppSelector } from "../app/hooks";
+import { selectUser } from "../features/auth/auth";
+import { useAuthorized } from "../hooks/useAuthorized";
 
 type Props = {};
 

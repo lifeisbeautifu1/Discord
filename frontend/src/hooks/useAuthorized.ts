@@ -1,12 +1,12 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { getMe } from "../features/auth/auth.thunks";
 
 export const useAuthorized = () => {
   const dispatch = useAppDispatch();
 
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const { loading, isAuth } = useAppSelector((state) => state.auth);
 
@@ -16,7 +16,7 @@ export const useAuthorized = () => {
 
   useEffect(() => {
     if (!loading && !isAuth) {
-      router.replace("/login");
+      navigate("/login");
     }
-  }, [loading, isAuth, router]);
+  }, [loading, isAuth, navigate]);
 };

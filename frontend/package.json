@@ -1,38 +1,36 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "web",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.7",
-    "@next/font": "13.1.1",
     "@reduxjs/toolkit": "^1.9.1",
-    "@types/node": "18.11.18",
-    "@types/react": "18.0.26",
-    "@types/react-dom": "18.0.10",
     "axios": "^1.2.2",
-    "eslint": "8.30.0",
-    "eslint-config-next": "13.1.1",
     "formik": "^2.2.9",
-    "framer-motion": "^8.0.2",
-    "next": "13.1.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "framer-motion": "^8.1.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "react-redux": "^8.0.5",
-    "react-spinners": "^0.13.7",
-    "typescript": "4.9.4"
+    "react-router-dom": "^6.6.1",
+    "react-spinners": "^0.13.7"
   },
   "devDependencies": {
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@vitejs/plugin-react": "^3.0.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.20",
     "prettier": "^2.8.1",
     "prettier-plugin-tailwindcss": "^0.2.1",
-    "tailwindcss": "^3.2.4"
+    "tailwindcss": "^3.2.4",
+    "typescript": "^4.9.3",
+    "vite": "^4.0.0"
   }
 }

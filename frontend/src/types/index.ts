@@ -1,22 +1,22 @@
-type User = {
+export type User = {
   id: string;
   email: string;
   username: string;
   imageUrl: string | null;
 } | null;
 
-type Errors = {
+export type Errors = {
   email?: string;
   username?: string;
   password?: string;
 } | null;
 
-type LoginData = {
+export type LoginData = {
   email: string;
   password: string;
 };
 
-type RegisterData = {
+export type RegisterData = {
   email: string;
   username: string;
   password: string;

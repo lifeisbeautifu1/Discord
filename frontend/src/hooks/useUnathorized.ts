@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { getMe } from "../features/auth/auth.thunks";
@@ -8,13 +8,13 @@ export const useUnathorized = () => {
 
   const dispatch = useAppDispatch();
 
-  const router = useRouter();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getMe());
   }, []);
 
   useEffect(() => {
-    if (isAuth) router.push("/channels/@me");
+    if (isAuth) navigate("/channels/@me");
   }, [isAuth]);
 };
