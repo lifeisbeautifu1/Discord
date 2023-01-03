@@ -11,6 +11,14 @@
 }
 
 @layer components {
+  .container {
+    @apply w-full max-w-[1260px] px-5 py-20 md:px-[40px] md:py-[120px];
+  }
+
+  .navbar-link {
+    @apply m-2.5 p-2.5 hover:underline;
+  }
+
   .shadow-button {
     box-shadow: 0 8px 15px rgb(0 0 0 / 20%);
   }

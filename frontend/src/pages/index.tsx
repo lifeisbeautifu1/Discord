@@ -4,8 +4,16 @@ import { FiDownload } from "react-icons/fi";
 import { GoThreeBars } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
 import { BsTwitter, BsInstagram, BsFacebook, BsYoutube } from "react-icons/bs";
-import { gintoFont } from "./_app";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  companyLinks,
+  links,
+  linksMobile,
+  policiesLinks,
+  productLinks,
+  resourcesLinks,
+} from "../constants/links";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +27,7 @@ export default function Home() {
       </Head>
       <div className={"relative bg-[#404eed] text-white"}>
         <header className="flex justify-center">
-          <nav className="relative z-10 flex h-[80px] w-full max-w-[1260px] items-center px-5 md:px-[40px] lg:justify-between">
+          <nav className="container relative z-10 flex h-[80px] items-center py-0  lg:justify-between">
             <Link href="/">
               <img
                 src="/logos/small_logo_white_RGB.svg"
@@ -28,31 +36,15 @@ export default function Home() {
               />
             </Link>
             <ul className="hidden items-center font-semibold lg:flex">
-              <li className="m-2.5 p-2.5 hover:underline">
-                <Link href="/">Download</Link>
-              </li>
-              <li className="m-2.5 p-2.5 hover:underline">
-                <Link href="/">Nitro</Link>
-              </li>
-              <li className="m-2.5 p-2.5 hover:underline">
-                <Link href="/">Discover</Link>
-              </li>
-              <li className="m-2.5 p-2.5 hover:underline">
-                <Link href="/">Safety</Link>
-              </li>
-              <li className="m-2.5 p-2.5 hover:underline">
-                <Link href="/">Support</Link>
-              </li>
-              <li className="m-2.5 p-2.5 hover:underline">
-                <Link href="/">Blog</Link>
-              </li>
-              <li className="m-2.5 p-2.5 hover:underline">
-                <Link href="/">Careers</Link>
-              </li>
+              {links.map((link) => (
+                <li key={link.title} className="navbar-link">
+                  <Link href={link.href}>{link.title}</Link>
+                </li>
+              ))}
             </ul>
             <Link
               href="/login"
-              className="hover:shadow-button ml-auto rounded-3xl bg-white px-4 py-2 text-sm font-medium text-[#23272a] transition hover:text-brand lg:ml-0"
+              className="hover:shadow-button ml-auto rounded-3xl bg-white px-4 py-2 text-sm font-medium text-d-black transition hover:text-brand lg:ml-0"
             >
               Login
             </Link>
@@ -63,7 +55,7 @@ export default function Home() {
               }`}
             />
             <div
-              className={`absolute top-0 bottom-0 right-[-300px] z-[20] flex h-screen flex-col items-start rounded-tl-lg rounded-bl-lg bg-white p-6 py-8 text-[#23272a] transition-all duration-300 ease-out lg:hidden ${
+              className={`absolute top-0 bottom-0 right-[-300px] z-[20] flex h-screen flex-col items-start rounded-tl-lg rounded-bl-lg bg-white p-6 py-8 text-d-black transition-all duration-300 ease-out lg:hidden ${
                 isOpen && "right-0"
               }`}
             >
@@ -83,46 +75,13 @@ export default function Home() {
                     Home
                   </Link>
                 </li>
-                <li className="rounded px-4 py-2">
-                  <Link className="hover:underline" href="/">
-                    Download
-                  </Link>
-                </li>
-                <li className="rounded px-4 py-2">
-                  <Link className="hover:underline" href="/">
-                    Nitro
-                  </Link>
-                </li>
-                <li className="rounded px-4 py-2">
-                  <Link className="hover:underline" href="/">
-                    Discover
-                  </Link>
-                </li>
-                <li className="rounded px-4 py-2">
-                  <Link className="hover:underline" href="/">
-                    Safety
-                  </Link>
-                </li>
-                <li className="rounded px-4 py-2">
-                  <Link className="hover:underline" href="/">
-                    Mod academy
-                  </Link>
-                </li>
-                <li className="rounded px-4 py-2">
-                  <Link className="hover:underline" href="/">
-                    Support
-                  </Link>
-                </li>
-                <li className="rounded px-4 py-2">
-                  <Link className="hover:underline" href="/">
-                    Blog
-                  </Link>
-                </li>
-                <li className="rounded px-4 py-2">
-                  <Link className="hover:underline" href="/">
-                    Careers
-                  </Link>
-                </li>
+                {linksMobile.map((link) => (
+                  <li key={link.title} className="rounded px-4 py-2">
+                    <Link className="hover:underline" href={link.href}>
+                      {link.title}
+                    </Link>
+                  </li>
+                ))}
               </ul>
               <button className="hover:shadow-button mt-auto flex w-full items-center justify-center rounded-[28px] bg-brand py-2 text-base font-medium text-white transition hover:bg-brand/80">
                 <FiDownload className="mr-3 text-xl" />
@@ -143,18 +102,18 @@ export default function Home() {
           <h1 className="__className_f7a229 text-2xl font-bold md:text-[56px]">
             Imagine a place...
           </h1>
-          <p className="mt-5 max-w-3xl text-left text-base md:mt-10 md:text-center md:text-xl ">
+          <p className="mt-5 max-w-3xl text-left text-base md:mt-10 md:text-center md:text-xl">
             ...where you can belong to a school club, a gaming group, or a
             worldwide art community. Where just you and a handful of friends can
             spend time together. A place that makes it easy to talk every day
             and hang out more often.
           </p>
           <div className="mt-6 flex w-full flex-col items-start justify-center gap-6 md:flex-row md:items-center">
-            <button className="hover:shadow-button flex items-center rounded-[28px] bg-white py-4 px-8 text-xl font-medium text-[#23272a] transition hover:text-brand">
+            <button className="hover:shadow-button flex items-center rounded-[28px] bg-white py-4 px-8 text-xl font-medium text-d-black transition hover:text-brand">
               <FiDownload className="mr-3 text-2xl" />
               Download for Mac
             </button>
-            <button className="hover:shadow-button hover:black-hover rounded-[28px] bg-[#23272a] py-4 px-8 text-xl font-medium text-white transition">
+            <button className="hover:shadow-button hover:black-hover rounded-[28px] bg-d-black py-4 px-8 text-xl font-medium text-white transition">
               Open Discord in your browser
             </button>
           </div>
@@ -174,9 +133,13 @@ export default function Home() {
           />
         </div>
       </div>
-      <main className="text-[#23272a]">
+      <main className="text-d-black">
         <div className="flex flex-col items-center">
-          <div className="grid w-full max-w-[1260px] grid-cols-12 gap-5 py-20 px-5 md:py-[120px] md:px-[40px]">
+          <motion.div
+            whileInView={{ y: [100, 50, 0], opacity: [0, 0, 1] }}
+            transition={{ duration: 0.5 }}
+            className="container grid grid-cols-12 gap-5"
+          >
             <img
               src="/images/group.svg"
               alt="group"
@@ -192,9 +155,13 @@ export default function Home() {
                 clogging up a group chat.
               </p>
             </div>
-          </div>
-          <div className="flex w-full flex-col items-center bg-[#f6f6f6]">
-            <div className="grid w-full max-w-[1260px] grid-cols-12 gap-5 py-20 px-5 md:py-[120px] md:px-[40px]">
+          </motion.div>
+          <motion.div
+            whileInView={{ y: [100, 50, 0], opacity: [0, 0, 1] }}
+            transition={{ duration: 0.5 }}
+            className="flex w-full flex-col items-center bg-[#f6f6f6]"
+          >
+            <div className="container  grid grid-cols-12 gap-5">
               <img
                 src="/images/voice.svg"
                 alt="group"
@@ -211,8 +178,12 @@ export default function Home() {
                 </p>
               </div>
             </div>
-          </div>
-          <div className="grid w-full max-w-[1260px] grid-cols-12 gap-5 py-20 px-5 md:py-[120px] md:px-[40px]">
+          </motion.div>
+          <motion.div
+            whileInView={{ y: [100, 50, 0], opacity: [0, 0, 1] }}
+            transition={{ duration: 0.5 }}
+            className="container grid grid-cols-12 gap-5"
+          >
             <img
               src="/images/graggle.svg"
               alt="group"
@@ -228,16 +199,16 @@ export default function Home() {
                 channels, and more.
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
-        <div className="flex w-full flex-col items-center bg-[#f6f6f6] text-center">
-          <div className="grid w-full max-w-[1260px] grid-cols-12 py-20 px-5 pb-[80px] md:py-[120px] md:px-[40px]">
+        <motion.div
+          whileInView={{ y: [100, 50, 0], opacity: [0, 0, 1] }}
+          transition={{ duration: 0.5 }}
+          className="flex w-full flex-col items-center bg-[#f6f6f6] text-center"
+        >
+          <div className="container grid grid-cols-12 pb-[80px]">
             <div className="md:weird-4 col-span-12 flex w-full flex-col items-start md:items-center">
-              <h2
-                className="__className_f7a229 text-left text-2xl font-bold leading-[95%] md:text-center md:text-[40px]"
-                // className={gintoFont.className}
-                // style={{ fontWeight: 700, fontSize: 40, lineHeight: "95%" }}
-              >
+              <h2 className="__className_f7a229 text-left text-2xl font-bold leading-[95%] md:text-center md:text-[40px]">
                 RELIABLE TECH FOR STAYING CLOSE
               </h2>
               <p className="font-calc mt-5 text-left leading-[1.625] md:text-center">
@@ -252,28 +223,25 @@ export default function Home() {
               className="col-span-12 mt-5 w-full !max-w-[auto] md:mt-0"
             />
           </div>
-          <div className="relative mb-[120px] flex w-full max-w-[1260px] flex-col items-center space-y-5 px-[40px] text-center">
+          <div className="container relative mb-[120px] flex flex-col items-center gap-5 py-5 text-center">
             <div className="absolute top-0 flex w-full justify-center">
               <img src="/images/sparkles.svg" alt="sparkles" />
             </div>
             <h2 className="z-10 text-[32px] font-bold">
               Ready to start your journey?
             </h2>
-            <button className="hover:shadow-button flex w-full items-center justify-center rounded-[28px] bg-brand py-4 px-8 text-xl font-medium text-white transition hover:bg-brand/90 md:w-auto">
+            <button className="hover:shadow-button mt-4 flex w-full items-center justify-center rounded-[28px] bg-brand py-4 px-8 text-xl font-medium text-white transition hover:bg-brand/90 md:w-auto">
               <FiDownload className="mr-3 text-2xl" />
               Download for Mac
             </button>
           </div>
-        </div>
+        </motion.div>
       </main>
-      <footer className="flex justify-center bg-[#23272a]">
-        <div className="w-full max-w-[1260px] px-5 pt-20 pb-16 md:px-[40px]">
+      <footer className="flex justify-center bg-d-black">
+        <div className="container pb-16">
           <div className="flex flex-col justify-between gap-5 border-b border-brand pb-10 md:flex-row">
             <div className="mr-28 space-y-5 uppercase text-brand">
-              <h2
-                className={gintoFont.className}
-                style={{ fontWeight: 700, fontSize: 32 }}
-              >
+              <h2 className="__className_f7a229 text-[32px] font-bold">
                 Imagine a place
               </h2>
               <ul className="flex items-center space-x-4 text-[22px]">
@@ -294,41 +262,35 @@ export default function Home() {
             <div className="mt-5 flex w-full flex-wrap justify-between gap-10 text-white md:gap-5">
               <ul className="flex min-w-[200px] flex-col space-y-2 md:min-w-[150px]">
                 <h2 className="text-brand">Product</h2>
-                <li className="cursor-pointer hover:underline">Download</li>
-                <li className="cursor-pointer hover:underline">Nitro</li>
-                <li className="cursor-pointer hover:underline">Status</li>
+                {productLinks.map((link) => (
+                  <li key={link.title} className="hover:underline">
+                    <Link href={link.href}>{link.title}</Link>
+                  </li>
+                ))}
               </ul>
               <ul className="flex min-w-[200px] flex-col space-y-2 md:min-w-[150px]">
                 <h2 className="text-brand">Company</h2>
-                <li className="cursor-pointer hover:underline">About</li>
-                <li className="cursor-pointer hover:underline">Jobs</li>
-                <li className="cursor-pointer hover:underline">Branding</li>
-                <li className="cursor-pointer hover:underline">Newsroom</li>
+                {companyLinks.map((link) => (
+                  <li key={link.title} className="hover:underline">
+                    <Link href={link.href}>{link.title}</Link>
+                  </li>
+                ))}
               </ul>
               <ul className="flex min-w-[200px] flex-col space-y-2 md:min-w-[150px]">
                 <h2 className="text-brand">Resources</h2>
-                <li className="cursor-pointer hover:underline">College</li>
-                <li className="cursor-pointer hover:underline">Support</li>
-                <li className="cursor-pointer hover:underline">Safety</li>
-                <li className="cursor-pointer hover:underline">Blog</li>
-                <li className="cursor-pointer hover:underline">Feedback</li>
-                <li className="cursor-pointer hover:underline">Developers</li>
-                <li className="cursor-pointer hover:underline">StreamKit</li>
-                <li className="cursor-pointer hover:underline">Creators</li>
+                {resourcesLinks.map((link) => (
+                  <li key={link.title} className="hover:underline">
+                    <Link href={link.href}>{link.title}</Link>
+                  </li>
+                ))}
               </ul>
               <ul className="flex min-w-[200px] flex-col space-y-2 md:min-w-[150px]">
                 <h2 className="text-brand">Policies</h2>
-                <li className="cursor-pointer hover:underline">Terms</li>
-                <li className="cursor-pointer hover:underline">Privacy</li>
-                <li className="cursor-pointer hover:underline">
-                  Cookie settings
-                </li>
-                <li className="cursor-pointer hover:underline">Guidelines</li>
-                <li className="cursor-pointer hover:underline">
-                  Acknowledgements
-                </li>
-                <li className="cursor-pointer hover:underline">Licenses</li>
-                <li className="cursor-pointer hover:underline">Moderation</li>
+                {policiesLinks.map((link) => (
+                  <li key={link.title} className="hover:underline">
+                    <Link href={link.href}>{link.title}</Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
