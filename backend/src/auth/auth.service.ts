@@ -1,13 +1,13 @@
 import { Injectable, BadRequestException } from "@nestjs/common";
 import { CreateUserDto } from "src/user/dtos/createUser.dto";
-import * as argon from "argon2";
 import { UserService } from "src/user/user.service";
+import * as argon from "argon2";
 
 @Injectable()
 export class AuthService {
   constructor(private userService: UserService) {}
 
-  async signUp(dto: CreateUserDto) {
+  async register(dto: CreateUserDto) {
     return await this.userService.createUser(dto);
   }
 

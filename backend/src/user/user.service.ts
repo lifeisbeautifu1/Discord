@@ -8,18 +8,6 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async createUser(dto: CreateUserDto) {
-    const existingUsername = await this.prisma.user.findUnique({
-      where: {
-        username: dto.username,
-      },
-    });
-
-    if (existingUsername) {
-      throw new BadRequestException({
-        username: "Username already taken",
-      });
-    }
-
     const existingEmail = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
@@ -29,6 +17,18 @@ export class UserService {
     if (existingEmail) {
       throw new BadRequestException({
         email: "Email already taken",
+      });
+    }
+
+    const existingUsername = await this.prisma.user.findUnique({
+      where: {
+        username: dto.username,
+      },
+    });
+
+    if (existingUsername) {
+      throw new BadRequestException({
+        username: "Username already taken",
       });
     }
 
@@ -55,6 +55,13 @@ export class UserService {
     return await this.prisma.user.findUnique({
       where: {
         email,
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        password: true,
+        imageUrl: true,
       },
     });
   }

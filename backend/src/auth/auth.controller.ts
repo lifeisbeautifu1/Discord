@@ -22,9 +22,13 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @UseFilters(HttpExceptionFilter)
-  @Post("signup")
-  async signUp(@Body() dto: CreateUserDto) {
-    return await this.authService.signUp(dto);
+  @Post("register")
+  async register(@Body() dto: CreateUserDto, @GetSession() session: any) {
+    const user = await this.authService.register(dto);
+    session.passport = {
+      user: user.id,
+    };
+    return user;
   }
 
   @Get("logout")
@@ -42,8 +46,8 @@ export class AuthController {
   @UseGuards(LocalGuard)
   @UseFilters(HttpExceptionFilter)
   @HttpCode(200)
-  @Post("signin")
-  signIn(@Body() dto: SignInDto, @GetUser() user: User) {
+  @Post("login")
+  login(@Body() dto: SignInDto, @GetUser() user: User) {
     return user;
   }
 }
