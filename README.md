@@ -2,6 +2,23 @@
 
 > Note, this project is under construction 🚧 🏗️ ⛔
 
+## MVP
+
+As a user, I can
+
+- sign up / sign in / sign out / reset pwd
+- search for friends / add them / delete them
+- create communities / join them / leave them
+- invite and delete users to community
+- send messages to other user(s)
+- call other users
+- see incoming messages live
+- see online users live
+- upload files (images, video, text)
+- edit my profile
+- see typing indicator
+- maintain privacy (can't read others chats/msgs)
+
 ## Stack
 
 ### BE
