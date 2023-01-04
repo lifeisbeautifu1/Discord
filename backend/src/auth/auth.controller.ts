@@ -19,6 +19,8 @@ import { LocalGuard, AuthenticatedGuard } from "./utils/guards";
 import { HttpExceptionFilter } from "src/utils/exceptions/http-exception.filter";
 import { Response } from "express";
 import { VerifyEmailDto } from "./dtos/verify-email.dto";
+import { ForgotPasswordDto } from "./dtos/forgot-password.dto";
+import { ResetPasswordDto } from "./dtos/reset-password.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -55,6 +57,27 @@ export class AuthController {
   @Post("email/resend")
   async resendEmail(@GetUser() user: User) {
     await this.authService.sendEmailVerification(user);
+    return {
+      message: "OK",
+    };
+  }
+
+  @UseFilters(HttpExceptionFilter)
+  @Post("password/email")
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    await this.authService.sendEmailToResetPassword(dto.email);
+    return {
+      message: "OK",
+    };
+  }
+
+  @UseFilters(HttpExceptionFilter)
+  @Post("password/reset")
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    const { password, token } = dto;
+
+    await this.authService.resetPassword(password, token);
+
     return {
       message: "OK",
     };

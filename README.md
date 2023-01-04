@@ -1,6 +1,6 @@
 # Discord
 
-> Note, this project is under construction 🚧 🏗️ ⛔⛔⛔
+> Note, this project is under construction 🚧 🏗️ ⛔
 
 ## Stack
 
@@ -9,7 +9,7 @@
 - Node + Nest + TS
 - WS + WebRTC
 - express-session + Redis
-- PostgreSQL + Redis + Prisma
+- PostgreSQL + Prisma
 
 ### FE
 

@@ -24,6 +24,28 @@ export class AuthService {
     return await this.userService.createUser(dto);
   }
 
+  async sendEmailToResetPassword(email: string) {
+    const user = await this.userService.findUserByEmail(email);
+
+    if (!user)
+      throw new BadRequestException({
+        email: "Email does not exist",
+      });
+
+    const prefix = this.config.get("PREFIX");
+
+    const token = uuid();
+
+    await this.redis.set(
+      prefix + token,
+      user.id,
+      "EX",
+      1000 * 60 * 60 * 24 * 3,
+    ); // 3 days
+
+    this.mailgun.sendPasswordReset(user, token);
+  }
+
   async sendEmailVerification(user: Partial<User>) {
     const { emailVerified } = await this.userService.findUserByEmail(
       user.email,
@@ -35,7 +57,7 @@ export class AuthService {
       });
     }
 
-    const prefix = this.config.get("FORGET_PASSWORD_PREFIX");
+    const prefix = this.config.get("PREFIX");
 
     const token = uuid();
 
@@ -50,7 +72,7 @@ export class AuthService {
   }
 
   async verifyEmail(token: string) {
-    const key = this.config.get("FORGET_PASSWORD_PREFIX") + token;
+    const key = this.config.get("PREFIX") + token;
 
     const userId = await this.redis.get(key);
 
@@ -60,6 +82,26 @@ export class AuthService {
       });
 
     await this.userService.updateUserEmailVerify(userId);
+
+    await this.redis.del(key);
+  }
+
+  async resetPassword(password: string, token: string) {
+    if (password.length < 6) {
+      throw new BadRequestException({
+        password: "Must be 6 or more in length.",
+      });
+    }
+    const key = this.config.get("PREFIX") + token;
+
+    const userId = await this.redis.get(key);
+
+    if (!userId)
+      throw new BadRequestException({
+        token: "Token invalid or expired",
+      });
+
+    await this.userService.updatePassword(password, userId);
 
     await this.redis.del(key);
   }

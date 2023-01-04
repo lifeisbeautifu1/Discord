@@ -40,7 +40,7 @@ export class MailgunService {
       <div>
       <h2>Hey, ${user.username}</h2>
           <p>Your Discord password can be reset by clicking the button below. If you did not request a new password, please ignore this email: </p>
-          <a href="http://localhost:5173/verify?token=${token}">Reset password</a>
+          <a href="http://localhost:5173/reset?token=${token}">Reset password</a>
           </p>
         </div>
         `,

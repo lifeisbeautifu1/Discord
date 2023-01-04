@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateUserDto } from "./dtos/createUser.dto";
 import * as argon from "argon2";
+import { use } from "passport";
 
 @Injectable()
 export class UserService {
@@ -53,12 +54,43 @@ export class UserService {
   }
 
   async updateUserEmailVerify(userId: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user)
+      throw new BadRequestException({
+        token: "User does not exist",
+      });
+
     await this.prisma.user.update({
       where: {
         id: userId,
       },
       data: {
         emailVerified: new Date().toISOString(),
+      },
+    });
+  }
+
+  async updatePassword(password: string, userId: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user)
+      throw new BadRequestException({
+        token: "User does not exist",
+      });
+
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        password: await argon.hash(password),
       },
     });
   }
