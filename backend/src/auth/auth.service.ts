@@ -98,12 +98,14 @@ export class AuthService {
 
     if (!userId)
       throw new BadRequestException({
-        token: "Token invalid or expired",
+        token: "Invalid token",
       });
 
-    await this.userService.updatePassword(password, userId);
+    const user = await this.userService.updatePassword(password, userId);
 
     await this.redis.del(key);
+
+    return user;
   }
 
   async validateUser(email: string, password: string) {

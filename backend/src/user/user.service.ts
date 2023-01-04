@@ -79,10 +79,17 @@ export class UserService {
       where: {
         id: userId,
       },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        imageUrl: true,
+        emailVerified: true,
+      },
     });
     if (!user)
       throw new BadRequestException({
-        token: "User does not exist",
+        token: "Invalid token",
       });
 
     await this.prisma.user.update({
@@ -93,6 +100,8 @@ export class UserService {
         password: await argon.hash(password),
       },
     });
+
+    return user;
   }
 
   async findUserByEmail(email: string) {

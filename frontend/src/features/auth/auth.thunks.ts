@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { LoginData, RegisterData } from "../../types";
+import { Errors, LoginData, RegisterData } from "../../types";
 import authService from "./auth.service";
 
 export const login = createAsyncThunk(
@@ -48,6 +48,35 @@ export const verifyEmail = createAsyncThunk(
   async (token: string, thunkAPI) => {
     try {
       await authService.verifyEmail(token);
+    } catch (error: any) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error?.response?.data?.errors);
+    }
+  }
+);
+
+export const passwordEmail = createAsyncThunk(
+  "auth/passwordEmail",
+  async (email: string, thunkAPI) => {
+    try {
+      await authService.passwordEmail(email);
+      return email;
+    } catch (error: any) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error?.response?.data?.errors);
+    }
+  }
+);
+
+export const passwordReset = createAsyncThunk(
+  "auth/passwordReset",
+  async (
+    { password, token }: { password: string; token: string },
+    thunkAPI
+  ) => {
+    try {
+      const data = await authService.passwordReset(password, token);
+      return data;
     } catch (error: any) {
       console.log(error);
       return thunkAPI.rejectWithValue(error?.response?.data?.errors);

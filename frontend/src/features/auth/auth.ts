@@ -1,13 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { Errors, User } from "../../types";
-import { login, register, getMe, logout, verifyEmail } from "./auth.thunks";
+import {
+  login,
+  register,
+  getMe,
+  logout,
+  verifyEmail,
+  passwordEmail,
+  passwordReset,
+} from "./auth.thunks";
 
 export type AuthState = {
   isAuth: boolean;
   user: User;
   errors: Errors;
   loading: boolean;
+
+  isAuthModalOpen: boolean;
+  modalEmail: string;
 };
 
 const initialState: AuthState = {
@@ -15,12 +26,22 @@ const initialState: AuthState = {
   user: null,
   errors: null,
   loading: false,
+
+  isAuthModalOpen: false,
+  modalEmail: "",
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setErrors: (state, action: PayloadAction<Errors>) => {
+      state.errors = action.payload;
+    },
+    setAuthModal: (state, action: PayloadAction<boolean>) => {
+      state.isAuthModalOpen = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -85,12 +106,45 @@ export const authSlice = createSlice({
         state.errors = null;
       })
       .addCase(verifyEmail.rejected, (state, action: any) => {
-        console.log(action.payload);
+        state.errors = action.payload;
+        state.loading = false;
+      })
+      .addCase(passwordEmail.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        passwordEmail.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.loading = false;
+          state.modalEmail = action.payload;
+          state.isAuthModalOpen = true;
+          state.errors = null;
+        }
+      )
+      .addCase(passwordEmail.rejected, (state, action: any) => {
+        state.errors = action.payload;
+        state.loading = false;
+      })
+      .addCase(passwordReset.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        passwordReset.fulfilled,
+        (state, action: PayloadAction<User>) => {
+          state.user = action.payload;
+          state.isAuth = true;
+          state.loading = false;
+          state.errors = null;
+        }
+      )
+      .addCase(passwordReset.rejected, (state, action: any) => {
         state.errors = action.payload;
         state.loading = false;
       });
   },
 });
+
+export const { setErrors, setAuthModal } = authSlice.actions;
 
 export const selectUser = (state: RootState) => state.auth.user;
 

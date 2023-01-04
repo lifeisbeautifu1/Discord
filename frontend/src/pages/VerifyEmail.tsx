@@ -57,7 +57,6 @@ const VerifyEmail: React.FC = () => {
         </div>
         <Link to={isAuth ? "/channels/@me" : "/login"}>
           <button
-            type="submit"
             disabled={loading || !token}
             className={`mt-5 flex h-12 w-full items-center justify-center rounded bg-brand py-2 font-medium transition ease-in hover:bg-d-brand-hover ${
               (loading || !token) && "bg-zinc-600 hover:bg-zinc-600"

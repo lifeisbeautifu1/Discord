@@ -73,14 +73,16 @@ export class AuthController {
 
   @UseFilters(HttpExceptionFilter)
   @Post("password/reset")
-  async resetPassword(@Body() dto: ResetPasswordDto) {
+  async resetPassword(@Body() dto: ResetPasswordDto, @GetSession() session) {
     const { password, token } = dto;
 
-    await this.authService.resetPassword(password, token);
+    const user = await this.authService.resetPassword(password, token);
 
-    return {
-      message: "OK",
+    session.passport = {
+      user: user.id,
     };
+
+    return user;
   }
 
   @UseGuards(AuthenticatedGuard)
