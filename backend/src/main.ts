@@ -15,7 +15,7 @@ async function bootstrap() {
 
   app.enableCors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: "http://localhost:5173",
   });
 
   app.useGlobalPipes(
@@ -31,7 +31,6 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 365,
       },

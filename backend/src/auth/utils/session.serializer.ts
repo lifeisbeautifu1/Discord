@@ -23,6 +23,7 @@ export class SessionSerializer extends PassportSerializer {
         username: true,
         email: true,
         imageUrl: true,
+        emailVerified: true,
       },
     });
     // Will be appended to req.user

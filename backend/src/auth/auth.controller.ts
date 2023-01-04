@@ -7,6 +7,7 @@ import {
   Session as GetSession,
   Get,
   UseFilters,
+  Res,
 } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { Session } from "express-session";
@@ -16,6 +17,8 @@ import { CreateUserDto } from "src/user/dtos/createUser.dto";
 import { SignInDto } from "./dtos/signIn.dto";
 import { LocalGuard, AuthenticatedGuard } from "./utils/guards";
 import { HttpExceptionFilter } from "src/utils/exceptions/http-exception.filter";
+import { Response } from "express";
+import { VerifyEmailDto } from "./dtos/verify-email.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -23,18 +26,48 @@ export class AuthController {
 
   @UseFilters(HttpExceptionFilter)
   @Post("register")
-  async register(@Body() dto: CreateUserDto, @GetSession() session: any) {
+  async register(@Body() dto: CreateUserDto, @GetSession() session) {
     const user = await this.authService.register(dto);
+
     session.passport = {
       user: user.id,
     };
+
+    await this.authService.sendEmailVerification(user);
+
     return user;
   }
 
+  @UseFilters(HttpExceptionFilter)
+  @Post("email/verify")
+  async verifyEmail(@Body() dto: VerifyEmailDto) {
+    const { token } = dto;
+
+    await this.authService.verifyEmail(token);
+
+    return {
+      message: "OK",
+    };
+  }
+
+  @UseFilters(HttpExceptionFilter)
+  @UseGuards(AuthenticatedGuard)
+  @Post("email/resend")
+  async resendEmail(@GetUser() user: User) {
+    await this.authService.sendEmailVerification(user);
+    return {
+      message: "OK",
+    };
+  }
+
+  @UseGuards(AuthenticatedGuard)
   @Get("logout")
   @HttpCode(204)
-  logout(@GetSession() session: Session) {
-    session.destroy(() => {});
+  logout(@Res() res: Response, @GetSession() session: Session) {
+    session.destroy((err) => {
+      res.clearCookie("connect.sid");
+      res.status(204).send();
+    });
   }
 
   @UseGuards(AuthenticatedGuard)

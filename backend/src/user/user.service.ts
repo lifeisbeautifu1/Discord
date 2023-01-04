@@ -36,7 +36,7 @@ export class UserService {
 
     const user = await this.prisma.user.create({
       data: {
-        email: dto.email,
+        email: dto.email.toLocaleLowerCase(),
         password: hash,
         username: dto.username,
       },
@@ -45,10 +45,22 @@ export class UserService {
         email: true,
         username: true,
         imageUrl: true,
+        emailVerified: true,
       },
     });
 
     return user;
+  }
+
+  async updateUserEmailVerify(userId: string) {
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        emailVerified: new Date().toISOString(),
+      },
+    });
   }
 
   async findUserByEmail(email: string) {
@@ -62,6 +74,7 @@ export class UserService {
         email: true,
         password: true,
         imageUrl: true,
+        emailVerified: true,
       },
     });
   }
