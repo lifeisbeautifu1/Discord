@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { login, register, getMe } from "./auth.thunks";
+import { Errors, User } from "../../types";
+import { login, register, getMe, logout, verifyEmail } from "./auth.thunks";
 
 export type AuthState = {
   isAuth: boolean;
@@ -58,12 +59,34 @@ export const authSlice = createSlice({
       .addCase(getMe.fulfilled, (state, action: PayloadAction<User>) => {
         state.user = action.payload;
         state.isAuth = true;
-        state.errors = null;
         state.loading = false;
       })
-      .addCase(getMe.rejected, (state, action: any) => {
+      .addCase(getMe.rejected, (state) => {
         state.isAuth = false;
         state.user = null;
+        state.loading = false;
+      })
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.isAuth = false;
+        state.user = null;
+        state.loading = false;
+      })
+      .addCase(logout.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(verifyEmail.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(verifyEmail.fulfilled, (state) => {
+        state.loading = false;
+        state.errors = null;
+      })
+      .addCase(verifyEmail.rejected, (state, action: any) => {
+        console.log(action.payload);
+        state.errors = action.payload;
         state.loading = false;
       });
   },

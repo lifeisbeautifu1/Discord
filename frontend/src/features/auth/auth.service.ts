@@ -19,8 +19,21 @@ const getMe = async () => {
   return data;
 };
 
+const logout = async () => {
+  await axios.get("/auth/logout");
+  return;
+};
+
+const verifyEmail = async (token: string) => {
+  await axios.post("/auth/email/verify", {
+    token,
+  });
+};
+
 export default {
   login,
   register,
   getMe,
+  logout,
+  verifyEmail,
 };

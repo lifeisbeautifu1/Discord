@@ -1,25 +1,28 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import { BsCheck2 } from "react-icons/bs";
 import { register } from "../features/auth/auth.thunks";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { BeatLoader } from "react-spinners";
-import { useUnathorized } from "../hooks/useUnathorized";
 
 const Register: React.FC = () => {
   const [sendEmails, setSendEmails] = useState(true);
 
+  const { errors, loading, isAuth } = useAppSelector((state) => state.auth);
+
   const dispatch = useAppDispatch();
 
-  const { errors, loading } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-  useUnathorized();
+  useEffect(() => {
+    if (isAuth) navigate("/channels/@me");
+  }, [isAuth]);
 
   return (
     <div className="flex h-screen w-screen select-none items-center justify-center px-2">
       <img
-        src="/images/login-bg.svg"
+        src="/images/bg.svg"
         className="absolute left-0 top-0 h-screen w-screen"
       />
       <div className="drop z-10 w-full max-w-[478px] rounded bg-dark p-8 text-white shadow-xl">

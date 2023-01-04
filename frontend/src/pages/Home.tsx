@@ -1,13 +1,20 @@
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectUser } from "../features/auth/auth";
-import { useAuthorized } from "../hooks/useAuthorized";
+import { logout } from "../features/auth/auth.thunks";
 
 type Props = {};
 
 const UserPage = (props: Props) => {
-  useAuthorized();
   const user = useAppSelector(selectUser);
-  return <div>hello, {user?.username}</div>;
+  const dispatch = useAppDispatch();
+  return (
+    <div>
+      <p>hello, {user?.username}</p>
+      <div>
+        <button onClick={() => dispatch(logout())}>logout</button>
+      </div>
+    </div>
+  );
 };
 
 export default UserPage;

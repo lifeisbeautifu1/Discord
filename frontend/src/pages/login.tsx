@@ -2,20 +2,24 @@ import { Formik } from "formik";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { BeatLoader } from "react-spinners";
 import { login } from "../features/auth/auth.thunks";
-import { Link } from "react-router-dom";
-import { useUnathorized } from "../hooks/useUnathorized";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Login: React.FC = () => {
-  const { errors, loading } = useAppSelector((state) => state.auth);
+  const { errors, loading, isAuth } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
 
-  useUnathorized();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuth) navigate("/channels/@me");
+  }, [isAuth]);
 
   return (
     <div className="flex h-screen w-screen select-none items-center justify-center px-2">
       <img
-        src="/images/login-bg.svg"
+        src="/images/bg.svg"
         className="absolute left-0 top-0 h-screen w-screen"
       />
       <div className="drop z-10 flex w-full max-w-[424px] gap-10 rounded bg-dark p-8 text-white shadow-xl md:max-w-[784px]">

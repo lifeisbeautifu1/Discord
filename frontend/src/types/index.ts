@@ -9,6 +9,7 @@ export type Errors = {
   email?: string;
   username?: string;
   password?: string;
+  token?: string;
 } | null;
 
 export type LoginData = {

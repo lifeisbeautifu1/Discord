@@ -1,7 +1,22 @@
 # Discord
 
+> Note, this project is under construction 🚧 🏗️ ⛔⛔⛔
+
 ## Stack
 
-#### Features
+### BE
 
-#### Screenshots
+- Node + Nest + TS
+- WS + WebRTC
+- express-session + Redis
+- PostgreSQL + Redis + Prisma
+
+### FE
+
+- React 18.2+
+- Redux Toolkit
+- HeadlessUI / TailwindCSS
+
+### DevOps
+
+- Docker + docker-compose

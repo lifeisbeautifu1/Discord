@@ -3,7 +3,7 @@ import { FiDownload } from "react-icons/fi";
 import { GoThreeBars } from "react-icons/go";
 import { RxCross2 } from "react-icons/rx";
 import { BsTwitter, BsInstagram, BsFacebook, BsYoutube } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   companyLinks,
@@ -13,18 +13,11 @@ import {
   productLinks,
   resourcesLinks,
 } from "../constants/links";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../app/hooks";
 import { selectIsAuth } from "../features/auth/auth";
-import { getMe } from "../features/auth/auth.thunks";
 
 const Landing = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(getMe());
-  }, []);
 
   const isAuth = useAppSelector(selectIsAuth);
 
@@ -104,7 +97,7 @@ const Landing = () => {
           </nav>
         </header>
         <div className="relative z-[5] mx-auto flex max-w-6xl flex-col items-start px-5 pt-12 pb-[300px] md:items-center md:pt-[120px] md:pb-[160px]">
-          <h1 className="font-ginto text-2xl font-bold md:text-[56px]">
+          <h1 className="font-ginto text-2xl font-bold uppercase md:text-[56px]">
             Imagine a place...
           </h1>
           <p className="mt-5 max-w-3xl text-left text-base md:mt-10 md:text-center md:text-xl">
@@ -141,7 +134,7 @@ const Landing = () => {
       <main className="text-d-black">
         <div className="flex flex-col items-center">
           <motion.div
-            whileInView={{ y: [100, 50, 0], opacity: [0, 0, 1] }}
+            whileInView={{ y: [100, 50, 0], opacity: [0, 0.5, 1] }}
             transition={{ duration: 0.5 }}
             className="container grid grid-cols-12 gap-5"
           >
@@ -162,7 +155,7 @@ const Landing = () => {
             </div>
           </motion.div>
           <motion.div
-            whileInView={{ y: [100, 50, 0], opacity: [0, 0, 1] }}
+            whileInView={{ y: [100, 50, 0], opacity: [0, 0.5, 1] }}
             transition={{ duration: 0.5 }}
             className="flex w-full flex-col items-center bg-[#f6f6f6]"
           >
@@ -185,7 +178,7 @@ const Landing = () => {
             </div>
           </motion.div>
           <motion.div
-            whileInView={{ y: [100, 50, 0], opacity: [0, 0, 1] }}
+            whileInView={{ y: [100, 50, 0], opacity: [0, 0.5, 1] }}
             transition={{ duration: 0.5 }}
             className="container grid grid-cols-12 gap-5"
           >
@@ -207,7 +200,7 @@ const Landing = () => {
           </motion.div>
         </div>
         <motion.div
-          whileInView={{ y: [100, 50, 0], opacity: [0, 0, 1] }}
+          whileInView={{ y: [100, 50, 0], opacity: [0, 0.5, 1] }}
           transition={{ duration: 0.5 }}
           className="flex w-full flex-col items-center bg-[#f6f6f6] text-center"
         >
@@ -245,8 +238,8 @@ const Landing = () => {
       <footer className="flex justify-center bg-d-black">
         <div className="container pb-16">
           <div className="flex flex-col justify-between gap-5 border-b border-brand pb-10 md:flex-row">
-            <div className="mr-28 space-y-5 uppercase text-brand">
-              <h2 className="font-ginto text-[32px] font-bold">
+            <div className="mr-10 min-w-[240px] space-y-5 uppercase leading-[1] text-brand">
+              <h2 className="font-ginto w-full text-[32px] font-bold">
                 Imagine a place
               </h2>
               <ul className="flex items-center space-x-4 text-[22px]">
@@ -264,7 +257,7 @@ const Landing = () => {
                 </li>
               </ul>
             </div>
-            <div className="mt-5 flex w-full flex-wrap justify-between gap-10 text-white md:gap-5">
+            <div className="mt-8 flex w-full flex-wrap justify-between gap-10 text-white md:mt-0 md:gap-5">
               <ul className="flex min-w-[200px] flex-col space-y-2 md:min-w-[150px]">
                 <h2 className="text-brand">Product</h2>
                 {productLinks.map((link) => (
@@ -308,7 +301,7 @@ const Landing = () => {
               />
             </Link>
             <Link
-              to="/signup"
+              to="/register"
               className="hover:shadow-button rounded-3xl bg-brand px-4 py-2 text-sm font-medium text-white transition hover:bg-brand/90"
             >
               Sign up

@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { LoginData, RegisterData } from "../../types";
 import authService from "./auth.service";
 
 export const login = createAsyncThunk(
@@ -33,3 +34,23 @@ export const getMe = createAsyncThunk("auth/getMe", async (_, thunkAPI) => {
     return thunkAPI.rejectWithValue(error?.response?.data?.errors);
   }
 });
+
+export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
+  try {
+    await authService.logout();
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error?.response?.data?.message);
+  }
+});
+
+export const verifyEmail = createAsyncThunk(
+  "auth/verifyEmail",
+  async (token: string, thunkAPI) => {
+    try {
+      await authService.verifyEmail(token);
+    } catch (error: any) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error?.response?.data?.errors);
+    }
+  }
+);
