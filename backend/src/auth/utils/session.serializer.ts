@@ -22,7 +22,8 @@ export class SessionSerializer extends PassportSerializer {
         id: true,
         username: true,
         email: true,
-        imageUrl: true,
+        u_name: true,
+        image: true,
         emailVerified: true,
       },
     });

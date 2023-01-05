@@ -30,6 +30,10 @@ const verifyEmail = async (token: string) => {
   });
 };
 
+const resendEmailverification = async () => {
+  await axios.post("/auth/email/resend");
+};
+
 const passwordEmail = async (email: string) => {
   await axios.post("auth/password/email", {
     email,
@@ -52,4 +56,5 @@ export default {
   verifyEmail,
   passwordEmail,
   passwordReset,
+  resendEmailverification,
 };

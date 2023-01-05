@@ -92,6 +92,24 @@
   .font-calc {
     font-size: clamp(16px, 2vw, 20px);
   }
+
+  .tab {
+    @apply cursor-pointer rounded border-none py-0.5 px-2 font-medium text-d-gray outline-none hover:bg-d-icon-bg ui-selected:bg-d-icon-bg ui-selected:text-d-white;
+  }
+}
+
+.triangle::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  transform: translateY(-50%);
+  background-color: transparent;
+  width: 0;
+  border-top: 5px solid transparent;
+  border-left: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid hsl(216, calc(1 * 7.2%), 13.5%);
 }
 
 .drop {

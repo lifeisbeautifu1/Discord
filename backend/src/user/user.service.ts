@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateUserDto } from "./dtos/createUser.dto";
 import * as argon from "argon2";
-import { use } from "passport";
+import { uniqueUsername } from "src/utils/generatesUsername";
 
 @Injectable()
 export class UserService {
@@ -21,31 +21,36 @@ export class UserService {
       });
     }
 
-    const existingUsername = await this.prisma.user.findUnique({
+    const hash = await argon.hash(dto.password);
+
+    const usersWithTheSameUsername = await this.prisma.user.findMany({
       where: {
-        username: dto.username,
+        username: dto.username.toLocaleLowerCase(),
       },
     });
 
-    if (existingUsername) {
+    if (usersWithTheSameUsername.length >= 9999) {
       throw new BadRequestException({
         username: "Username already taken",
       });
     }
-
-    const hash = await argon.hash(dto.password);
 
     const user = await this.prisma.user.create({
       data: {
         email: dto.email.toLocaleLowerCase(),
         password: hash,
         username: dto.username,
+        u_name: uniqueUsername(
+          dto.username,
+          usersWithTheSameUsername.length + 1,
+        ),
       },
       select: {
         id: true,
         email: true,
         username: true,
-        imageUrl: true,
+        u_name: true,
+        image: true,
         emailVerified: true,
       },
     });
@@ -81,9 +86,10 @@ export class UserService {
       },
       select: {
         id: true,
-        username: true,
         email: true,
-        imageUrl: true,
+        username: true,
+        u_name: true,
+        image: true,
         emailVerified: true,
       },
     });
@@ -108,14 +114,6 @@ export class UserService {
     return await this.prisma.user.findUnique({
       where: {
         email,
-      },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        password: true,
-        imageUrl: true,
-        emailVerified: true,
       },
     });
   }

@@ -100,7 +100,7 @@ const Landing = () => {
           <h1 className="font-ginto text-2xl font-bold uppercase md:text-[56px]">
             Imagine a place...
           </h1>
-          <p className="mt-5 max-w-3xl text-left text-base md:mt-10 md:text-center md:text-xl">
+          <p className="mt-10 max-w-3xl text-left text-base md:mt-10 md:text-center md:text-xl">
             ...where you can belong to a school club, a gaming group, or a
             worldwide art community. Where just you and a handful of friends can
             spend time together. A place that makes it easy to talk every day
@@ -111,9 +111,11 @@ const Landing = () => {
               <FiDownload className="mr-3 text-2xl" />
               Download for Mac
             </button>
-            <button className="hover:shadow-button hover:black-hover rounded-[28px] bg-d-black py-4 px-8 text-xl font-medium text-white transition">
-              Open Discord in your browser
-            </button>
+            <Link to="/login">
+              <button className="hover:shadow-button hover:black-hover rounded-[28px] bg-d-black py-4 px-8 text-xl font-medium text-white transition">
+                Open Discord in your browser
+              </button>
+            </Link>
           </div>
         </div>
         <div className="absolute inset-0 h-full w-full">

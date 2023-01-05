@@ -8,13 +8,13 @@ As a user, I can
 
 - sign up / sign in / sign out / reset pwd
 - search for friends / add them / delete them
-- create communities / join them / leave them
-- invite and delete users to community
+- create servers / join them / leave them
+- invite users to servers
 - send messages to other user(s)
 - call other users
 - see incoming messages live
 - see online users live
-- upload files (images, video, text)
+- upload files
 - edit my profile
 - see typing indicator
 - maintain privacy (can't read others chats/msgs)

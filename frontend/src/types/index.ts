@@ -2,7 +2,9 @@ export type User = {
   id: string;
   email: string;
   username: string;
-  imageUrl: string | null;
+  u_name: string;
+  emailVerified: string | null;
+  image: string | null;
 } | null;
 
 export type Errors = {

@@ -83,3 +83,16 @@ export const passwordReset = createAsyncThunk(
     }
   }
 );
+
+export const resendEmailVerification = createAsyncThunk(
+  "auth/resendEmail",
+  async (_, thunkAPI) => {
+    try {
+      await authService.resendEmailverification();
+      return;
+    } catch (error: any) {
+      console.log(error);
+      return thunkAPI.rejectWithValue(error?.response?.data?.errors);
+    }
+  }
+);

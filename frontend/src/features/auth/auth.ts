@@ -9,6 +9,7 @@ import {
   verifyEmail,
   passwordEmail,
   passwordReset,
+  resendEmailVerification,
 } from "./auth.thunks";
 
 export type AuthState = {
@@ -18,6 +19,7 @@ export type AuthState = {
   loading: boolean;
 
   isAuthModalOpen: boolean;
+  isEmailModalOpen: boolean;
   modalEmail: string;
 };
 
@@ -28,6 +30,7 @@ const initialState: AuthState = {
   loading: false,
 
   isAuthModalOpen: false,
+  isEmailModalOpen: false,
   modalEmail: "",
 };
 
@@ -40,6 +43,9 @@ export const authSlice = createSlice({
     },
     setAuthModal: (state, action: PayloadAction<boolean>) => {
       state.isAuthModalOpen = action.payload;
+    },
+    setEmailModal: (state, action: PayloadAction<boolean>) => {
+      state.isEmailModalOpen = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -140,11 +146,20 @@ export const authSlice = createSlice({
       .addCase(passwordReset.rejected, (state, action: any) => {
         state.errors = action.payload;
         state.loading = false;
+      })
+      .addCase(resendEmailVerification.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(resendEmailVerification.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(resendEmailVerification.rejected, (state) => {
+        state.loading = false;
       });
   },
 });
 
-export const { setErrors, setAuthModal } = authSlice.actions;
+export const { setErrors, setAuthModal, setEmailModal } = authSlice.actions;
 
 export const selectUser = (state: RootState) => state.auth.user;
 
@@ -153,5 +168,8 @@ export const selectErrors = (state: RootState) => state.auth.errors;
 export const selectIsAuth = (state: RootState) => state.auth.isAuth;
 
 export const selectLoading = (state: RootState) => state.auth.loading;
+
+export const selectIsEmailModal = (state: RootState) =>
+  state.auth.isEmailModalOpen;
 
 export default authSlice.reducer;

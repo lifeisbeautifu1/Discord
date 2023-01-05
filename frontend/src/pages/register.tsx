@@ -58,7 +58,7 @@ const Register: React.FC = () => {
                     type="email"
                     name="email"
                     id="email"
-                    className="h-10 w-full rounded border-none bg-d-input-black p-2.5 outline-none"
+                    className="h-10 w-full rounded border-none bg-d-dark-black p-2.5 outline-none"
                   />
                 </div>
                 <div className="mt-4 flex flex-col">
@@ -83,7 +83,7 @@ const Register: React.FC = () => {
                     type="username"
                     name="username"
                     id="username"
-                    className="h-10 w-full rounded border-none bg-d-input-black p-2.5 outline-none"
+                    className="h-10 w-full rounded border-none bg-d-dark-black p-2.5 outline-none"
                   />
                 </div>
                 <div className="mt-4 flex flex-col">
@@ -109,7 +109,7 @@ const Register: React.FC = () => {
                     type="password"
                     name="password"
                     id="password"
-                    className="h-10 w-full rounded border-none bg-d-input-black p-2.5 outline-none"
+                    className="h-10 w-full rounded border-none bg-d-dark-black p-2.5 outline-none"
                   />
                 </div>
                 <div

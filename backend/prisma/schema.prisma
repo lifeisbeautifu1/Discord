@@ -10,13 +10,13 @@ datasource db {
 model User {
     id String @id @default(uuid())
 
-    email         String    @unique
+    email         String     @unique
     password      String
-    username      String    @unique
-    imageUrl      String?
+    username      String
+    image         String?
     emailVerified DateTime?
-
-    bookmarks Bookmark[]
+    u_name        String     @unique
+    bookmarks     Bookmark[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

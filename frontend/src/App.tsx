@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useAppDispatch } from "./app/hooks";
 import { getMe } from "./features/auth/auth.thunks";
-import { Protected } from "./components";
+import { Layout, Protected } from "./components";
 import {
   Landing,
   Login,
@@ -27,22 +27,24 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/verify" element={<VerifyEmail />} />
       <Route path="/reset" element={<ResetPassword />} />
-      <Route
-        path="/channels/@me"
-        element={
-          <Protected>
-            <Home />
-          </Protected>
-        }
-      />
-      <Route
-        path="/channels/:id"
-        element={
-          <Protected>
-            <Channel />
-          </Protected>
-        }
-      />
+      <Route path="/channels" element={<Layout />}>
+        <Route
+          path="/channels/@me"
+          element={
+            <Protected>
+              <Home />
+            </Protected>
+          }
+        />
+        <Route
+          path="/channels/:id"
+          element={
+            <Protected>
+              <Channel />
+            </Protected>
+          }
+        />
+      </Route>
     </Routes>
   );
 }

@@ -1,6 +1,6 @@
-import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { motion } from "framer-motion";
-import { setAuthModal } from "../features/auth/auth";
+import { setAuthModal } from "../../features/auth/auth";
 
 const AuthModal: React.FC = () => {
   const { modalEmail } = useAppSelector((state) => state.auth);
@@ -17,7 +17,7 @@ const AuthModal: React.FC = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-[440px] overflow-hidden rounded bg-dark "
+        className="w-full max-w-[440px] overflow-hidden rounded bg-dark"
       >
         <h1 className="p-4 pb-0 text-xl font-semibold text-white">
           Instructions Sent
