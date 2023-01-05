@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { FriendRequest, User } from "@prisma/client";
+import { FriendsService } from "src/friends/friends.service";
 
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserService } from "src/user/user.service";
@@ -10,6 +11,7 @@ export class FriendRequestService {
   constructor(
     private prisma: PrismaService,
     private userService: UserService,
+    private friendsService: FriendsService,
   ) {}
   async create(user: User, u_name: string): Promise<FriendRequest> {
     const receiver = await this.userService.findUserByUName(u_name);
@@ -26,7 +28,8 @@ export class FriendRequestService {
     }
 
     // Check if already friends
-    // !(TODO)
+    const isFriends = await this.friendsService.isFriends(user.id, receiver.id);
+    if (isFriends) throw new BadRequestException("You already friends");
 
     // Check if trying to add yourself
     if (user.id === receiver.id)
@@ -39,7 +42,11 @@ export class FriendRequestService {
         status: "pending",
       },
       include: {
-        receiver: true,
+        receiver: {
+          select: {
+            ...userSelectedFields,
+          },
+        },
       },
     });
 
