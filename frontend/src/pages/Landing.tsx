@@ -138,6 +138,7 @@ const Landing = () => {
           <motion.div
             whileInView={{ y: [100, 50, 0], opacity: [0, 0.5, 1] }}
             transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
             className="container grid grid-cols-12 gap-5"
           >
             <img
@@ -159,6 +160,7 @@ const Landing = () => {
           <motion.div
             whileInView={{ y: [100, 50, 0], opacity: [0, 0.5, 1] }}
             transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
             className="flex w-full flex-col items-center bg-[#f6f6f6]"
           >
             <div className="container  grid grid-cols-12 gap-5">
@@ -182,6 +184,7 @@ const Landing = () => {
           <motion.div
             whileInView={{ y: [100, 50, 0], opacity: [0, 0.5, 1] }}
             transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
             className="container grid grid-cols-12 gap-5"
           >
             <img
@@ -204,6 +207,7 @@ const Landing = () => {
         <motion.div
           whileInView={{ y: [100, 50, 0], opacity: [0, 0.5, 1] }}
           transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
           className="flex w-full flex-col items-center bg-[#f6f6f6] text-center"
         >
           <div className="container grid grid-cols-12 pb-[80px]">

@@ -8,3 +8,4 @@ export { default as Tooltip } from "./Tooltip";
 export { default as Avatar } from "./Avatar";
 export { default as UserInfo } from "./UserInfo";
 export { default as EmailVerifyPopup } from "./EmailVerifyPopup";
+export { default as AddFriend } from "./AddFriend";

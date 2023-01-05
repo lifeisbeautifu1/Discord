@@ -1,4 +1,9 @@
-import { EmailVerifyPopup, SidebarFriends, Tooltip } from "../components";
+import {
+  EmailVerifyPopup,
+  SidebarFriends,
+  Tooltip,
+  AddFriend,
+} from "../components";
 import { HiChatAlt, HiInbox, HiQuestionMarkCircle } from "react-icons/hi";
 import { Tab } from "@headlessui/react";
 import { FriendIcon } from "../components/icons";
@@ -104,8 +109,18 @@ const HomePage = () => {
                     </p>
                   </div>
                 </Tab.Panel>
-                <Tab.Panel className="flex h-full w-full items-center justify-center">
-                  Friends
+                <Tab.Panel className="flex h-full w-full flex-col">
+                  <AddFriend />
+                  <div className="flex flex-1 items-center justify-center">
+                    <div>
+                      <div className="mb-10 h-[168px] w-[376px]">
+                        <img src="/images/no-friends-bg.svg" alt="no friends" />
+                      </div>
+                      <p className="text-[#a3a6aa]">
+                        Wumpus is waiting on friends. You don't have to though!
+                      </p>
+                    </div>
+                  </div>
                 </Tab.Panel>
               </Tab.Panels>
               <div className="hidden h-full border-l-[0.25px] border-gray-600 p-5 py-6 lg:block lg:flex-[0.3]">
