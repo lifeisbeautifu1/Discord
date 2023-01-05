@@ -1,10 +1,31 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useRef, ChangeEvent } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { reset } from "../features/friendRequests/friendRequest";
+import { sendFriendRequest } from "../features/friendRequests/friendRequests.thunks";
 
 const AddFriend = () => {
   const [searchTag, setSearchTag] = useState("");
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const { error, success, u_name } = useAppSelector(
+    (state) => state.friendRequests
+  );
+
+  const dispatch = useAppDispatch();
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    inputRef?.current?.blur();
+
+    dispatch(sendFriendRequest(searchTag));
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTag(e.target.value);
+
+    if (error || success) dispatch(reset());
   };
 
   return (
@@ -14,20 +35,39 @@ const AddFriend = () => {
         You can add a friend with their Discord Tag. It's cAsE sEnSitIvE!
       </p>
       <form className="mt-4" onSubmit={handleSubmit}>
-        <div className="flex w-full rounded-lg border border-black bg-d-dark-black px-3 py-2 focus-within:border-blue-500">
+        <div
+          className={`flex w-full rounded-lg border border-black bg-d-dark-black px-3 py-2 focus-within:border-blue-500 ${
+            success && "!border-green-500"
+          } ${error && "!border-red-500"}`}
+        >
           <input
             type="text"
+            ref={inputRef}
+            value={searchTag}
+            onChange={handleChange}
             placeholder="Enter a Username#0000"
             className="flex-1 border-none bg-transparent text-d-white outline-none"
           />
           <button
             type="submit"
-            disabled
+            disabled={!searchTag.trim().length}
             className="h-full rounded bg-brand py-1.5 px-4 text-sm text-d-white hover:bg-d-brand-hover disabled:cursor-not-allowed disabled:bg-brand/70"
           >
             Send Friend Request
           </button>
         </div>
+        {success && (
+          <p className="mt-2 text-sm text-green-500">
+            Success! Your friend request to{" "}
+            <span className="font-semibold">{u_name}</span> was sent.
+          </p>
+        )}
+        {error && (
+          <p className="mt-2 text-sm text-red-500">
+            Hm, didn't work. Double check that the capitalization, spelling, any
+            spaces, and numbers are correct.
+          </p>
+        )}
       </form>
     </div>
   );

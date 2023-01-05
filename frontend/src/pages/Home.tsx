@@ -3,17 +3,29 @@ import {
   SidebarFriends,
   Tooltip,
   AddFriend,
+  FriendRequests,
 } from "../components";
 import { HiChatAlt, HiInbox, HiQuestionMarkCircle } from "react-icons/hi";
 import { Tab } from "@headlessui/react";
 import { FriendIcon } from "../components/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { getFriendRequests } from "../features/friendRequests/friendRequests.thunks";
+import { selectFriendRequests } from "../features/friendRequests/friendRequest";
 
 const HomePage = () => {
   const [selectedIndex, setSelectedIndex] = useState(4);
 
+  const friendRequests = useAppSelector(selectFriendRequests);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getFriendRequests());
+  }, []);
+
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col overflow-hidden">
       <EmailVerifyPopup />
       <div className="flex h-full w-full">
         <SidebarFriends />
@@ -83,18 +95,22 @@ const HomePage = () => {
                   </div>
                 </Tab.Panel>
                 <Tab.Panel className="flex h-full w-full items-center justify-center">
-                  <div className="flex flex-col items-center">
-                    <div className="h-[200px] w-[415px]">
-                      <img
-                        src="/images/no-friends-pending-bg.svg"
-                        alt="no friends request pending"
-                      />
+                  {friendRequests ? (
+                    <FriendRequests />
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <div className="h-[200px] w-[415px]">
+                        <img
+                          src="/images/no-friends-pending-bg.svg"
+                          alt="no friends request pending"
+                        />
+                      </div>
+                      <p className="mt-10 text-[#a3a6aa]">
+                        There are no pending friend requests. Here's Wumpus for
+                        now
+                      </p>
                     </div>
-                    <p className="mt-10 text-[#a3a6aa]">
-                      There are no pending friend requests. Here's Wumpus for
-                      now
-                    </p>
-                  </div>
+                  )}
                 </Tab.Panel>
                 <Tab.Panel className="flex h-full w-full items-center justify-center">
                   <div className="flex flex-col items-center">

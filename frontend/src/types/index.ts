@@ -24,3 +24,12 @@ export type RegisterData = {
   username: string;
   password: string;
 };
+
+export type FriendRequest = {
+  id: string;
+  senderId: string;
+  receiverId: string;
+  sender: User;
+  receiver: User;
+  status: "pending" | "accepted" | "rejected";
+};
