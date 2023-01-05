@@ -6,10 +6,12 @@ import {
   UploadedFile,
   Req,
   UseInterceptors,
+  UseGuards,
 } from "@nestjs/common";
 import { v2 as cloudinary } from "cloudinary";
 import { createReadStream } from "streamifier";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { AuthenticatedGuard } from "src/auth/utils/guards";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -20,6 +22,7 @@ cloudinary.config({
 @Controller("upload")
 export class UploadController {
   @Post("")
+  @UseGuards(AuthenticatedGuard)
   @UseInterceptors(FileInterceptor("file"))
   async uploadImage(
     @Req() req: Request,
@@ -38,6 +41,7 @@ export class UploadController {
     return result;
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Delete(":id")
   async deleteImage(@Param("id") id: string) {
     await cloudinary.uploader.destroy(id, function (result) {

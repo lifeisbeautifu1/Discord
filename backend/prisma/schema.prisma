@@ -10,31 +10,50 @@ datasource db {
 model User {
     id String @id @default(uuid())
 
-    email         String     @unique
+    email         String    @unique
     password      String
     username      String
     image         String?
     emailVerified DateTime?
-    u_name        String     @unique
-    bookmarks     Bookmark[]
+    u_name        String    @unique
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    sendFriendRequests     FriendRequest[] @relation("sender")
+    receivedFriendRequests FriendRequest[] @relation("receiver")
+    sendFriends            Friend[]        @relation("sender")
+    receivedFriends        Friend[]        @relation("receiver")
 
     @@map("users")
 }
 
-model Bookmark {
-    id        String   @id @default(uuid())
+model FriendRequest {
+    id String @id @default(uuid())
+
+    senderId String
+    sender   User?  @relation(name: "sender", fields: [senderId], references: [id])
+
+    receiverId String
+    receiver   User?  @relation(name: "receiver", fields: [receiverId], references: [id])
+
     createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
 
-    title       String
-    description String?
-    link        String?
+    status String
 
-    userId String @unique
-    user   User   @relation(fields: [userId], references: [id])
+    @@map("friend_requsts")
+}
 
-    @@map("bookmarks")
+model Friend {
+    id String @id @default(uuid())
+
+    senderId String
+    sender   User?  @relation(name: "sender", fields: [senderId], references: [id])
+
+    receiverId String
+    receiver   User?  @relation(name: "receiver", fields: [receiverId], references: [id])
+
+    createdAt DateTime @default(now())
+
+    @@map("friends")
 }
