@@ -4,6 +4,7 @@ import {
   Tooltip,
   AddFriend,
   FriendRequests,
+  Friends,
 } from "../components";
 import { HiChatAlt, HiInbox, HiQuestionMarkCircle } from "react-icons/hi";
 import { Tab } from "@headlessui/react";
@@ -14,7 +15,7 @@ import { useAppSelector } from "../app/hooks";
 const HomePage = () => {
   const [selectedIndex, setSelectedIndex] = useState(4);
 
-  const { friendRequests, incomingFriendRequests } = useAppSelector(
+  const { friendRequests, incomingFriendRequests, friends } = useAppSelector(
     (state) => state.friends
   );
 
@@ -82,20 +83,24 @@ const HomePage = () => {
                   </div>
                 </Tab.Panel>
                 <Tab.Panel className="flex h-full w-full items-center justify-center">
-                  <div className="flex flex-col items-center">
-                    <div className="mb-10 h-[168px] w-[376px]">
-                      <img src="/images/no-friends-bg.svg" alt="no friends" />
+                  {friends.length > 0 ? (
+                    <Friends />
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <div className="mb-10 h-[168px] w-[376px]">
+                        <img src="/images/no-friends-bg.svg" alt="no friends" />
+                      </div>
+                      <p className="text-[#a3a6aa]">
+                        Wumpus is waiting on friends. You don't have to though!
+                      </p>
+                      <button
+                        onClick={() => setSelectedIndex(4)}
+                        className="mt-4 rounded bg-brand px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-d-brand-hover"
+                      >
+                        Add Friend
+                      </button>
                     </div>
-                    <p className="text-[#a3a6aa]">
-                      Wumpus is waiting on friends. You don't have to though!
-                    </p>
-                    <button
-                      onClick={() => setSelectedIndex(4)}
-                      className="mt-4 rounded bg-brand px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-d-brand-hover"
-                    >
-                      Add Friend
-                    </button>
-                  </div>
+                  )}
                 </Tab.Panel>
                 <Tab.Panel className="flex h-full w-full items-center justify-center">
                   {friendRequests.length > 0 ? (

@@ -139,3 +139,16 @@
     transform: perspective(500px) translateZ(0px) translateY(0px);
   }
 }
+
+.rotate {
+  animation: rotate 0.2s ease-out;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

@@ -2,38 +2,37 @@ import { IoSearchOutline } from "react-icons//io5";
 import { RxCross1 } from "react-icons/rx";
 import { useAppSelector } from "../app/hooks";
 import { useEffect, useState } from "react";
-import { FriendRequestItem } from "./";
-import { selectFriendRequests } from "../features/friends/friends";
-import { FriendRequest } from "../types";
+import { FriendItem } from "./";
+import { selectAllFriends } from "../features/friends/friends";
+import { Friend } from "../types";
 import { selectUser } from "../features/auth/auth";
 
-const FriendRequests = () => {
-  const allFriendRequests = useAppSelector(selectFriendRequests);
+const Friends = () => {
+  const allFriends = useAppSelector(selectAllFriends);
 
   const user = useAppSelector(selectUser);
 
-  const [friendRequests, setFriendRequests] =
-    useState<Array<FriendRequest>>(allFriendRequests);
+  const [friends, setFriends] = useState<Array<Friend>>(allFriends);
 
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    setFriendRequests(allFriendRequests);
-  }, [allFriendRequests]);
+    setFriends(allFriends);
+  }, [allFriends]);
 
   useEffect(() => {
     if (searchTerm.trim()) {
-      setFriendRequests(
-        allFriendRequests.filter((fr) => {
-          const isSender = fr.senderId === user?.id;
-          const toShow = isSender ? fr.receiver : fr.sender;
+      setFriends(
+        allFriends.filter((friend) => {
+          const isSender = friend.sender?.id === user?.id;
+          const toShow = isSender ? friend.receiver : friend.sender;
           return toShow?.username
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
         })
       );
     } else {
-      setFriendRequests(allFriendRequests);
+      setFriends(allFriends);
     }
   }, [searchTerm]);
 
@@ -58,10 +57,10 @@ const FriendRequests = () => {
       </div>
       <div className="ml-[30px] mr-5 mt-2">
         <h2 className="text-xs font-semibold uppercase">
-          Pending – {friendRequests.length}
+          All Friends – {friends.length}
         </h2>
       </div>
-      {friendRequests.length === 0 ? (
+      {friends.length === 0 ? (
         <div className="flex h-full w-full items-center justify-center">
           <div className="flex flex-col items-center">
             <div className="h-[220px] w-[420px]">
@@ -77,8 +76,8 @@ const FriendRequests = () => {
         </div>
       ) : (
         <ul className="mt-4">
-          {friendRequests.map((fr) => (
-            <FriendRequestItem key={fr.id} friendRequest={fr} />
+          {friends.map((friend) => (
+            <FriendItem key={friend.id} friend={friend} />
           ))}
         </ul>
       )}
@@ -86,4 +85,4 @@ const FriendRequests = () => {
   );
 };
 
-export default FriendRequests;
+export default Friends;

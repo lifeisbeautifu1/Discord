@@ -22,6 +22,8 @@ export type FriendsState = {
   friends: Array<Friend>;
   isModalOpen: boolean;
   u_name: string;
+  isRemoveFriendModal: boolean;
+  friendToDelete: Friend | null;
 };
 
 const initialState: FriendsState = {
@@ -34,6 +36,8 @@ const initialState: FriendsState = {
   friends: [],
   isModalOpen: false,
   u_name: "",
+  isRemoveFriendModal: false,
+  friendToDelete: null,
 };
 
 export const friendsSlice = createSlice({
@@ -46,6 +50,12 @@ export const friendsSlice = createSlice({
     reset: (state) => {
       state.error = false;
       state.success = false;
+    },
+    setRemoveFriendModal: (state, action: PayloadAction<boolean>) => {
+      state.isRemoveFriendModal = action.payload;
+    },
+    setFriendToDelete: (state, action: PayloadAction<Friend | null>) => {
+      state.friendToDelete = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -175,7 +185,10 @@ export const friendsSlice = createSlice({
   },
 });
 
-export const { setModalOpen, reset } = friendsSlice.actions;
+export const { setModalOpen, reset, setRemoveFriendModal, setFriendToDelete } =
+  friendsSlice.actions;
+
+export const selectAllFriends = (state: RootState) => state.friends.friends;
 
 export const selectFriendRequests = (state: RootState) =>
   state.friends.friendRequests;

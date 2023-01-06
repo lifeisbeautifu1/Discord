@@ -37,5 +37,5 @@ export type FriendRequest = {
 export type Friend = {
   id: string;
   sender: User;
-  receiever: User;
+  receiver: User;
 };

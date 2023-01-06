@@ -3,15 +3,15 @@ import { Tooltip } from "../";
 type Props = {
   icon: React.ReactElement;
   tooltip: string;
-  onClick: () => void;
-  hoverColor: string;
+  onClick?: () => void;
+  hoverColor?: string;
 };
 
 const ActionIcon: React.FC<Props> = ({
   icon,
   tooltip,
   onClick,
-  hoverColor,
+  hoverColor = "hover:text-d-gray",
 }) => {
   return (
     <Tooltip text={tooltip}>
