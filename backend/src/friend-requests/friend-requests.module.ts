@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { FriendsService } from "src/friends/friends.service";
 import { UserService } from "src/user/user.service";
-import { FriendRequestController } from "./friend-requests.cotroller";
+import { FriendRequestController } from "./friend-requests.controller";
 import { FriendRequestService } from "./friend-requests.service";
 
 @Module({

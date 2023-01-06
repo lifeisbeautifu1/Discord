@@ -1,7 +1,7 @@
 import { IoSearchOutline } from "react-icons//io5";
 import { RxCross1 } from "react-icons/rx";
 import { useAppSelector } from "../app/hooks";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FriendRequestItem } from "./";
 import { selectFriendRequests } from "../features/friends/friends";
 import { FriendRequest } from "../types";
@@ -37,13 +37,17 @@ const FriendRequests = () => {
     }
   }, [searchTerm]);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
     <div className="flex h-full w-full flex-col text-d-gray">
       <div className="relative my-4 ml-[30px] mr-5 flex items-center rounded bg-d-dark-black py-1.5 px-3">
         <input
           type="text"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleChange}
           placeholder="Search"
           className="w-full border-none bg-transparent outline-none"
         />

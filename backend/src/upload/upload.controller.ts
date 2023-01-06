@@ -12,6 +12,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { createReadStream } from "streamifier";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { AuthenticatedGuard } from "src/auth/utils/guards";
+import { Routes } from "src/utils/constants";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -19,7 +20,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-@Controller("upload")
+@Controller(Routes.UPLOAD)
 export class UploadController {
   @Post("")
   @UseGuards(AuthenticatedGuard)

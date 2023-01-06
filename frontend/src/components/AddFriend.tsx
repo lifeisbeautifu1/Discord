@@ -1,4 +1,4 @@
-import { useState, FormEvent, useRef, ChangeEvent } from "react";
+import { useState, FormEvent, useRef, ChangeEvent, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { reset } from "../features/friends/friends";
 import { sendFriendRequest } from "../features/friends/friends.thunks";
@@ -8,9 +8,7 @@ const AddFriend = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { error, success, u_name } = useAppSelector(
-    (state) => state.friends
-  );
+  const { error, success, u_name } = useAppSelector((state) => state.friends);
 
   const dispatch = useAppDispatch();
 
@@ -21,6 +19,10 @@ const AddFriend = () => {
 
     dispatch(sendFriendRequest(searchTag));
   };
+
+  useEffect(() => {
+    dispatch(reset());
+  }, []);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTag(e.target.value);

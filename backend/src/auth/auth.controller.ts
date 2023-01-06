@@ -21,8 +21,9 @@ import { Response } from "express";
 import { VerifyEmailDto } from "./dtos/verify-email.dto";
 import { ForgotPasswordDto } from "./dtos/forgot-password.dto";
 import { ResetPasswordDto } from "./dtos/reset-password.dto";
+import { Routes } from "src/utils/constants";
 
-@Controller("auth")
+@Controller(Routes.AUTH)
 export class AuthController {
   constructor(private authService: AuthService) {}
 
