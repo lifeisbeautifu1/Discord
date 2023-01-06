@@ -11,6 +11,7 @@ type Props = {
   size?: string;
   text?: string;
   classNames?: string;
+  notifications?: number;
 };
 
 const ServerIcon: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const ServerIcon: React.FC<Props> = ({
   size = "text-[22px]",
   hover = "hover:bg-brand",
   classNames,
+  notifications,
 }) => {
   return (
     <NavLink
@@ -39,6 +41,11 @@ const ServerIcon: React.FC<Props> = ({
     >
       {text}
       {icon}
+      {typeof notifications !== "undefined" && notifications > 0 && (
+        <span className="pill absolute -bottom-1 -right-1 box-content border-4 border-d-dark-black">
+          {notifications > 9 ? "9+" : notifications}
+        </span>
+      )}
       {tooltip && (
         <span className="absolute left-16 z-[20] m-2 min-w-max origin-left scale-0 rounded-md bg-[#111] px-3 py-2 text-sm font-bold text-white shadow-md transition-all duration-100 before:absolute before:top-1/2 before:-left-2.5 before:w-0 before:translate-y-[-50%] before:border-[5px] before:border-solid before:border-t-transparent before:border-l-transparent before:border-b-transparent before:border-r-[#111] before:bg-transparent group-hover:scale-100">
           {tooltip}

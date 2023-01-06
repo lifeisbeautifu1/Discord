@@ -94,7 +94,11 @@
   }
 
   .tab {
-    @apply cursor-pointer rounded border-none py-0.5 px-2 font-medium text-d-gray outline-none hover:bg-d-icon-bg ui-selected:bg-d-icon-bg ui-selected:text-d-white;
+    @apply flex cursor-pointer items-center space-x-2 rounded border-none py-0.5 px-2 font-medium text-d-gray outline-none hover:bg-d-icon-bg ui-selected:bg-d-icon-bg ui-selected:text-d-white;
+  }
+
+  .pill {
+    @apply flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-red-500  text-xs font-bold text-white;
   }
 
   .fr:hover span {

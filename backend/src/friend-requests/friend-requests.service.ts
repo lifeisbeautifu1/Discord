@@ -125,8 +125,8 @@ export class FriendRequestService {
     return updatedFriendRequest;
   }
 
-  getFriendRequests(id: string): Promise<FriendRequest[]> {
-    return this.prisma.friendRequest.findMany({
+  async getFriendRequests(id: string) {
+    const friendRequests = await this.prisma.friendRequest.findMany({
       where: {
         OR: [
           {
@@ -139,6 +139,11 @@ export class FriendRequestService {
           },
         ],
       },
+      orderBy: [
+        {
+          createdAt: "desc",
+        },
+      ],
       include: {
         sender: {
           select: {
@@ -152,6 +157,17 @@ export class FriendRequestService {
         },
       },
     });
+    const incomingFriendRequests = friendRequests.filter(
+      (fr) => fr.senderId !== id,
+    );
+    const outgoingFriendRequests = friendRequests.filter(
+      (fr) => fr.senderId === id,
+    );
+    return {
+      friendRequests,
+      incomingFriendRequests,
+      outgoingFriendRequests,
+    };
   }
 
   isPending(userOneId: string, userTwoId: string): Promise<FriendRequest> {

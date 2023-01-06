@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { useAppDispatch } from "./app/hooks";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { getMe } from "./features/auth/auth.thunks";
 import { Layout, Protected } from "./components";
 import {
@@ -12,13 +12,27 @@ import {
   VerifyEmail,
   ResetPassword,
 } from "./pages";
+import { selectIsAuth } from "./features/auth/auth";
+import {
+  getFriendRequests,
+  getFriends,
+} from "./features/friends/friends.thunks";
 
 function App() {
+  const isAuth = useAppSelector(selectIsAuth);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getMe());
   }, []);
+
+  useEffect(() => {
+    if (isAuth) {
+      dispatch(getFriendRequests());
+      dispatch(getFriends());
+    }
+  }, [isAuth]);
 
   return (
     <Routes>

@@ -1,10 +1,15 @@
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { ActionIcon } from "./icons";
 import { RxCross1 } from "react-icons/rx";
 import { IoCheckmark } from "react-icons/io5";
 import { selectUser } from "../features/auth/auth";
 import { FriendRequest } from "../types";
 import { Avatar } from "./";
+import {
+  cancelFriendRequest,
+  rejectFriendRequest,
+  acceptFriendRequest,
+} from "../features/friends/friends.thunks";
 
 type Props = {
   friendRequest: FriendRequest;
@@ -12,6 +17,8 @@ type Props = {
 
 const FriendRequestItem: React.FC<Props> = ({ friendRequest }) => {
   const user = useAppSelector(selectUser);
+
+  const dispatch = useAppDispatch();
 
   const isSender = friendRequest.senderId === user?.id;
 
@@ -36,7 +43,9 @@ const FriendRequestItem: React.FC<Props> = ({ friendRequest }) => {
       <div className="ml-auto flex items-center space-x-3">
         {isSender ? (
           <ActionIcon
-            onClick={() => {}}
+            onClick={() => {
+              dispatch(cancelFriendRequest(friendRequest.id));
+            }}
             tooltip="Cancel"
             hoverColor="hover:text-red-500"
             icon={<RxCross1 />}
@@ -44,13 +53,17 @@ const FriendRequestItem: React.FC<Props> = ({ friendRequest }) => {
         ) : (
           <>
             <ActionIcon
-              onClick={() => {}}
+              onClick={() => {
+                dispatch(acceptFriendRequest(friendRequest.id));
+              }}
               hoverColor="hover:text-green-500"
               tooltip="Accept"
               icon={<IoCheckmark />}
             />
             <ActionIcon
-              onClick={() => {}}
+              onClick={() => {
+                dispatch(rejectFriendRequest(friendRequest.id));
+              }}
               hoverColor="hover:text-red-500"
               tooltip="Ignore"
               icon={<RxCross1 />}

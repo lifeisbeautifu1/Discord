@@ -2,12 +2,17 @@ import { FaDiscord, FaCompass } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
 import { ServerIcon } from "./icons";
 import { TbDownload } from "react-icons/tb";
+import { useAppSelector } from "../app/hooks";
 
 const Navbar: React.FC = () => {
+  const { incomingFriendRequests } = useAppSelector(
+    (state) => state.friends
+  );
   return (
     <nav className="flex h-full w-[72px] flex-shrink-0 select-none flex-col items-center space-y-2 bg-d-dark-black py-3">
       <ServerIcon
         to="/channels/@me"
+        notifications={incomingFriendRequests.length}
         main
         icon={<FaDiscord />}
         tooltip="Direct Messages"

@@ -8,21 +8,15 @@ import {
 import { HiChatAlt, HiInbox, HiQuestionMarkCircle } from "react-icons/hi";
 import { Tab } from "@headlessui/react";
 import { FriendIcon } from "../components/icons";
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { getFriendRequests } from "../features/friendRequests/friendRequests.thunks";
-import { selectFriendRequests } from "../features/friendRequests/friendRequest";
+import { useState } from "react";
+import { useAppSelector } from "../app/hooks";
 
 const HomePage = () => {
   const [selectedIndex, setSelectedIndex] = useState(4);
 
-  const friendRequests = useAppSelector(selectFriendRequests);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(getFriendRequests());
-  }, []);
+  const { friendRequests, incomingFriendRequests } = useAppSelector(
+    (state) => state.friends
+  );
 
   return (
     <div className="flex w-full flex-col overflow-hidden">
@@ -40,7 +34,16 @@ const HomePage = () => {
                 <Tab.List className="flex items-center space-x-4 overflow-hidden pl-4">
                   <Tab className="tab">Online</Tab>
                   <Tab className="tab">All</Tab>
-                  <Tab className="tab">Pending</Tab>
+                  <Tab className="tab">
+                    <span>Pending</span>
+                    {incomingFriendRequests.length > 0 && (
+                      <span className="pill">
+                        {incomingFriendRequests.length > 9
+                          ? "9+"
+                          : incomingFriendRequests.length}
+                      </span>
+                    )}
+                  </Tab>
                   <Tab className="tab">Blocked</Tab>
                   <Tab className="min-w-max cursor-pointer overflow-hidden rounded border-none bg-d-green py-0.5 px-2  font-medium text-d-white outline-none ui-selected:bg-transparent ui-selected:text-green-500">
                     Add Friend
@@ -95,7 +98,7 @@ const HomePage = () => {
                   </div>
                 </Tab.Panel>
                 <Tab.Panel className="flex h-full w-full items-center justify-center">
-                  {friendRequests ? (
+                  {friendRequests.length > 0 ? (
                     <FriendRequests />
                   ) : (
                     <div className="flex flex-col items-center">

@@ -1,8 +1,12 @@
 import { FriendIcon } from "./icons";
 import { AiOutlinePlus } from "react-icons/ai";
 import { Tooltip, UserInfo, Skeleton } from "./";
+import { useAppSelector } from "../app/hooks";
 
 const SidebarFriends = () => {
+  const { incomingFriendRequests } = useAppSelector(
+    (state) => state.friends
+  );
   return (
     <aside
       className="relative
@@ -17,6 +21,13 @@ const SidebarFriends = () => {
         <button className="flex w-full items-center rounded bg-d-icon-bg px-3 py-2 text-left font-medium text-d-white transition hover:bg-d-icon-bg-hover">
           <FriendIcon className="mr-3.5 h-6 w-6" />
           Friends
+          {incomingFriendRequests.length > 0 && (
+            <span className="pill ml-auto">
+              {incomingFriendRequests.length > 9
+                ? "9+"
+                : incomingFriendRequests.length}
+            </span>
+          )}
         </button>
       </div>
       <UserInfo />

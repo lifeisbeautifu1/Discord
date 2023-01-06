@@ -1,8 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectFriendRequestIsModalOpen } from "../../features/friendRequests/friendRequest";
-import { setModalOpen } from "../../features/friendRequests/friendRequest";
+import { selectFriendRequestIsModalOpen } from "../../features/friends/friends";
+import { setModalOpen } from "../../features/friends/friends";
 
 function FriendRequestModal() {
   const isModalOpen = useAppSelector(selectFriendRequestIsModalOpen);

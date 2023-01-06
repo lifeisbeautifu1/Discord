@@ -33,3 +33,9 @@ export type FriendRequest = {
   receiver: User;
   status: "pending" | "accepted" | "rejected";
 };
+
+export type Friend = {
+  id: string;
+  sender: User;
+  receiever: User;
+};
