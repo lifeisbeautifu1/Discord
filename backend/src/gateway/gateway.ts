@@ -1,11 +1,14 @@
-import { OnModuleInit } from "@nestjs/common";
 import {
   MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
 import { Server } from "socket.io";
+import { AuthenticatedSocket } from "src/utils/interfaces";
+import { GatewaySessionManager } from "./gateway.session";
 
 @WebSocketGateway({
   cors: {
@@ -13,19 +16,28 @@ import { Server } from "socket.io";
     credentials: true,
   },
 })
-export class MyGateway implements OnModuleInit {
+export class MessagingGateway
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
+  constructor(private readonly sessions: GatewaySessionManager) {}
+
   @WebSocketServer()
   server: Server;
 
-  onModuleInit() {
-    this.server.on("connection", (socket) => {
-      console.log(socket.id);
-    });
+  handleConnection(socket: AuthenticatedSocket) {
+    console.log("Incoming connection");
+    this.sessions.setUserSocket(socket.userId, socket);
+    socket.emit("connected", {});
   }
 
-  @SubscribeMessage("newMessage")
-  onNewMessage(@MessageBody() body) {
-    console.log(body);
-    this.server.emit("onMessage", body);
+  handleDisconnect(socket: any) {
+    console.log("handleDisconnect");
+    this.sessions.removeUserSocket(socket.userId);
   }
+
+  // @SubscribeMessage("newMessage")
+  // onNewMessage(@MessageBody() body) {
+  //   console.log(body);
+  //   this.server.emit("onMessage", body);
+  // }
 }

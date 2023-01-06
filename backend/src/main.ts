@@ -5,13 +5,18 @@ import IoRedis from "ioredis";
 import * as connectRedis from "connect-redis";
 import * as session from "express-session";
 import * as passport from "passport";
+import { WebsocketAdapter } from "./gateway/gateway.adapter";
 
 const RedisStore = connectRedis(session);
 
-const redisClient = new IoRedis("redis://localhost:6379");
+export const redisClient = new IoRedis("redis://localhost:6379");
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const adapter = new WebsocketAdapter(app);
+
+  app.useWebSocketAdapter(adapter);
 
   app.enableCors({
     credentials: true,
@@ -27,6 +32,7 @@ async function bootstrap() {
 
   app.use(
     session({
+      name: "sid",
       secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,

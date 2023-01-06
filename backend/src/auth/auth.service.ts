@@ -5,8 +5,9 @@ import { ConfigService } from "@nestjs/config";
 import { MailgunService } from "src/mailgun/mailgun.service";
 import { User } from "@prisma/client";
 import { v4 as uuid } from "uuid";
-import IoRedis, { Redis } from "ioredis";
+import { Redis } from "ioredis";
 import * as argon from "argon2";
+import { redisClient } from "src/main";
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,7 @@ export class AuthService {
     private config: ConfigService,
     private mailgun: MailgunService,
   ) {
-    this.redis = new IoRedis("redis://localhost:6379");
+    this.redis = redisClient;
   }
 
   async register(dto: CreateUserDto) {
