@@ -43,7 +43,6 @@ npx prisma db push
    MAILGUN_DOMAIN=
 
    PREFIX=
-
    ```
 
    - **`DATABASE_URL`** The hostname for your PostgreSQL database server (you can use the one from the example file)
@@ -57,7 +56,7 @@ npx prisma db push
 
 9. Run `npm run start:dev` to start the project in development mode.
 
-## Setting up the Backend
+## Setting up the Frontend
 
 1. Change directory to frontend
 2. Run `npm install` to install dependencies.
