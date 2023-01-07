@@ -2,6 +2,67 @@
 
 > Note, this project is under construction 🚧 🏗️ ⛔
 
+# Installation & Setup
+
+## Setting up the Backend
+
+1. Clone the repository.
+2. Change directory to backend
+3. Run `npm install` to install dependencies.
+4. Install Docker for your operating system.
+5. Install the [Docker Compose](https://docs.docker.com/compose/install/) tool.
+6. Run docker-compose
+
+```
+docker-compose up -d
+```
+
+This will start container with PostgreSQL, Redis and Redis Commander.
+
+7. Run the following command
+
+```
+npx prisma db push
+```
+
+8. Create a `.env` file in the root directory and paste the following:
+
+   ```
+   DATABASE_URL=
+
+   SESSION_SECRET=
+
+   CLOUDINARY_CLOUD_NAME=
+
+   CLOUDINARY_API_KEY=
+
+   CLOUDINARY_API_SECRET=
+
+   MAILGUN_API_KEY=
+
+   MAILGUN_DOMAIN=
+
+   PREFIX=
+
+   ```
+
+   - **`DATABASE_URL`** The hostname for your PostgreSQL database server (you can use the one from the example file)
+   - **`SESSION_SECRET`** Can be any string that can be used to encrypt & decrypt your cookie for sessions.
+   - **`CLOUDINARY_CLOUD_NAME`** Cloudinary API Credentials
+   - **`CLOUDINARY_API_KEY`** Cloudinary API Credentials
+   - **`CLOUDINARY_API_SECRET`** Cloudinary API Credentials
+   - **`MAILGUN_API_KEY`** Mailgun API Credentials
+   - **`MAILGUN_DOMAIN`** Mailgun API Credentials
+   - **`PREFIX`** Can be any string that can be used to encrypt & decrypt your redis data
+
+9. Run `npm run start:dev` to start the project in development mode.
+
+## Setting up the Backend
+
+1. Change directory to frontend
+2. Run `npm install` to install dependencies.
+3. Run `npm run dev` to start the project in development mode.
+
 ## MVP
 
 As a user, I can
