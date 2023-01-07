@@ -23,4 +23,6 @@ export enum Routes {
   FRIENDS = "friends",
   FRIEND_REQUESTS = "friends/requests",
   UPLOAD = "upload",
+  CONVERSATIONS = "conversations",
+  MESSAGES = "conversations/:id/messages",
 }

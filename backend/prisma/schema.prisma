@@ -24,6 +24,10 @@ model User {
     receivedFriendRequests FriendRequest[] @relation("receiver")
     sendFriends            Friend[]        @relation("sender")
     receivedFriends        Friend[]        @relation("receiver")
+    messages               Message[]
+
+    createdConversations  Conversation[] @relation("creator")
+    acceptedConversations Conversation[] @relation("recipient")
 
     @@map("users")
 }
@@ -56,4 +60,39 @@ model Friend {
     createdAt DateTime @default(now())
 
     @@map("friends")
+}
+
+model Message {
+    id String @id @default(uuid())
+
+    content String
+
+    authorId String
+    author   User?  @relation(fields: [authorId], references: [id])
+
+    conversationId String
+    conversation   Conversation? @relation(fields: [conversationId], references: [id])
+
+    lastInConversation Conversation? @relation("last_message_sent")
+
+    createdAt DateTime @default(now())
+}
+
+model Conversation {
+    id String @id @default(uuid())
+
+    creatorId String
+    creator   User?  @relation(name: "creator", fields: [creatorId], references: [id])
+
+    recipientId String
+    recipient   User?  @relation(name: "recipient", fields: [recipientId], references: [id])
+
+    createdAt DateTime @default(now())
+
+    messages Message[]
+
+    messageId       String?  @unique
+    lastMessageSent Message? @relation(name: "last_message_sent", fields: [messageId], references: [id])
+
+    lastMessageSentAt DateTime @updatedAt
 }

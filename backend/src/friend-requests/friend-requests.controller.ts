@@ -17,6 +17,7 @@ import { SendFriendRequestDto } from "./dtos/CreateFriendDto";
 import { FriendRequestService } from "./friend-requests.service";
 import { Routes, ServerEvents } from "src/utils/constants";
 
+@UseGuards(AuthenticatedGuard)
 @Controller(Routes.FRIEND_REQUESTS)
 export class FriendRequestController {
   constructor(
@@ -25,7 +26,6 @@ export class FriendRequestController {
   ) {}
 
   @Throttle(3, 10)
-  @UseGuards(AuthenticatedGuard)
   @Post()
   async sendFriendRequest(
     @Body() dto: SendFriendRequestDto,
@@ -36,14 +36,12 @@ export class FriendRequestController {
     return response;
   }
 
-  @UseGuards(AuthenticatedGuard)
   @Get()
   async getFriendRequests(@GetUser() user: User) {
     return await this.friendRequestsService.getFriendRequests(user.id);
   }
 
   @Throttle(3, 10)
-  @UseGuards(AuthenticatedGuard)
   @Delete(":id/cancel")
   async cancelFriendRequest(@GetUser() user: User, @Param("id") id: string) {
     const response = await this.friendRequestsService.cancel(user, id);
@@ -52,7 +50,6 @@ export class FriendRequestController {
   }
 
   @Throttle(3, 10)
-  @UseGuards(AuthenticatedGuard)
   @Patch(":id/accept")
   async acceptFriendRequest(@GetUser() user: User, @Param("id") id: string) {
     const response = await this.friendRequestsService.accept(user, id);
@@ -61,7 +58,6 @@ export class FriendRequestController {
   }
 
   @Throttle(3, 10)
-  @UseGuards(AuthenticatedGuard)
   @Patch(":id/reject")
   async rejectFriendRequest(@GetUser() user: User, @Param("id") id: string) {
     const response = await this.friendRequestsService.reject(user, id);

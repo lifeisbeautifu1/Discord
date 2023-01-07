@@ -20,10 +20,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+@UseGuards(AuthenticatedGuard)
 @Controller(Routes.UPLOAD)
 export class UploadController {
   @Post("")
-  @UseGuards(AuthenticatedGuard)
   @UseInterceptors(FileInterceptor("file"))
   async uploadImage(
     @Req() req: Request,
@@ -42,7 +42,6 @@ export class UploadController {
     return result;
   }
 
-  @UseGuards(AuthenticatedGuard)
   @Delete(":id")
   async deleteImage(@Param("id") id: string) {
     await cloudinary.uploader.destroy(id, function (result) {

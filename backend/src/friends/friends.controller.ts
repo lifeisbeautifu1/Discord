@@ -6,6 +6,7 @@ import { Routes, ServerEvents } from "src/utils/constants";
 import { GetUser } from "src/utils/decorators";
 import { FriendsService } from "./friends.service";
 
+@UseGuards(AuthenticatedGuard)
 @Controller(Routes.FRIENDS)
 export class FriendsController {
   constructor(
@@ -13,13 +14,11 @@ export class FriendsController {
     private event: EventEmitter2,
   ) {}
 
-  @UseGuards(AuthenticatedGuard)
   @Get()
   async getFriends(@GetUser() user: User) {
     return await this.friendsService.getFriends(user.id);
   }
 
-  @UseGuards(AuthenticatedGuard)
   @Delete(":id/delete")
   async deleteFriend(@Param("id") id: string, @GetUser() user: User) {
     const friend = await this.friendsService.deleteFriend(id, user);

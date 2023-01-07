@@ -12,6 +12,8 @@ import { UploadModule } from "./upload/upload.module";
 import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
 import { UserModule } from "./user/user.module";
 import { GatewayModule } from "./gateway/gateway.module";
+import { ConversationsModule } from "./conversations/conversations.module";
+import { MessagesModule } from "./messages/messages.module";
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { GatewayModule } from "./gateway/gateway.module";
     UploadModule,
     FriendRequestsModule,
     FriendsModule,
+    ConversationsModule,
+    MessagesModule,
   ],
   providers: [
     {
