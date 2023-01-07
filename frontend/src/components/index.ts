@@ -11,5 +11,6 @@ export { default as EmailVerifyPopup } from "./EmailVerifyPopup";
 export { default as AddFriend } from "./AddFriend";
 export { default as FriendRequests } from "./FriendRequests";
 export { default as Friends } from "./Friends";
+export { default as OnlineFriends } from "./OnlineFriends";
 export { default as FriendRequestItem } from "./FriendRequestItem";
 export { default as FriendItem } from "./FriendItem";

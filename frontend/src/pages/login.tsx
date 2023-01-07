@@ -1,10 +1,11 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { BeatLoader } from "react-spinners";
 import { login, passwordEmail } from "../features/auth/auth.thunks";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { setErrors } from "../features/auth/auth";
 import { AuthModal } from "../components";
+import { useSocketContext } from "../contexts/SocketContext";
 
 const Login: React.FC = () => {
   const { errors, loading, isAuth, isAuthModalOpen } = useAppSelector(
@@ -16,12 +17,23 @@ const Login: React.FC = () => {
     password: "",
   });
 
+  const socket = useSocketContext();
+
+  const location = useLocation();
+
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuth) navigate("/channels/@me");
+    if (isAuth) {
+      socket.connect();
+      if (location?.state?.from?.pathname) {
+        navigate(location.state.from.pathname);
+      } else {
+        navigate("/channels/@me");
+      }
+    }
   }, [isAuth]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

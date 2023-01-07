@@ -1,37 +1,47 @@
 import { Injectable } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
-import { FriendRequest } from "@prisma/client";
+import { Friend, FriendRequest } from "@prisma/client";
+import { MessagingGateway } from "src/gateway/gateway";
 import { ServerEvents, WebsocketEvents } from "src/utils/constants";
 
 @Injectable()
 export class FriendRequestsEvents {
-  constructor() {}
+  constructor(private readonly gateway: MessagingGateway) {}
 
   @OnEvent(ServerEvents.FRIEND_REQUEST_CREATE)
   friendRequestCreate(payload: FriendRequest) {
     console.log(ServerEvents.FRIEND_REQUEST_CREATE);
-    // TODO get socket for the receiver
-    // receiverSocket.emit(WebsocketEvents.FRIEND_REQUEST_RECEIVED, payload)
+    const receiverSocket = this.gateway.sessions.getUserSocket(
+      payload.receiverId,
+    );
+    receiverSocket?.emit(WebsocketEvents.FRIEND_REQUEST_RECEIVED, payload);
   }
 
   @OnEvent(ServerEvents.FRIEND_REQUEST_CANCEL)
   handleFriendRequestCancel(payload: FriendRequest) {
     console.log(ServerEvents.FRIEND_REQUEST_CANCEL);
-    // TODO get socket for the receiver
-    // receiverSocket.emit(WebsocketEvents.FRIEND_REQUEST_CANCELLED, payload)
+    const receiverSocket = this.gateway.sessions.getUserSocket(
+      payload.receiverId,
+    );
+    receiverSocket?.emit(WebsocketEvents.FRIEND_REQUEST_CANCELLED, payload);
   }
 
   @OnEvent(ServerEvents.FRIEND_REQUEST_ACCEPTED)
-  handleFriendRequestAccepted() {
+  handleFriendRequestAccepted(payload: {
+    newFriend: Friend;
+    friendRequest: FriendRequest;
+  }) {
     console.log(ServerEvents.FRIEND_REQUEST_ACCEPTED);
-    // !TODO get socket for the receiver
-    // senderSocket?.emit(WebsocketEvents.FRIEND_REQUEST_ACCEPTED, payload)
+    const senderSocket = this.gateway.sessions.getUserSocket(
+      payload.friendRequest.senderId,
+    );
+    senderSocket?.emit(WebsocketEvents.FRIEND_REQUEST_ACCEPTED, payload);
   }
 
   @OnEvent(ServerEvents.FRIEND_REQUEST_REJECTED)
   handleFriendRequestRejected(payload: FriendRequest) {
     console.log(ServerEvents.FRIEND_REQUEST_REJECTED);
-    // !TODO get socket for the receiver
-    // senderSocket?.emit(WebsocketEvents.FRIEND_REQUEST_REJECTED, payload)
+    const senderSocket = this.gateway.sessions.getUserSocket(payload.senderId);
+    senderSocket?.emit(WebsocketEvents.FRIEND_REQUEST_REJECTED, payload);
   }
 }

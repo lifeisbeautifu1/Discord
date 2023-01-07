@@ -6,27 +6,19 @@ import { FriendItem } from "./";
 import { Friend } from "../types";
 import { selectUser } from "../features/auth/auth";
 
-const Friends = () => {
-  const { onlineFriends, offlineFriends } = useAppSelector(
-    (state) => state.friends
-  );
+const OnlineFriends = () => {
+  const { onlineFriends } = useAppSelector((state) => state.friends);
 
   const user = useAppSelector(selectUser);
 
   const [localOnlineFriends, setLocalOnlineFriends] =
     useState<Array<Friend>>(onlineFriends);
-  const [localOfflineFriends, setLocalOfflineFriends] =
-    useState<Array<Friend>>(offlineFriends);
 
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     setLocalOnlineFriends(onlineFriends);
   }, [onlineFriends]);
-
-  useEffect(() => {
-    setLocalOfflineFriends(offlineFriends);
-  }, [offlineFriends]);
 
   useEffect(() => {
     if (searchTerm.trim()) {
@@ -39,18 +31,8 @@ const Friends = () => {
             .includes(searchTerm.toLowerCase());
         })
       );
-      setLocalOfflineFriends(
-        offlineFriends.filter((friend) => {
-          const isSender = friend.sender?.id === user?.id;
-          const toShow = isSender ? friend.receiver : friend.sender;
-          return toShow?.username
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
-        })
-      );
     } else {
       setLocalOnlineFriends(onlineFriends);
-      setLocalOfflineFriends(offlineFriends);
     }
   }, [searchTerm]);
 
@@ -75,10 +57,10 @@ const Friends = () => {
       </div>
       <div className="ml-[30px] mr-5 mt-2">
         <h2 className="text-xs font-semibold uppercase">
-          All Friends – {localOnlineFriends.length + localOfflineFriends.length}
+          Online Friends – {localOnlineFriends.length}
         </h2>
       </div>
-      {localOnlineFriends.length + localOfflineFriends.length === 0 ? (
+      {localOnlineFriends.length === 0 ? (
         <div className="flex h-full w-full items-center justify-center">
           <div className="flex flex-col items-center">
             <div className="h-[220px] w-[420px]">
@@ -97,13 +79,10 @@ const Friends = () => {
           {localOnlineFriends.map((friend) => (
             <FriendItem online={true} key={friend.id} friend={friend} />
           ))}
-          {localOfflineFriends.map((friend) => (
-            <FriendItem online={false} key={friend.id} friend={friend} />
-          ))}
         </ul>
       )}
     </div>
   );
 };
 
-export default Friends;
+export default OnlineFriends;

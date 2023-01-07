@@ -6,6 +6,10 @@ export enum ServerEvents {
   FRIEND_REMOVED = "friend.removed",
 }
 
+export enum ClientEvents {
+  GET_ONLINE_FRIENDS = "getOnlineFriends",
+}
+
 export enum WebsocketEvents {
   FRIEND_REQUEST_RECEIVED = "onFriendRequestReceived",
   FRIEND_REQUEST_CANCELLED = "onFriendRequestCancelled",

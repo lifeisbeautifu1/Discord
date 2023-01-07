@@ -54,7 +54,7 @@ const Landing = () => {
             />
             <div
               className={`absolute top-0 bottom-0 right-[-300px] z-[20] flex h-screen flex-col items-start rounded-tl-lg rounded-bl-lg bg-white p-6 py-8 text-d-black transition-all duration-300 ease-out lg:hidden ${
-                isOpen && "right-0"
+                isOpen && "right-[0px]"
               }`}
             >
               <Link

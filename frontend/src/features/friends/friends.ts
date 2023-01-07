@@ -20,6 +20,8 @@ export type FriendsState = {
   incomingFriendRequests: Array<FriendRequest>;
   outgoingFriendRequests: Array<FriendRequest>;
   friends: Array<Friend>;
+  onlineFriends: Array<Friend>;
+  offlineFriends: Array<Friend>;
   isModalOpen: boolean;
   u_name: string;
   isRemoveFriendModal: boolean;
@@ -34,6 +36,8 @@ const initialState: FriendsState = {
   incomingFriendRequests: [],
   outgoingFriendRequests: [],
   friends: [],
+  onlineFriends: [],
+  offlineFriends: [],
   isModalOpen: false,
   u_name: "",
   isRemoveFriendModal: false,
@@ -56,6 +60,49 @@ export const friendsSlice = createSlice({
     },
     setFriendToDelete: (state, action: PayloadAction<Friend | null>) => {
       state.friendToDelete = action.payload;
+    },
+    addIncomingFriendRequest: (state, action: PayloadAction<FriendRequest>) => {
+      state.friendRequests.unshift(action.payload);
+      state.incomingFriendRequests.unshift(action.payload);
+    },
+    removeIncomingFriendRequest: (
+      state,
+      action: PayloadAction<FriendRequest>
+    ) => {
+      state.friendRequests = state.friendRequests.filter(
+        (fr) => fr.id !== action.payload.id
+      );
+      state.incomingFriendRequests = state.incomingFriendRequests.filter(
+        (fr) => fr.id !== action.payload.id
+      );
+    },
+    removeOutgoingFriendRequest: (
+      state,
+      action: PayloadAction<FriendRequest>
+    ) => {
+      state.friendRequests = state.friendRequests.filter(
+        (fr) => fr.id !== action.payload.id
+      );
+      state.outgoingFriendRequests = state.outgoingFriendRequests.filter(
+        (fr) => fr.id !== action.payload.id
+      );
+    },
+    addFriend: (state, action: PayloadAction<Friend>) => {
+      state.friends.unshift(action.payload);
+    },
+    removeFriend: (state, action: PayloadAction<Friend>) => {
+      state.friends = state.friends.filter(
+        (friend) => friend.id !== action.payload.id
+      );
+    },
+    setOnlineFriends: (state, action: PayloadAction<Array<Friend>>) => {
+      state.onlineFriends = action.payload;
+    },
+    setOfflineFriends: (state) => {
+      state.offlineFriends = state.friends.filter(
+        (friend) =>
+          !state.onlineFriends.map((friend) => friend.id).includes(friend.id)
+      );
     },
   },
   extraReducers: (builder) => {
@@ -185,8 +232,19 @@ export const friendsSlice = createSlice({
   },
 });
 
-export const { setModalOpen, reset, setRemoveFriendModal, setFriendToDelete } =
-  friendsSlice.actions;
+export const {
+  setModalOpen,
+  reset,
+  setRemoveFriendModal,
+  setFriendToDelete,
+  addIncomingFriendRequest,
+  removeIncomingFriendRequest,
+  removeOutgoingFriendRequest,
+  addFriend,
+  removeFriend,
+  setOnlineFriends,
+  setOfflineFriends,
+} = friendsSlice.actions;
 
 export const selectAllFriends = (state: RootState) => state.friends.friends;
 

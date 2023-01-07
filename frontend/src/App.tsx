@@ -8,7 +8,7 @@ import {
   Login,
   Register,
   Home,
-  Channel,
+  Conversation,
   VerifyEmail,
   ResetPassword,
 } from "./pages";
@@ -17,11 +17,25 @@ import {
   getFriendRequests,
   getFriends,
 } from "./features/friends/friends.thunks";
+import { useSocketContext } from "./contexts/SocketContext";
+import { Friend, FriendRequest } from "./types";
+import { OnFriendRequestAcceptedData } from "./types/onFriendRequestAcceptedData";
+import {
+  addFriend,
+  addIncomingFriendRequest,
+  removeFriend,
+  removeIncomingFriendRequest,
+  removeOutgoingFriendRequest,
+  setOfflineFriends,
+  setOnlineFriends,
+} from "./features/friends/friends";
 
 function App() {
   const isAuth = useAppSelector(selectIsAuth);
 
   const dispatch = useAppDispatch();
+
+  const socket = useSocketContext();
 
   useEffect(() => {
     dispatch(getMe());
@@ -33,6 +47,56 @@ function App() {
       dispatch(getFriends());
     }
   }, [isAuth]);
+
+  useEffect(() => {
+    socket?.emit("getOnlineFriends");
+
+    const interval = setInterval(() => socket?.emit("getOnlineFriends"), 10000);
+
+    socket?.on("onFriendRequestReceived", (data: FriendRequest) => {
+      console.log("someone sent me friend request");
+      dispatch(addIncomingFriendRequest(data));
+    });
+
+    socket?.on(
+      "onFriendRequestAccepted",
+      ({ newFriend, friendRequest }: OnFriendRequestAcceptedData) => {
+        console.log("someone accepted my friend request");
+        dispatch(removeOutgoingFriendRequest(friendRequest));
+        dispatch(addFriend(newFriend));
+      }
+    );
+
+    socket?.on("onFriendRequestRejected", (data: FriendRequest) => {
+      console.log("someone declined my friend request");
+      dispatch(removeOutgoingFriendRequest(data));
+    });
+
+    socket?.on("onFriendRequestCancelled", (data: FriendRequest) => {
+      console.log("someone cancelled friend request to me");
+      dispatch(removeIncomingFriendRequest(data));
+    });
+
+    socket?.on("onFriendRemoved", (data: Friend) => {
+      console.log("someone deleted me from friends");
+      dispatch(removeFriend(data));
+    });
+
+    socket?.on("getOnlineFriends", (data: Array<Friend>) => {
+      console.log("Received online friends: ", data);
+      dispatch(setOnlineFriends(data));
+      dispatch(setOfflineFriends());
+    });
+
+    return () => {
+      socket.off("onFriendRequestCancelled");
+      socket.off("onFriendRequestRejected");
+      socket.off("onFriendRequestAccepted");
+      socket.off("onFriendRequestReceived");
+      socket.off("onFriendRemoved");
+      clearInterval(interval);
+    };
+  }, [socket]);
 
   return (
     <Routes>
@@ -51,10 +115,10 @@ function App() {
           }
         />
         <Route
-          path="/channels/:id"
+          path="/channels/@me/:id"
           element={
             <Protected>
-              <Channel />
+              <Conversation />
             </Protected>
           }
         />

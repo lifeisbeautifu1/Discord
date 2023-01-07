@@ -5,6 +5,7 @@ import {
   AddFriend,
   FriendRequests,
   Friends,
+  OnlineFriends,
 } from "../components";
 import { HiChatAlt, HiInbox, HiQuestionMarkCircle } from "react-icons/hi";
 import { Tab } from "@headlessui/react";
@@ -15,12 +16,11 @@ import { useAppSelector } from "../app/hooks";
 const HomePage = () => {
   const [selectedIndex, setSelectedIndex] = useState(4);
 
-  const { friendRequests, incomingFriendRequests, friends } = useAppSelector(
-    (state) => state.friends
-  );
+  const { friendRequests, incomingFriendRequests, friends, onlineFriends } =
+    useAppSelector((state) => state.friends);
 
   return (
-    <div className="flex w-full flex-col overflow-hidden">
+    <div className="flex w-full select-none flex-col overflow-hidden">
       <EmailVerifyPopup />
       <div className="flex h-full w-full">
         <SidebarFriends />
@@ -70,17 +70,21 @@ const HomePage = () => {
             <main className="flex h-full w-full">
               <Tab.Panels className="h-full w-full lg:flex-[0.7]">
                 <Tab.Panel className="flex h-full w-full items-center justify-center">
-                  <div className="flex flex-col items-center">
-                    <div className="h-[220px] w-[420px]">
-                      <img
-                        src="/images/no-friends-online-bg.svg"
-                        alt="no friends online right now"
-                      />
+                  {onlineFriends.length > 0 ? (
+                    <OnlineFriends />
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <div className="h-[220px] w-[420px]">
+                        <img
+                          src="/images/no-friends-online-bg.svg"
+                          alt="no friends online right now"
+                        />
+                      </div>
+                      <p className="mt-8 text-[#a3a6aa]">
+                        No one's around to play with Wumpus.
+                      </p>
                     </div>
-                    <p className="mt-8 text-[#a3a6aa]">
-                      No one's around to play with Wumpus.
-                    </p>
-                  </div>
+                  )}
                 </Tab.Panel>
                 <Tab.Panel className="flex h-full w-full items-center justify-center">
                   {friends.length > 0 ? (

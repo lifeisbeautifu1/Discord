@@ -47,6 +47,11 @@ export class FriendRequestService {
             ...userSelectedFields,
           },
         },
+        sender: {
+          select: {
+            ...userSelectedFields,
+          },
+        },
       },
     });
 
@@ -84,6 +89,18 @@ export class FriendRequestService {
       data: {
         status: "accepted",
       },
+      include: {
+        receiver: {
+          select: {
+            ...userSelectedFields,
+          },
+        },
+        sender: {
+          select: {
+            ...userSelectedFields,
+          },
+        },
+      },
     });
     const newFriend = await this.prisma.friend.create({
       data: {
@@ -91,6 +108,11 @@ export class FriendRequestService {
         receiverId: friendRequest.receiverId,
       },
       include: {
+        receiver: {
+          select: {
+            ...userSelectedFields,
+          },
+        },
         sender: {
           select: {
             ...userSelectedFields,

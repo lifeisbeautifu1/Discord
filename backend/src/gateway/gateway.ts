@@ -1,4 +1,5 @@
 import {
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -7,19 +8,24 @@ import {
   WebSocketServer,
 } from "@nestjs/websockets";
 import { Server } from "socket.io";
+import { FriendsService } from "src/friends/friends.service";
+import { ClientEvents } from "src/utils/constants";
 import { AuthenticatedSocket } from "src/utils/interfaces";
 import { GatewaySessionManager } from "./gateway.session";
 
 @WebSocketGateway({
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
     credentials: true,
   },
 })
 export class MessagingGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private readonly sessions: GatewaySessionManager) {}
+  constructor(
+    readonly sessions: GatewaySessionManager,
+    private readonly friendsService: FriendsService,
+  ) {}
 
   @WebSocketServer()
   server: Server;
@@ -30,14 +36,25 @@ export class MessagingGateway
     socket.emit("connected", {});
   }
 
-  handleDisconnect(socket: any) {
+  handleDisconnect(socket: AuthenticatedSocket) {
     console.log("handleDisconnect");
     this.sessions.removeUserSocket(socket.userId);
   }
 
-  // @SubscribeMessage("newMessage")
-  // onNewMessage(@MessageBody() body) {
-  //   console.log(body);
-  //   this.server.emit("onMessage", body);
-  // }
+  @SubscribeMessage(ClientEvents.GET_ONLINE_FRIENDS)
+  async handleFriendListRetrieve(
+    @MessageBody() body: any,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    const { userId } = socket;
+    if (userId) {
+      const friends = await this.friendsService.getFriends(userId);
+      const onlineFriends = friends.filter((friend) =>
+        this.sessions.getUserSocket(
+          userId === friend.receiverId ? friend.senderId : friend.receiverId,
+        ),
+      );
+      socket.emit(ClientEvents.GET_ONLINE_FRIENDS, onlineFriends);
+    }
+  }
 }

@@ -13,9 +13,10 @@ import {
 
 type Props = {
   friend: Friend;
+  online?: boolean;
 };
 
-const FriendItem: React.FC<Props> = ({ friend }) => {
+const FriendItem: React.FC<Props> = ({ friend, online = false }) => {
   const user = useAppSelector(selectUser);
 
   const dispatch = useAppDispatch();
@@ -32,7 +33,7 @@ const FriendItem: React.FC<Props> = ({ friend }) => {
   return (
     <li className="fr relative ml-[30px] mr-5 flex h-[62px] cursor-pointer items-center border-t border-d-icon-bg hover:ml-5 hover:mr-2.5 hover:rounded-lg hover:border-t-transparent hover:bg-d-icon-bg hover:py-4 hover:px-2.5">
       <div className="flex items-center">
-        <Avatar />
+        <Avatar online={online} offline={!online} />
         <div className="ml-3 flex flex-col justify-center">
           <h2 className="font-semibold text-d-white">
             {toShow?.username}
@@ -40,7 +41,9 @@ const FriendItem: React.FC<Props> = ({ friend }) => {
               #{toShow?.u_name.split("#")?.[1]}
             </span>
           </h2>
-          <p className="-mt-0.5 text-sm font-medium text-d-gray">Offline</p>
+          <p className="-mt-1 text-sm font-medium text-d-gray">
+            {online ? "Online" : "Offline"}
+          </p>
         </div>
       </div>
       <div className="ml-auto flex items-center space-x-3">
@@ -66,7 +69,7 @@ const FriendItem: React.FC<Props> = ({ friend }) => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute top-1/2 left-1/2 m-1 w-[200px] rounded bg-d-dark-black p-1.5 text-sm font-semibold text-d-gray">
+            <Menu.Items className="absolute top-1/2 left-1/2 z-50 m-1 w-[200px] rounded bg-d-dark-black p-1.5 text-sm font-semibold text-d-gray">
               <Menu.Item>
                 <div className="rounded p-2 transition hover:bg-brand hover:text-d-white">
                   Start Video Call

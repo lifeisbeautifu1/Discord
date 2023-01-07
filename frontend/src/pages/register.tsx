@@ -5,6 +5,7 @@ import { BsCheck2 } from "react-icons/bs";
 import { register } from "../features/auth/auth.thunks";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { BeatLoader } from "react-spinners";
+import { useSocketContext } from "../contexts/SocketContext";
 
 const Register: React.FC = () => {
   const [sendEmails, setSendEmails] = useState(true);
@@ -15,8 +16,14 @@ const Register: React.FC = () => {
 
   const navigate = useNavigate();
 
+  const socket = useSocketContext();
+
   useEffect(() => {
-    if (isAuth) navigate("/channels/@me");
+    if (isAuth) {
+      socket.connect();
+
+      navigate("/channels/@me");
+    }
   }, [isAuth]);
 
   return (
