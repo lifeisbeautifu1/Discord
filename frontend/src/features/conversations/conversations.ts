@@ -30,6 +30,15 @@ export const conversationsSlice = createSlice({
     setError: (state, action: PayloadAction<boolean>) => {
       state.error = action.payload;
     },
+    resetSelectedConversation: (state) => {
+      state.selectedConversation = null;
+    },
+    addConversation: (state, action: PayloadAction<Conversation>) => {
+      state.converastions.push(action.payload);
+    },
+    addMessage: (state, action: PayloadAction<Message>) => {
+      state.messages.unshift(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -89,6 +98,7 @@ export const conversationsSlice = createSlice({
   },
 });
 
-export const { setError } = conversationsSlice.actions;
+export const { setError, addConversation, addMessage, resetSelectedConversation } =
+  conversationsSlice.actions;
 
 export default conversationsSlice.reducer;

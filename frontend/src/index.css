@@ -49,6 +49,7 @@
   html,
   body {
     overflow-x: hidden;
+    margin: 0;
     height: 100%;
     font-family: "Whitney", system-ui, -apple-system, BlinkMacSystemFont,
       "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
@@ -94,7 +95,7 @@
   }
 
   .tab {
-    @apply flex cursor-pointer items-center space-x-2 rounded border-none py-0.5 px-2 font-medium text-d-gray outline-none hover:bg-d-icon-bg ui-selected:bg-d-icon-bg ui-selected:text-d-white;
+    @apply flex cursor-pointer items-center space-x-2 rounded border-none py-0.5 px-2 font-medium text-d-gray outline-none ui-selected:bg-d-icon-bg ui-selected:text-d-white hover:bg-d-icon-bg;
   }
 
   .pill {

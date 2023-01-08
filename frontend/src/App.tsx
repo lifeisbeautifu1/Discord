@@ -8,7 +8,7 @@ import {
   Login,
   Register,
   Home,
-  Conversation,
+  Conversation as ConversationPage,
   VerifyEmail,
   ResetPassword,
 } from "./pages";
@@ -18,8 +18,11 @@ import {
   getFriends,
 } from "./features/friends/friends.thunks";
 import { useSocketContext } from "./contexts/SocketContext";
-import { Friend, FriendRequest } from "./types";
-import { OnFriendRequestAcceptedData } from "./types/onFriendRequestAcceptedData";
+import { Conversation, Friend, FriendRequest } from "./types";
+import {
+  OnFriendRequestAcceptedData,
+  OnMessageData,
+} from "./types/onFriendRequestAcceptedData";
 import {
   addFriend,
   addIncomingFriendRequest,
@@ -30,6 +33,10 @@ import {
   setOnlineFriends,
 } from "./features/friends/friends";
 import { getConversations } from "./features/conversations/conversations.thunks";
+import {
+  addConversation,
+  addMessage,
+} from "./features/conversations/conversations";
 
 function App() {
   const isAuth = useAppSelector(selectIsAuth);
@@ -60,6 +67,11 @@ function App() {
       dispatch(addIncomingFriendRequest(data));
     });
 
+    socket?.on("onConversation", (data: Conversation) => {
+      console.log("just got new conversation");
+      dispatch(addConversation(data));
+    });
+
     socket?.on(
       "onFriendRequestAccepted",
       ({ newFriend, friendRequest }: OnFriendRequestAcceptedData) => {
@@ -69,6 +81,11 @@ function App() {
         socket?.emit("getOnlineFriends");
       }
     );
+
+    socket?.on("onMessage", ({ message, conversation }: OnMessageData) => {
+      console.log("got new message!");
+      dispatch(addMessage(message));
+    });
 
     socket?.on("onFriendRequestRejected", (data: FriendRequest) => {
       console.log("someone declined my friend request");
@@ -98,6 +115,8 @@ function App() {
       socket.off("onFriendRequestAccepted");
       socket.off("onFriendRequestReceived");
       socket.off("onFriendRemoved");
+      socket.off("onConversation");
+      socket.off("onMessage");
       clearInterval(interval);
     };
   }, [socket]);
@@ -122,7 +141,7 @@ function App() {
           path="/channels/@me/:id"
           element={
             <Protected>
-              <Conversation />
+              <ConversationPage />
             </Protected>
           }
         />

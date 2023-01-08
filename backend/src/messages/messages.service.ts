@@ -27,6 +27,13 @@ export class MessagesService {
         conversationId: conversation.id,
         authorId: user.id,
       },
+      include: {
+        author: {
+          select: {
+            ...userSelectedFields,
+          },
+        },
+      },
     });
 
     const updatedConversation = await this.conversationsService.update(

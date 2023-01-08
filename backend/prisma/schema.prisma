@@ -36,10 +36,10 @@ model FriendRequest {
     id String @id @default(uuid())
 
     senderId String
-    sender   User?  @relation(name: "sender", fields: [senderId], references: [id])
+    sender   User?  @relation(name: "sender", fields: [senderId], references: [id], onDelete: Cascade)
 
     receiverId String
-    receiver   User?  @relation(name: "receiver", fields: [receiverId], references: [id])
+    receiver   User?  @relation(name: "receiver", fields: [receiverId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
 
@@ -52,10 +52,10 @@ model Friend {
     id String @id @default(uuid())
 
     senderId String
-    sender   User?  @relation(name: "sender", fields: [senderId], references: [id])
+    sender   User?  @relation(name: "sender", fields: [senderId], references: [id], onDelete: Cascade)
 
     receiverId String
-    receiver   User?  @relation(name: "receiver", fields: [receiverId], references: [id])
+    receiver   User?  @relation(name: "receiver", fields: [receiverId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
 
@@ -68,10 +68,10 @@ model Message {
     content String
 
     authorId String
-    author   User?  @relation(fields: [authorId], references: [id])
+    author   User?  @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
     conversationId String
-    conversation   Conversation? @relation(fields: [conversationId], references: [id])
+    conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
     lastInConversation Conversation? @relation("last_message_sent")
 
@@ -83,10 +83,10 @@ model Conversation {
     id String @id @default(uuid())
 
     creatorId String
-    creator   User?  @relation(name: "creator", fields: [creatorId], references: [id])
+    creator   User?  @relation(name: "creator", fields: [creatorId], references: [id], onDelete: Cascade)
 
     recipientId String
-    recipient   User?  @relation(name: "recipient", fields: [recipientId], references: [id])
+    recipient   User?  @relation(name: "recipient", fields: [recipientId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now())
 

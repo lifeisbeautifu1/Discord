@@ -13,16 +13,23 @@ import { Tab } from "@headlessui/react";
 import { FriendIcon } from "../components/icons";
 import { useState } from "react";
 import { useSocketContext } from "../contexts/SocketContext";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { resetSelectedConversation } from "../features/conversations/conversations";
 
 const HomePage = () => {
   const [selectedIndex, setSelectedIndex] = useState(4);
+
+  const dispatch = useAppDispatch();
 
   const socket = useSocketContext();
 
   useEffect(() => {
     if (!socket.active) socket.connect();
   }, [socket]);
+
+  useEffect(() => {
+    dispatch(resetSelectedConversation());
+  }, []);
 
   const { friendRequests, incomingFriendRequests, friends, onlineFriends } =
     useAppSelector((state) => state.friends);

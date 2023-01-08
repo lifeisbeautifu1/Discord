@@ -16,12 +16,14 @@ import { GetUser } from "src/utils/decorators";
 import { SendFriendRequestDto } from "./dtos/CreateFriendDto";
 import { FriendRequestService } from "./friend-requests.service";
 import { Routes, ServerEvents } from "src/utils/constants";
+import { ConversationsService } from "src/conversations/conversations.service";
 
 @UseGuards(AuthenticatedGuard)
 @Controller(Routes.FRIEND_REQUESTS)
 export class FriendRequestController {
   constructor(
     private friendRequestsService: FriendRequestService,
+    private conversationsService: ConversationsService,
     private event: EventEmitter2,
   ) {}
 
@@ -54,6 +56,17 @@ export class FriendRequestController {
   async acceptFriendRequest(@GetUser() user: User, @Param("id") id: string) {
     const response = await this.friendRequestsService.accept(user, id);
     this.event.emit(ServerEvents.FRIEND_REQUEST_ACCEPTED, response);
+    const isConversation = await this.conversationsService.isCreated(
+      user.id,
+      response.friendRequest.senderId,
+    );
+    if (!isConversation) {
+      const conversation = await this.conversationsService.createConversation(
+        user,
+        response.friendRequest.sender.u_name,
+      );
+      this.event.emit(ServerEvents.CONVERSATION_CREATE, conversation);
+    }
     return response;
   }
 

@@ -3,7 +3,7 @@ import { EventEmitter2 } from "@nestjs/event-emitter";
 import { SkipThrottle } from "@nestjs/throttler";
 import { User } from "@prisma/client";
 import { AuthenticatedGuard } from "src/auth/utils/guards";
-import { Routes } from "src/utils/constants";
+import { Routes, ServerEvents } from "src/utils/constants";
 import { GetUser } from "src/utils/decorators";
 import { ConversationsService } from "./conversations.service";
 import { CreateConversationDto } from "./dto/CreateConversation.dto";
@@ -26,7 +26,7 @@ export class ConversationsController {
       user,
       dto.u_name,
     );
-    // this.event.emit('conversation.create', conversation);
+    this.event.emit(ServerEvents.CONVERSATION_CREATE, conversation);
     return conversation;
   }
 

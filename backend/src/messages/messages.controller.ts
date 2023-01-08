@@ -12,7 +12,7 @@ import { EventEmitter2 } from "@nestjs/event-emitter";
 import { SkipThrottle, Throttle } from "@nestjs/throttler";
 import { User } from "@prisma/client";
 import { AuthenticatedGuard } from "src/auth/utils/guards";
-import { Routes } from "src/utils/constants";
+import { Routes, ServerEvents } from "src/utils/constants";
 import { GetUser } from "src/utils/decorators";
 import { CreateMessageDto } from "./dto/CreateMessage.dto";
 import { EditMessageDto } from "./dto/EditMessage.dto";
@@ -37,6 +37,7 @@ export class MessagesController {
       dto.content,
       id,
     );
+    this.event.emit(ServerEvents.MESSAGE_CREATE, response);
     return;
   }
 

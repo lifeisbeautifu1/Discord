@@ -1,3 +1,4 @@
+import { OnEvent } from "@nestjs/event-emitter";
 import {
   ConnectedSocket,
   MessageBody,
@@ -7,9 +8,14 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
+import { Conversation, Message } from "@prisma/client";
 import { Server } from "socket.io";
 import { FriendsService } from "src/friends/friends.service";
-import { ClientEvents } from "src/utils/constants";
+import {
+  ClientEvents,
+  ServerEvents,
+  WebsocketEvents,
+} from "src/utils/constants";
 import { AuthenticatedSocket } from "src/utils/interfaces";
 import { GatewaySessionManager } from "./gateway.session";
 
@@ -39,6 +45,32 @@ export class MessagingGateway
   handleDisconnect(socket: AuthenticatedSocket) {
     console.log("handleDisconnect");
     this.sessions.removeUserSocket(socket.userId);
+  }
+
+  @OnEvent(ServerEvents.CONVERSATION_CREATE)
+  handleConversationEvent(payload: Conversation) {
+    console.log(ServerEvents.CONVERSATION_CREATE);
+    const recipientSocket = this.sessions.getUserSocket(payload.recipientId);
+    recipientSocket?.emit(WebsocketEvents.CONVERSATION_CREATED, payload);
+    const creatorSocket = this.sessions.getUserSocket(payload.creatorId);
+    creatorSocket?.emit(WebsocketEvents.CONVERSATION_CREATED, payload);
+  }
+
+  @OnEvent(ServerEvents.MESSAGE_CREATE)
+  handleMessageCreate(payload: {
+    message: Message;
+    conversation: Conversation;
+  }) {
+    console.log(ServerEvents.MESSAGE_CREATE);
+    const { authorId } = payload.message;
+    const { creatorId, recipientId } = payload.conversation;
+    const authorSocket = this.sessions.getUserSocket(authorId);
+    authorSocket?.emit(WebsocketEvents.MESSAGE_CREATED, payload);
+    const recipientSocket =
+      authorId === creatorId
+        ? this.sessions.getUserSocket(recipientId)
+        : this.sessions.getUserSocket(creatorId);
+    recipientSocket?.emit(WebsocketEvents.MESSAGE_CREATED, payload);
   }
 
   @SubscribeMessage(ClientEvents.GET_ONLINE_FRIENDS)

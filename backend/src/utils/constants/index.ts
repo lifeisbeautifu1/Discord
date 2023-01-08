@@ -4,6 +4,8 @@ export enum ServerEvents {
   FRIEND_REQUEST_ACCEPTED = "friendrequest.accepted",
   FRIEND_REQUEST_REJECTED = "friendrequest.rejected",
   FRIEND_REMOVED = "friend.removed",
+  CONVERSATION_CREATE = "conversation.create",
+  MESSAGE_CREATE = "message.create",
 }
 
 export enum ClientEvents {
@@ -15,6 +17,9 @@ export enum WebsocketEvents {
   FRIEND_REQUEST_CANCELLED = "onFriendRequestCancelled",
   FRIEND_REQUEST_ACCEPTED = "onFriendRequestAccepted",
   FRIEND_REQUEST_REJECTED = "onFriendRequestRejected",
+  FRIEND_REMOVED = "onFriendRemoved",
+  CONVERSATION_CREATED = "onConversation",
+  MESSAGE_CREATED = "onMessage",
 }
 
 export enum Routes {

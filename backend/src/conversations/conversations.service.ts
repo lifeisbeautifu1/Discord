@@ -64,6 +64,18 @@ export class ConversationsService {
         creatorId: creator.id,
         recipientId: recipient.id,
       },
+      include: {
+        creator: {
+          select: {
+            ...userSelectedFields,
+          },
+        },
+        recipient: {
+          select: {
+            ...userSelectedFields,
+          },
+        },
+      },
     });
     return newConversation;
   }

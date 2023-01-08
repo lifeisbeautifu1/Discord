@@ -3,7 +3,7 @@ import { OnEvent } from "@nestjs/event-emitter";
 import { Friend } from "@prisma/client";
 import { MessagingGateway } from "src/gateway/gateway";
 import { GatewaySessionManager } from "src/gateway/gateway.session";
-import { ServerEvents } from "src/utils/constants";
+import { ServerEvents, WebsocketEvents } from "src/utils/constants";
 
 @Injectable()
 export class FriendsEvents {
@@ -16,6 +16,6 @@ export class FriendsEvents {
     const socket = this.gateway.sessions.getUserSocket(
       receiverId === userId ? senderId : receiverId,
     );
-    socket?.emit("onFriendRemoved", friend);
+    socket?.emit(WebsocketEvents.FRIEND_REMOVED, friend);
   }
 }
