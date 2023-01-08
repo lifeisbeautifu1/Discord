@@ -5,6 +5,8 @@ import {
   getConversation,
   getMessages,
   sendMessage,
+  deleteMessage,
+  editMessage,
 } from "./conversations.thunks";
 
 export type ConversationsState = {
@@ -38,6 +40,18 @@ export const conversationsSlice = createSlice({
     },
     addMessage: (state, action: PayloadAction<Message>) => {
       state.messages.unshift(action.payload);
+    },
+    updateMessage: (state, action: PayloadAction<Message>) => {
+      state.messages = state.messages.map((message) =>
+        message.id === action.payload.id
+          ? { ...message, content: action.payload.content }
+          : message
+      );
+    },
+    removeMessage: (state, action: PayloadAction<string>) => {
+      state.messages = state.messages.filter(
+        (message) => message.id !== action.payload
+      );
     },
   },
   extraReducers: (builder) => {
@@ -94,11 +108,40 @@ export const conversationsSlice = createSlice({
       })
       .addCase(sendMessage.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(editMessage.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(editMessage.fulfilled, (state) => {
+        state.loading = false;
+        state.error = false;
+      })
+      .addCase(editMessage.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(deleteMessage.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteMessage.fulfilled, (state, action) => {
+        state.loading = false;
+        state.messages = state.messages.filter(
+          (msg) => msg.id !== action.payload.messageId
+        );
+        state.error = false;
+      })
+      .addCase(deleteMessage.rejected, (state) => {
+        state.loading = false;
       });
   },
 });
 
-export const { setError, addConversation, addMessage, resetSelectedConversation } =
-  conversationsSlice.actions;
+export const {
+  setError,
+  addConversation,
+  addMessage,
+  resetSelectedConversation,
+  updateMessage,
+  removeMessage,
+} = conversationsSlice.actions;
 
 export default conversationsSlice.reducer;

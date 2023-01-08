@@ -86,7 +86,7 @@ export class MessagesService {
     if (!message) throw new BadRequestException("Message not found");
 
     if (messageId !== conversation.messageId) {
-      return this.prisma.message.delete({
+      await this.prisma.message.delete({
         where: {
           id: messageId,
         },
@@ -101,8 +101,9 @@ export class MessagesService {
         },
         take: 5,
       });
-      return this.deleteLastMessage(conversationId, messages, message);
+      await this.deleteLastMessage(conversationId, messages, message);
     }
+    return conversation;
   }
 
   async deleteLastMessage(
@@ -158,6 +159,9 @@ export class MessagesService {
       },
       data: {
         content,
+      },
+      include: {
+        conversation: true,
       },
     });
   }

@@ -54,6 +54,7 @@ export type Conversation = {
 export type Message = {
   id: string;
   content: string;
+  conversationId: string;
   authorId: string;
   author: User;
   createdAt: Date;

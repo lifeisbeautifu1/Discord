@@ -1,5 +1,4 @@
-import { Message } from "postcss";
-import { Conversation, Friend, FriendRequest } from ".";
+import { Conversation, Friend, FriendRequest, Message } from ".";
 
 export type OnFriendRequestAcceptedData = {
   newFriend: Friend;

@@ -22,6 +22,7 @@ import { VerifyEmailDto } from "./dtos/verify-email.dto";
 import { ForgotPasswordDto } from "./dtos/forgot-password.dto";
 import { ResetPasswordDto } from "./dtos/reset-password.dto";
 import { Routes } from "src/utils/constants";
+import { SkipThrottle } from "@nestjs/throttler";
 
 @Controller(Routes.AUTH)
 export class AuthController {
@@ -96,6 +97,7 @@ export class AuthController {
     });
   }
 
+  @SkipThrottle()
   @UseGuards(AuthenticatedGuard)
   @Get("me")
   getMe(@GetUser() user: User) {

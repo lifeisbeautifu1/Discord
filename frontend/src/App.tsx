@@ -19,10 +19,7 @@ import {
 } from "./features/friends/friends.thunks";
 import { useSocketContext } from "./contexts/SocketContext";
 import { Conversation, Friend, FriendRequest } from "./types";
-import {
-  OnFriendRequestAcceptedData,
-  OnMessageData,
-} from "./types/onFriendRequestAcceptedData";
+import { OnFriendRequestAcceptedData } from "./types/onFriendRequestAcceptedData";
 import {
   addFriend,
   addIncomingFriendRequest,
@@ -33,10 +30,7 @@ import {
   setOnlineFriends,
 } from "./features/friends/friends";
 import { getConversations } from "./features/conversations/conversations.thunks";
-import {
-  addConversation,
-  addMessage,
-} from "./features/conversations/conversations";
+import { addConversation } from "./features/conversations/conversations";
 
 function App() {
   const isAuth = useAppSelector(selectIsAuth);
@@ -82,11 +76,6 @@ function App() {
       }
     );
 
-    socket?.on("onMessage", ({ message, conversation }: OnMessageData) => {
-      console.log("got new message!");
-      dispatch(addMessage(message));
-    });
-
     socket?.on("onFriendRequestRejected", (data: FriendRequest) => {
       console.log("someone declined my friend request");
       dispatch(removeOutgoingFriendRequest(data));
@@ -116,7 +105,7 @@ function App() {
       socket.off("onFriendRequestReceived");
       socket.off("onFriendRemoved");
       socket.off("onConversation");
-      socket.off("onMessage");
+
       clearInterval(interval);
     };
   }, [socket]);

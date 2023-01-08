@@ -73,6 +73,33 @@ export class MessagingGateway
     recipientSocket?.emit(WebsocketEvents.MESSAGE_CREATED, payload);
   }
 
+  @OnEvent(ServerEvents.MESSAGE_DELETE)
+  handleMessageDelete(payload: {
+    conversation: Conversation;
+    userId: string;
+    messageId: string;
+  }) {
+    const recipientSocket =
+      payload.conversation.creatorId === payload.userId
+        ? this.sessions.getUserSocket(payload.conversation.recipientId)
+        : this.sessions.getUserSocket(payload.conversation.creatorId);
+    recipientSocket?.emit(WebsocketEvents.MESSAGE_DELETE, payload.messageId);
+  }
+
+  @OnEvent(ServerEvents.MESSAGE_UPDATE)
+  handleMessageUpdate(
+    message: Message & {
+      conversation: Conversation;
+    },
+  ) {
+    const { authorId, conversation } = message;
+    const recipientSocket =
+      authorId === conversation.creatorId
+        ? this.sessions.getUserSocket(conversation.recipientId)
+        : this.sessions.getUserSocket(conversation.creatorId);
+    recipientSocket?.emit(WebsocketEvents.MESSAGE_UPDATE, message);
+  }
+
   @SubscribeMessage(ClientEvents.GET_ONLINE_FRIENDS)
   async handleFriendListRetrieve(
     @MessageBody() body: any,

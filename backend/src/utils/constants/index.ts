@@ -6,6 +6,8 @@ export enum ServerEvents {
   FRIEND_REMOVED = "friend.removed",
   CONVERSATION_CREATE = "conversation.create",
   MESSAGE_CREATE = "message.create",
+  MESSAGE_DELETE = "message.delete",
+  MESSAGE_UPDATE = "message.update",
 }
 
 export enum ClientEvents {
@@ -20,6 +22,8 @@ export enum WebsocketEvents {
   FRIEND_REMOVED = "onFriendRemoved",
   CONVERSATION_CREATED = "onConversation",
   MESSAGE_CREATED = "onMessage",
+  MESSAGE_DELETE = "onMessageDelete",
+  MESSAGE_UPDATE = "onMessageUpdate",
 }
 
 export enum Routes {

@@ -9,12 +9,20 @@ import {
   MessageItem,
 } from "../components";
 import { format } from "date-fns";
-import { setError } from "../features/conversations/conversations";
+import {
+  addMessage,
+  removeMessage,
+  setError,
+  updateMessage,
+} from "../features/conversations/conversations";
 import {
   getConversation,
   getMessages,
 } from "../features/conversations/conversations.thunks";
 import { toShowFromConversation } from "../util";
+import { useSocketContext } from "../contexts/SocketContext";
+import { OnMessageData } from "../types/onFriendRequestAcceptedData";
+import { Message } from "../types";
 
 const Conversation = () => {
   const { error, selectedConversation, messages } = useAppSelector(
@@ -23,11 +31,35 @@ const Conversation = () => {
 
   const { user } = useAppSelector((state) => state.auth);
 
+  const socket = useSocketContext();
+
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
   const { id } = useParams();
+
+  useEffect(() => {
+    socket?.on("onMessage", ({ message }: OnMessageData) => {
+      console.log("got new message!");
+      dispatch(addMessage(message));
+    });
+
+    socket?.on("onMessageDelete", (messageId: string) => {
+      console.log("message got deleted");
+      dispatch(removeMessage(messageId));
+    });
+
+    socket?.on("onMessageUpdate", (payload: Message) => {
+      console.log("message got updated");
+      dispatch(updateMessage(payload));
+    });
+    return () => {
+      socket?.off("onMessage");
+      socket?.off("onMessageDelete");
+      socket?.off("onMessageUpdate");
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (id) {

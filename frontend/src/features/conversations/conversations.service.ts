@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Conversation, Message } from "../../types";
+import { EditMessageParams } from "../../types/editMessageParams";
 
 const getConversations = async () => {
   const { data } = await axios.get<Array<Conversation>>("/conversations");
@@ -25,9 +26,29 @@ const sendMessage = async (id: string, content: string) => {
   return;
 };
 
+const editMessage = async ({
+  content,
+  messageId,
+  conversationId,
+}: EditMessageParams) => {
+  await axios.patch(`/conversations/${conversationId}/messages/${messageId}`, {
+    content,
+  });
+  return;
+};
+
+const deleteMessage = async (converastionId: string, messageId: string) => {
+  const { data } = await axios.delete<{ messageId: string }>(
+    `/conversations/${converastionId}/messages/${messageId}`
+  );
+  return data;
+};
+
 export default {
   getConversations,
   getConversation,
   getMessages,
   sendMessage,
+  editMessage,
+  deleteMessage,
 };

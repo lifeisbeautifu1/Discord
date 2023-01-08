@@ -125,6 +125,18 @@
   border-right: 5px solid hsl(216, calc(1 * 7.2%), 13.5%);
 }
 
+.custom-hover:hover {
+  box-shadow: 0 0 0 1px rgba(4, 4, 5, 0.15), 0 4px 4px rgba(0, 0, 0, 0.16);
+}
+
+.display {
+  display: none;
+}
+
+.custom-group:hover .display {
+  display: flex;
+}
+
 .drop {
   animation: drop 0.3s ease-in-out 1;
 }

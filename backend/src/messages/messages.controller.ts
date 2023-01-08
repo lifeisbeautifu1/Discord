@@ -57,11 +57,16 @@ export class MessagesController {
     @Param("id") conversationId: string,
     @Param("messageId") messageId: string,
   ) {
-    await this.messagesService.deleteMessage(
+    const conversation = await this.messagesService.deleteMessage(
       conversationId,
       user.id,
       messageId,
     );
+    this.event.emit(ServerEvents.MESSAGE_DELETE, {
+      userId: user.id,
+      conversation,
+      messageId,
+    });
     return { conversationId, messageId };
   }
 
@@ -77,5 +82,7 @@ export class MessagesController {
       user.id,
       messageId,
     );
+    this.event.emit(ServerEvents.MESSAGE_UPDATE, message);
+    return message;
   }
 }
