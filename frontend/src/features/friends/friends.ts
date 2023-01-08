@@ -223,6 +223,12 @@ export const friendsSlice = createSlice({
           state.friends = state.friends.filter(
             (friend) => friend.id !== action.payload.id
           );
+          state.onlineFriends = state.onlineFriends.filter(
+            (friend) => friend.id !== action.payload.id
+          );
+          state.offlineFriends = state.offlineFriends.filter(
+            (friend) => friend.id !== action.payload.id
+          );
           state.loading = false;
         }
       )

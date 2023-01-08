@@ -36,6 +36,25 @@ export type FriendRequest = {
 
 export type Friend = {
   id: string;
+  senderId: string;
+  receiverId: string;
   sender: User;
   receiver: User;
+};
+
+export type Conversation = {
+  id: string;
+  creatorId: string;
+  creator: User;
+  recipient: User;
+  recipientId: string;
+  createdAt: string;
+};
+
+export type Message = {
+  id: string;
+  content: string;
+  authorId: string;
+  author: User;
+  createdAt: Date;
 };

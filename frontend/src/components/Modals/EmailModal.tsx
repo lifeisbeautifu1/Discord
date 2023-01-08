@@ -16,7 +16,10 @@ function EmailModal() {
 
   return (
     <Transition show={isEmailModalOpen} as={Fragment}>
-      <Dialog onClose={() => dispatch(setEmailModal(false))}>
+      <Dialog
+        className="absolute inset-0 z-30 flex items-center justify-center bg-black/80"
+        onClose={() => dispatch(setEmailModal(false))}
+      >
         <Transition.Child
           enter="transition duration-100 ease-out"
           enterFrom="transform scale-95 opacity-0"

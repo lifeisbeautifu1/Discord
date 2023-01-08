@@ -5,9 +5,7 @@ import { TbDownload } from "react-icons/tb";
 import { useAppSelector } from "../app/hooks";
 
 const Navbar: React.FC = () => {
-  const { incomingFriendRequests } = useAppSelector(
-    (state) => state.friends
-  );
+  const { incomingFriendRequests } = useAppSelector((state) => state.friends);
   return (
     <nav className="flex h-full w-[72px] flex-shrink-0 select-none flex-col items-center space-y-2 bg-d-dark-black py-3">
       <ServerIcon
@@ -18,12 +16,6 @@ const Navbar: React.FC = () => {
         tooltip="Direct Messages"
       />
       <div className="h-[1.5px] w-[40%] bg-gray-700" />
-      <ServerIcon
-        to="/channels/123"
-        size="text-sm"
-        tooltip="Some Server"
-        text="6308"
-      />
       <ServerIcon
         to="/"
         hover="hover:bg-green-500"

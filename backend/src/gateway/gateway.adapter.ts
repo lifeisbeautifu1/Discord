@@ -16,6 +16,7 @@ export class WebsocketAdapter extends IoAdapter {
         console.log("Client has no cookies");
         return next(new Error("Not Authenticated. No cookies were sent"));
       }
+
       const { sid } = cookie.parse(clientCookie);
 
       if (!sid) {

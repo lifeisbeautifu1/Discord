@@ -23,7 +23,7 @@ const UserInfo = () => {
           </div>
         </div>
         <div className="flex items-center">
-          <Icon tooltip="Mute" icon={<FaMicrophone />} />
+          <Icon tooltip="Mute" size={"text-[17px]"} icon={<FaMicrophone />} />
           <Icon tooltip="Deafen" size="text-xl" icon={<MdHeadphones />} />
           <Icon tooltip="User Settings" icon={<IoSettingsSharp />} />
         </div>

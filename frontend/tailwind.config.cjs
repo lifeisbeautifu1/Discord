@@ -9,6 +9,7 @@ module.exports = {
         "d-green": "#2d7d46",
         "d-dark-black": "hsl(216, calc(1 * 7.2%), 13.5%);",
         dark: "hsl(220, calc(1 * 7.7%), 22.9%);",
+        "d-input-bg": "hsl(218, calc(1 * 7.9%), 27.3%);",
         secondary: "hsl(223, 6.9%, 19.8%);",
         "secondary-alt": "hsl(220, calc(1 * 6.8%), 17.3%);",
         "d-white": "hsl(0, calc(1 * 0%), 100%);",
@@ -21,5 +22,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@headlessui/tailwindcss")],
+  plugins: [require("@headlessui/tailwindcss"), require("tailwind-scrollbar")],
 };

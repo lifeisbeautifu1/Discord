@@ -7,14 +7,22 @@ import {
   Friends,
   OnlineFriends,
 } from "../components";
+import { useEffect } from "react";
 import { HiChatAlt, HiInbox, HiQuestionMarkCircle } from "react-icons/hi";
 import { Tab } from "@headlessui/react";
 import { FriendIcon } from "../components/icons";
 import { useState } from "react";
+import { useSocketContext } from "../contexts/SocketContext";
 import { useAppSelector } from "../app/hooks";
 
 const HomePage = () => {
   const [selectedIndex, setSelectedIndex] = useState(4);
+
+  const socket = useSocketContext();
+
+  useEffect(() => {
+    if (!socket.active) socket.connect();
+  }, [socket]);
 
   const { friendRequests, incomingFriendRequests, friends, onlineFriends } =
     useAppSelector((state) => state.friends);

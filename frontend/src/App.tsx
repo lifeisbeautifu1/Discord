@@ -29,6 +29,7 @@ import {
   setOfflineFriends,
   setOnlineFriends,
 } from "./features/friends/friends";
+import { getConversations } from "./features/conversations/conversations.thunks";
 
 function App() {
   const isAuth = useAppSelector(selectIsAuth);
@@ -45,6 +46,7 @@ function App() {
     if (isAuth) {
       dispatch(getFriendRequests());
       dispatch(getFriends());
+      dispatch(getConversations());
     }
   }, [isAuth]);
 
@@ -64,6 +66,7 @@ function App() {
         console.log("someone accepted my friend request");
         dispatch(removeOutgoingFriendRequest(friendRequest));
         dispatch(addFriend(newFriend));
+        socket?.emit("getOnlineFriends");
       }
     );
 
@@ -80,6 +83,7 @@ function App() {
     socket?.on("onFriendRemoved", (data: Friend) => {
       console.log("someone deleted me from friends");
       dispatch(removeFriend(data));
+      socket?.emit("getOnlineFriends");
     });
 
     socket?.on("getOnlineFriends", (data: Array<Friend>) => {
