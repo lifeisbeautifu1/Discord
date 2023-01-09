@@ -129,7 +129,9 @@ const Conversation = () => {
               </div>
               <div className="p-4 pb-0">
                 <img
-                  src="/images/default-avatar.png"
+                  src={`https://cdn.discordapp.com/embed/avatars/${
+                    parseInt(toShow?.u_name.split("#")[1]!) % 5
+                  }.png`}
                   width={80}
                   className="rounded-full"
                   height={80}

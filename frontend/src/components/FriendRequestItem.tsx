@@ -27,7 +27,12 @@ const FriendRequestItem: React.FC<Props> = ({ friendRequest }) => {
   return (
     <li className="fr relative ml-[30px] mr-5 flex h-[62px] cursor-pointer items-center border-t border-d-icon-bg hover:ml-5 hover:mr-2.5 hover:rounded-lg hover:border-t-transparent hover:bg-d-icon-bg hover:py-4 hover:px-2.5">
       <div className="flex items-center">
-        <Avatar offline={false} />
+        <Avatar
+          offline={false}
+          image={`https://cdn.discordapp.com/embed/avatars/${
+            parseInt(toShow?.u_name.split("#")[1]!) % 5
+          }.png`}
+        />
         <div className="ml-3 flex flex-col justify-center">
           <h2 className="font-semibold text-d-white">
             {toShow?.username}

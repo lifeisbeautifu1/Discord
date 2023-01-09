@@ -32,7 +32,13 @@ const ConversationItem: React.FC<Props> = ({ conversation }) => {
         "bg-d-icon-bg text-d-white"
       }`}
     >
-      <Avatar online={online} offline={!online} />
+      <Avatar
+        online={online}
+        offline={!online}
+        image={`https://cdn.discordapp.com/embed/avatars/${
+          parseInt(toShow?.u_name.split("#")[1]!) % 5
+        }.png`}
+      />
       <h2>{toShow?.username}</h2>
     </li>
   );

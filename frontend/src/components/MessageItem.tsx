@@ -100,7 +100,9 @@ const MessageItem: React.FC<Props> = ({ message, index }) => {
       >
         {type ? (
           <img
-            src="/images/default-avatar.png"
+            src={`https://cdn.discordapp.com/embed/avatars/${
+              parseInt(message?.author?.u_name.split("#")[1]!) % 5
+            }.png`}
             alt="avatar"
             className="h-10 w-10 flex-shrink-0 rounded-full object-cover"
           />

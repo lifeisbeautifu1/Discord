@@ -102,12 +102,14 @@ export class MessagingGateway
 
   @SubscribeMessage(ClientEvents.TYPING_START)
   async handleTypingStart(@MessageBody() userId: string) {
+    console.log(ClientEvents.TYPING_START);
     const receiverSocket = this.sessions.getUserSocket(userId);
     receiverSocket?.emit(WebsocketEvents.ON_TYPING_START);
   }
 
   @SubscribeMessage(ClientEvents.TYPING_STOP)
   async handleTypingEnd(@MessageBody() userId: string) {
+    console.log(ClientEvents.TYPING_STOP);
     const receiverSocket = this.sessions.getUserSocket(userId);
     receiverSocket?.emit(WebsocketEvents.ON_TYPING_STOP);
   }

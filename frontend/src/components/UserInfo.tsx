@@ -8,11 +8,16 @@ import { selectUser } from "../features/auth/auth";
 
 const UserInfo = () => {
   const user = useAppSelector(selectUser);
+
   return (
     <div className="opacity-1 absolute bottom-0 left-0 right-0 z-20 bg-secondary-alt p-2 shadow">
       <div className="flex items-center gap-2">
         <div className="flex flex-1 cursor-pointer items-center gap-2 rounded p-1 py-1 hover:bg-d-icon-bg">
-          <Avatar />
+          <Avatar
+            image={`https://cdn.discordapp.com/embed/avatars/${
+              parseInt(user?.u_name.split("#")[1]!) % 5
+            }.png`}
+          />
           <div className="flex flex-col justify-center text-sm">
             <h2 className="font-semibold text-white">
               {user?.u_name.split("#")?.[0]}
