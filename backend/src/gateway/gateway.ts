@@ -100,6 +100,18 @@ export class MessagingGateway
     recipientSocket?.emit(WebsocketEvents.MESSAGE_UPDATE, message);
   }
 
+  @SubscribeMessage(ClientEvents.TYPING_START)
+  async handleTypingStart(@MessageBody() userId: string) {
+    const receiverSocket = this.sessions.getUserSocket(userId);
+    receiverSocket?.emit(WebsocketEvents.ON_TYPING_START);
+  }
+
+  @SubscribeMessage(ClientEvents.TYPING_END)
+  async handleTypingEnd(@MessageBody() userId: string) {
+    const receiverSocket = this.sessions.getUserSocket(userId);
+    receiverSocket?.emit(WebsocketEvents.ON_TYPING_END);
+  }
+
   @SubscribeMessage(ClientEvents.GET_ONLINE_FRIENDS)
   async handleFriendListRetrieve(
     @MessageBody() body: any,

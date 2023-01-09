@@ -1,6 +1,11 @@
 import { Outlet } from "react-router-dom";
 import { Navbar } from "./";
-import { EmailModal, FriendRequestModal, RemoveFriendModal } from "./Modals";
+import {
+  EmailModal,
+  FriendRequestModal,
+  RemoveFriendModal,
+  DeleteMessageModal,
+} from "./Modals";
 
 const Layout: React.FC = () => {
   return (
@@ -10,6 +15,7 @@ const Layout: React.FC = () => {
       <EmailModal />
       <FriendRequestModal />
       <RemoveFriendModal />
+      <DeleteMessageModal />
     </div>
   );
 };

@@ -12,6 +12,8 @@ export enum ServerEvents {
 
 export enum ClientEvents {
   GET_ONLINE_FRIENDS = "getOnlineFriends",
+  TYPING_START = "typingStart",
+  TYPING_END = "typingEnd",
 }
 
 export enum WebsocketEvents {
@@ -24,6 +26,8 @@ export enum WebsocketEvents {
   MESSAGE_CREATED = "onMessage",
   MESSAGE_DELETE = "onMessageDelete",
   MESSAGE_UPDATE = "onMessageUpdate",
+  ON_TYPING_START = "onTypingStart",
+  ON_TYPING_END = "onTypingEnd",
 }
 
 export enum Routes {

@@ -14,7 +14,11 @@ export type ConversationsState = {
   selectedConversation: Conversation | null;
   error: boolean;
   loading: boolean;
+  isDeleteMessageModalOpen: boolean;
+  selectedMessage: Message | null;
+  isEdit: boolean;
   messages: Array<Message>;
+  isTyping: boolean;
 };
 
 const initialState: ConversationsState = {
@@ -22,7 +26,11 @@ const initialState: ConversationsState = {
   selectedConversation: null,
   error: false,
   loading: false,
+  isDeleteMessageModalOpen: false,
+  selectedMessage: null,
+  isEdit: false,
   messages: [],
+  isTyping: false,
 };
 
 export const conversationsSlice = createSlice({
@@ -44,7 +52,11 @@ export const conversationsSlice = createSlice({
     updateMessage: (state, action: PayloadAction<Message>) => {
       state.messages = state.messages.map((message) =>
         message.id === action.payload.id
-          ? { ...message, content: action.payload.content }
+          ? {
+              ...message,
+              content: action.payload.content,
+              updatedAt: action.payload.updatedAt,
+            }
           : message
       );
     },
@@ -52,6 +64,18 @@ export const conversationsSlice = createSlice({
       state.messages = state.messages.filter(
         (message) => message.id !== action.payload
       );
+    },
+    setIsDeleteMessageModalOpen: (state, action: PayloadAction<boolean>) => {
+      state.isDeleteMessageModalOpen = action.payload;
+    },
+    setSelectedMessage: (state, action: PayloadAction<Message | null>) => {
+      state.selectedMessage = action.payload;
+    },
+    setIsEdit: (state, action: PayloadAction<boolean>) => {
+      state.isEdit = action.payload;
+    },
+    setIsTyping: (state, action: PayloadAction<boolean>) => {
+      state.isTyping = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -112,10 +136,22 @@ export const conversationsSlice = createSlice({
       .addCase(editMessage.pending, (state) => {
         state.loading = true;
       })
-      .addCase(editMessage.fulfilled, (state) => {
-        state.loading = false;
-        state.error = false;
-      })
+      .addCase(
+        editMessage.fulfilled,
+        (state, action: PayloadAction<Message>) => {
+          state.loading = false;
+          state.messages = state.messages.map((msg) =>
+            msg.id === action.payload.id
+              ? {
+                  ...msg,
+                  content: action.payload.content,
+                  updatedAt: action.payload.updatedAt,
+                }
+              : msg
+          );
+          state.error = false;
+        }
+      )
       .addCase(editMessage.rejected, (state) => {
         state.loading = false;
       })
@@ -142,6 +178,10 @@ export const {
   resetSelectedConversation,
   updateMessage,
   removeMessage,
+  setIsDeleteMessageModalOpen,
+  setSelectedMessage,
+  setIsEdit,
+  setIsTyping,
 } = conversationsSlice.actions;
 
 export default conversationsSlice.reducer;

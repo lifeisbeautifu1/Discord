@@ -54,8 +54,8 @@ export const editMessage = createAsyncThunk(
   "conversations/editMessage",
   async (params: EditMessageParams, thunkAPI) => {
     try {
-      await conversationsService.editMessage(params);
-      return;
+      const data = await conversationsService.editMessage(params);
+      return data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error?.response?.data?.message);
     }

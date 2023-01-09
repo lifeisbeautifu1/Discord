@@ -18,3 +18,4 @@ export { default as ConversationHeader } from "./ConversationHeader";
 export { default as ConversationInput } from "./ConversationInput";
 export { default as MessageItem } from "./MessageItem";
 export { default as ConversationItem } from "./ConversationItem";
+export { default as TypingIndicator } from "./TypingIndicator";

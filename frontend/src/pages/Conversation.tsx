@@ -7,12 +7,14 @@ import {
   EmailVerifyPopup,
   SidebarFriends,
   MessageItem,
+  TypingIndicator,
 } from "../components";
 import { format } from "date-fns";
 import {
   addMessage,
   removeMessage,
   setError,
+  setIsTyping,
   updateMessage,
 } from "../features/conversations/conversations";
 import {
@@ -45,6 +47,14 @@ const Conversation = () => {
       dispatch(addMessage(message));
     });
 
+    socket?.on("onTypingStart", () => {
+      dispatch(setIsTyping(true));
+    });
+
+    socket?.on("onTypingEnd", () => {
+      dispatch(setIsTyping(false));
+    });
+
     socket?.on("onMessageDelete", (messageId: string) => {
       console.log("message got deleted");
       dispatch(removeMessage(messageId));
@@ -58,6 +68,8 @@ const Conversation = () => {
       socket?.off("onMessage");
       socket?.off("onMessageDelete");
       socket?.off("onMessageUpdate");
+      socket?.off("onTypingStart");
+      socket?.off("onTypingEnd");
     };
   }, [socket]);
 
@@ -133,6 +145,7 @@ const Conversation = () => {
               </div>
             </div>
             <ConversationInput />
+            <TypingIndicator />
           </main>
         </div>
       </div>

@@ -37,7 +37,7 @@ const ConversationInput = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-4 mb-6 -mt-2 flex items-center rounded-lg bg-d-input-bg px-4 py-2"
+      className="mx-4 -mt-2 flex items-center rounded-lg bg-d-input-bg px-4 py-2"
     >
       <PlusCircleIcon className="mr-4 h-6 w-6 cursor-pointer text-d-gray hover:text-d-white" />
       <input

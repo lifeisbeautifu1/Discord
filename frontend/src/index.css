@@ -165,3 +165,16 @@
     transform: rotate(0deg);
   }
 }
+
+.fade-in {
+  animation: fade-in 600ms ease-out;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
