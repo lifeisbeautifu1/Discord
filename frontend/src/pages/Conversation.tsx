@@ -51,7 +51,7 @@ const Conversation = () => {
       dispatch(setIsTyping(true));
     });
 
-    socket?.on("onTypingEnd", () => {
+    socket?.on("onTypingStop", () => {
       dispatch(setIsTyping(false));
     });
 

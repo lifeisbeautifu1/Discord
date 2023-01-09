@@ -106,10 +106,10 @@ export class MessagingGateway
     receiverSocket?.emit(WebsocketEvents.ON_TYPING_START);
   }
 
-  @SubscribeMessage(ClientEvents.TYPING_END)
+  @SubscribeMessage(ClientEvents.TYPING_STOP)
   async handleTypingEnd(@MessageBody() userId: string) {
     const receiverSocket = this.sessions.getUserSocket(userId);
-    receiverSocket?.emit(WebsocketEvents.ON_TYPING_END);
+    receiverSocket?.emit(WebsocketEvents.ON_TYPING_STOP);
   }
 
   @SubscribeMessage(ClientEvents.GET_ONLINE_FRIENDS)

@@ -19,6 +19,7 @@ export type ConversationsState = {
   isEdit: boolean;
   messages: Array<Message>;
   isTyping: boolean;
+  typing: boolean;
 };
 
 const initialState: ConversationsState = {
@@ -31,6 +32,7 @@ const initialState: ConversationsState = {
   isEdit: false,
   messages: [],
   isTyping: false,
+  typing: false,
 };
 
 export const conversationsSlice = createSlice({
@@ -76,6 +78,9 @@ export const conversationsSlice = createSlice({
     },
     setIsTyping: (state, action: PayloadAction<boolean>) => {
       state.isTyping = action.payload;
+    },
+    setTyping: (state, action: PayloadAction<boolean>) => {
+      state.typing = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -182,6 +187,7 @@ export const {
   setSelectedMessage,
   setIsEdit,
   setIsTyping,
+  setTyping,
 } = conversationsSlice.actions;
 
 export default conversationsSlice.reducer;

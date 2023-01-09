@@ -4,22 +4,48 @@ import {
   EmojiHappyIcon,
   PlusCircleIcon,
 } from "@heroicons/react/solid";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { sendMessage } from "../features/conversations/conversations.thunks";
 import { toShowFromConversation } from "../util";
 import { selectUser } from "../features/auth/auth";
+import { useSocketContext } from "../contexts/SocketContext";
+import { useDebounce } from "../hooks/useDebounce";
+import { setTyping } from "../features/conversations/conversations";
 
 const ConversationInput = () => {
   const [content, setContent] = useState("");
 
-  const { selectedConversation } = useAppSelector(
+  const socket = useSocketContext();
+
+  const { selectedConversation, isTyping, typing } = useAppSelector(
     (state) => state.conversations
   );
 
+  const debounceValue = useDebounce(content, 3000);
+
   const user = useAppSelector(selectUser);
 
+  if (!user || !selectedConversation) return null;
+
+  const toShow = toShowFromConversation(user.id, selectedConversation);
+
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (typing) {
+      socket.emit("typingStop", toShow?.id);
+      dispatch(setTyping(false));
+    }
+  }, [debounceValue]);
+
+  const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value);
+    if (!typing) {
+      socket?.emit("typingStart", toShow?.id);
+      dispatch(setTyping(true));
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,21 +54,22 @@ const ConversationInput = () => {
 
     dispatch(sendMessage({ id: selectedConversation?.id!, content }));
 
+    socket?.emit("typingStop", toShow?.id);
+
     setContent("");
   };
 
-  if (!user || !selectedConversation) return null;
-
-  const toShow = toShowFromConversation(user.id, selectedConversation);
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-4 -mt-2 flex items-center rounded-lg bg-d-input-bg px-4 py-2"
+      className={`mx-4 ${
+        !isTyping && "mb-6"
+      } -mt-2 flex items-center rounded-lg bg-d-input-bg px-4 py-2`}
     >
       <PlusCircleIcon className="mr-4 h-6 w-6 cursor-pointer text-d-gray hover:text-d-white" />
       <input
         value={content}
-        onChange={(e) => setContent(e.target.value)}
+        onChange={handleTyping}
         type="text"
         autoFocus
         placeholder={`Message @${toShow?.username}`}
