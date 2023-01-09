@@ -67,7 +67,9 @@ function DeleteMessageModal() {
               Are you sure you want to delete this message?
               <div className="mt-3 flex w-full items-center rounded border-[0.5px] border-gray-800 bg-dark px-4 py-3 shadow">
                 <img
-                  src="/images/default-avatar.png"
+                  src={`https://cdn.discordapp.com/embed/avatars/${
+                    parseInt(user?.u_name.split("#")[1]!) % 5
+                  }.png`}
                   alt="avatar"
                   className="h-10 w-10 flex-shrink-0 rounded-full object-cover"
                 />

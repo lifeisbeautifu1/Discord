@@ -4,25 +4,24 @@ import {
   EmojiHappyIcon,
   PlusCircleIcon,
 } from "@heroicons/react/solid";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { sendMessage } from "../features/conversations/conversations.thunks";
 import { toShowFromConversation } from "../util";
 import { selectUser } from "../features/auth/auth";
 import { useSocketContext } from "../contexts/SocketContext";
-import { useDebounce } from "../hooks/useDebounce";
 import { setTyping } from "../features/conversations/conversations";
 
 const ConversationInput = () => {
   const [content, setContent] = useState("");
+
+  const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
 
   const socket = useSocketContext();
 
   const { selectedConversation, isTyping, typing } = useAppSelector(
     (state) => state.conversations
   );
-
-  const debounceValue = useDebounce(content, 3000);
 
   const user = useAppSelector(selectUser);
 
@@ -32,18 +31,28 @@ const ConversationInput = () => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (typing) {
-      socket.emit("typingStop", toShow?.id);
-      dispatch(setTyping(false));
-    }
-  }, [debounceValue]);
-
   const handleTyping = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContent(e.target.value);
-    if (!typing) {
-      socket?.emit("typingStart", toShow?.id);
+
+    if (typing) {
+      clearTimeout(timer);
+      setTimer(
+        setTimeout(() => {
+          console.log("User stopped typing");
+          socket.emit("typingStop", toShow?.id);
+          dispatch(setTyping(false));
+        }, 2000)
+      );
+    } else {
       dispatch(setTyping(true));
+      socket.emit("typingStart", toShow?.id);
+      setTimer(
+        setTimeout(() => {
+          console.log("User stopped typing");
+          socket.emit("typingStop", toShow?.id);
+          dispatch(setTyping(false));
+        }, 2000)
+      );
     }
   };
 
