@@ -1,4 +1,4 @@
-import { OnEvent } from "@nestjs/event-emitter";
+import { EventEmitter2, OnEvent } from "@nestjs/event-emitter";
 import {
   ConnectedSocket,
   MessageBody,
@@ -30,21 +30,44 @@ export class MessagingGateway
 {
   constructor(
     readonly sessions: GatewaySessionManager,
+    private readonly event: EventEmitter2,
     private readonly friendsService: FriendsService,
   ) {}
 
   @WebSocketServer()
   server: Server;
 
-  handleConnection(socket: AuthenticatedSocket) {
+  async handleConnection(socket: AuthenticatedSocket) {
     console.log("Incoming connection");
     this.sessions.setUserSocket(socket.userId, socket);
+    const { userId } = socket;
+    if (userId) {
+      const friends = await this.friendsService.getFriends(userId);
+      friends.forEach((friend) => {
+        const friendSocket = this.sessions.getUserSocket(
+          userId === friend.receiverId ? friend.senderId : friend.receiverId,
+        );
+        friendSocket &&
+          this.event.emit(ServerEvents.GET_ONLINE_FRIENDS, friendSocket);
+      });
+    }
     socket.emit("connected", {});
   }
 
-  handleDisconnect(socket: AuthenticatedSocket) {
+  async handleDisconnect(socket: AuthenticatedSocket) {
     console.log("handleDisconnect");
     this.sessions.removeUserSocket(socket.userId);
+    const { userId } = socket;
+    if (userId) {
+      const friends = await this.friendsService.getFriends(userId);
+      friends.forEach((friend) => {
+        const friendSocket = this.sessions.getUserSocket(
+          userId === friend.receiverId ? friend.senderId : friend.receiverId,
+        );
+        friendSocket &&
+          this.event.emit(ServerEvents.GET_ONLINE_FRIENDS, friendSocket);
+      });
+    }
   }
 
   @OnEvent(ServerEvents.CONVERSATION_CREATE)
@@ -100,6 +123,21 @@ export class MessagingGateway
     recipientSocket?.emit(WebsocketEvents.MESSAGE_UPDATE, message);
   }
 
+  @OnEvent(ServerEvents.GET_ONLINE_FRIENDS)
+  async handleGetOnlineFriends(socket: AuthenticatedSocket) {
+    console.log(ServerEvents.GET_ONLINE_FRIENDS);
+    const { userId } = socket;
+    if (userId) {
+      const friends = await this.friendsService.getFriends(userId);
+      const onlineFriends = friends.filter((friend) =>
+        this.sessions.getUserSocket(
+          userId === friend.receiverId ? friend.senderId : friend.receiverId,
+        ),
+      );
+      socket?.emit(ClientEvents.GET_ONLINE_FRIENDS, onlineFriends);
+    }
+  }
+
   @SubscribeMessage(ClientEvents.TYPING_START)
   async handleTypingStart(@MessageBody() userId: string) {
     console.log(ClientEvents.TYPING_START);
@@ -116,18 +154,9 @@ export class MessagingGateway
 
   @SubscribeMessage(ClientEvents.GET_ONLINE_FRIENDS)
   async handleFriendListRetrieve(
-    @MessageBody() body: any,
+    @MessageBody() _: any,
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
-    const { userId } = socket;
-    if (userId) {
-      const friends = await this.friendsService.getFriends(userId);
-      const onlineFriends = friends.filter((friend) =>
-        this.sessions.getUserSocket(
-          userId === friend.receiverId ? friend.senderId : friend.receiverId,
-        ),
-      );
-      socket.emit(ClientEvents.GET_ONLINE_FRIENDS, onlineFriends);
-    }
+    this.event.emit(ServerEvents.GET_ONLINE_FRIENDS, socket);
   }
 }

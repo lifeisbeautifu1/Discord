@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
 import { Friend } from "@prisma/client";
 import { MessagingGateway } from "src/gateway/gateway";
-import { GatewaySessionManager } from "src/gateway/gateway.session";
 import { ServerEvents, WebsocketEvents } from "src/utils/constants";
 
 @Injectable()

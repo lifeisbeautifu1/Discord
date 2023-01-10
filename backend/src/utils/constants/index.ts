@@ -8,6 +8,7 @@ export enum ServerEvents {
   MESSAGE_CREATE = "message.create",
   MESSAGE_DELETE = "message.delete",
   MESSAGE_UPDATE = "message.update",
+  GET_ONLINE_FRIENDS = "onlineFriends.get",
 }
 
 export enum ClientEvents {

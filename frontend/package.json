@@ -23,7 +23,8 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.1",
     "react-spinners": "^0.13.7",
-    "socket.io-client": "^4.5.4"
+    "socket.io-client": "^4.5.4",
+    "tailwind-scrollbar-hide": "^1.1.7"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

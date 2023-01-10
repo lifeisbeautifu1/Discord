@@ -101,7 +101,7 @@ const Conversation = () => {
         <div className="flex flex-1 flex-col bg-dark">
           <ConversationHeader />
           <main className="flex flex-1 flex-col overflow-hidden">
-            <div className="mb-6 flex h-0 flex-1 flex-col-reverse overflow-y-scroll">
+            <div className="mb-6 flex h-0 flex-1 flex-col-reverse overflow-y-scroll scrollbar-none">
               <ul className="flex flex-col-reverse">
                 {messages.map((message, index) => (
                   <MessageItem
