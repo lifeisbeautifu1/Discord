@@ -38,7 +38,6 @@ export class MessagesController {
       conversationId,
     );
     this.event.emit(ServerEvents.MESSAGE_CREATED, response);
-    this.event.emit(ServerEvents.CONVERSATION_UPDATED, response.conversation);
     return;
   }
 

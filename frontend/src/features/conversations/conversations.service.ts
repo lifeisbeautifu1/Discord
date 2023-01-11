@@ -31,20 +31,18 @@ const editMessage = async ({
   messageId,
   conversationId,
 }: EditMessageParams) => {
-  const { data } = await axios.patch<Message>(
+  return axios.patch<Message>(
     `/conversations/${conversationId}/messages/${messageId}`,
     {
       content,
     }
   );
-  return data;
 };
 
 const deleteMessage = async (converastionId: string, messageId: string) => {
-  const { data } = await axios.delete<{ messageId: string }>(
+  return await axios.delete<{ messageId: string }>(
     `/conversations/${converastionId}/messages/${messageId}`
   );
-  return data;
 };
 
 export default {

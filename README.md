@@ -43,6 +43,8 @@ npx prisma db push
    MAILGUN_DOMAIN=
 
    PREFIX=
+
+   CLIENT_URL=http://localhost:5173
    ```
 
    - **`DATABASE_URL`** The hostname for your PostgreSQL database server (you can use the one from the example file)

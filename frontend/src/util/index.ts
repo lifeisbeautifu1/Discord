@@ -8,9 +8,10 @@ export const toShowFromConversation = (
   id: string,
   conversation: Conversation
 ) => {
-  return conversation.creatorId === id
-    ? conversation.recipient
-    : conversation.creator;
+  const index = conversation.participants.findIndex(
+    (participant) => participant?.user?.id !== id
+  );
+  return conversation.participants[index].user;
 };
 
 export const isOnline = (

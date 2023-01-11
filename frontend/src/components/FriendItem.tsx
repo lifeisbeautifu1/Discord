@@ -30,11 +30,10 @@ const FriendItem: React.FC<Props> = ({ friend, online = false }) => {
 
   const toShow = isSender ? friend.receiver : friend.sender;
 
-  const conversation = converastions.find(
-    (conversation) =>
-      conversation.creatorId === toShow?.id ||
-      conversation.recipientId === toShow?.id
-  );
+  // const conversation = converastions.find(
+  //   (conversation) =>
+  //     conversation.participants.find((toSho))
+  // );
 
   const handleDelete = () => {
     dispatch(setRemoveFriendModal(true));
@@ -66,9 +65,9 @@ const FriendItem: React.FC<Props> = ({ friend, online = false }) => {
       <div className="ml-auto flex items-center space-x-3">
         <ActionIcon
           tooltip="Message"
-          onClick={() => {
-            conversation && navigate("/channels/@me/" + conversation.id);
-          }}
+          // onClick={() => {
+          //   conversation && navigate("/channels/@me/" + conversation.id);
+          // }}
           hoverColor="hover:text-d-white"
           icon={<HiChatBubbleLeft />}
         />

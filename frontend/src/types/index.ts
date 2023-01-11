@@ -44,10 +44,7 @@ export type Friend = {
 
 export type Conversation = {
   id: string;
-  creatorId: string;
-  creator: User;
-  recipient: User;
-  recipientId: string;
+  participants: Array<Participant>;
   createdAt: string;
 };
 
@@ -59,4 +56,12 @@ export type Message = {
   author: User;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type Participant = {
+  id: string;
+  userId: string;
+  user: User;
+  conversationId: string;
+  conversation: Conversation;
 };

@@ -141,22 +141,10 @@ export const conversationsSlice = createSlice({
       .addCase(editMessage.pending, (state) => {
         state.loading = true;
       })
-      .addCase(
-        editMessage.fulfilled,
-        (state, action: PayloadAction<Message>) => {
-          state.loading = false;
-          state.messages = state.messages.map((msg) =>
-            msg.id === action.payload.id
-              ? {
-                  ...msg,
-                  content: action.payload.content,
-                  updatedAt: action.payload.updatedAt,
-                }
-              : msg
-          );
-          state.error = false;
-        }
-      )
+      .addCase(editMessage.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = false;
+      })
       .addCase(editMessage.rejected, (state) => {
         state.loading = false;
       })
@@ -165,9 +153,6 @@ export const conversationsSlice = createSlice({
       })
       .addCase(deleteMessage.fulfilled, (state, action) => {
         state.loading = false;
-        state.messages = state.messages.filter(
-          (msg) => msg.id !== action.payload.messageId
-        );
         state.error = false;
       })
       .addCase(deleteMessage.rejected, (state) => {
