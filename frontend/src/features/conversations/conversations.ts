@@ -3,6 +3,7 @@ import { Conversation, Message } from "../../types";
 import {
   getConversations,
   getConversation,
+  createConversation,
   getMessages,
   sendMessage,
   deleteMessage,
@@ -156,6 +157,16 @@ export const conversationsSlice = createSlice({
         state.error = false;
       })
       .addCase(deleteMessage.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(createConversation.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createConversation.fulfilled, (state) => {
+        state.loading = false;
+        state.error = false;
+      })
+      .addCase(createConversation.rejected, (state) => {
         state.loading = false;
       });
   },

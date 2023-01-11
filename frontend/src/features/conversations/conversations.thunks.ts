@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { EditMessageParams } from "../../types/editMessageParams";
+import { toShowFromFriend } from "../../util";
 import conversationsService from "./conversations.service";
 
 export const getConversations = createAsyncThunk(
@@ -20,6 +21,32 @@ export const getConversation = createAsyncThunk(
     try {
       const data = await conversationsService.getConversation(id);
       return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.response?.data?.message);
+    }
+  }
+);
+
+export const createConversation = createAsyncThunk(
+  "conversations/createConversation",
+  async (_, thunkAPI) => {
+    try {
+      // @ts-ignore
+      const user = thunkAPI.getState().auth.user;
+      // @ts-ignore
+      const participantsIds = thunkAPI
+        .getState()
+        // @ts-ignore
+        .friends.selectedFriends.map((friend) => {
+          const toShow = toShowFromFriend(user?.id, friend);
+          return toShow?.id;
+        });
+
+      await conversationsService.createConversation([
+        ...participantsIds,
+        user.id,
+      ]);
+      return;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error?.response?.data?.message);
     }

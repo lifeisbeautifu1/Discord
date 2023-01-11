@@ -24,6 +24,13 @@ const ConversationItem: React.FC<Props> = ({ conversation }) => {
 
   const online = isOnline(user?.id!, toShow?.id!, onlineFriends);
 
+  const group = conversation?.participants.length > 2;
+
+  const groupName = conversation?.participants
+    .filter((p) => p.userId !== user?.id)
+    .map((p) => p.user?.username)
+    .join(", ");
+
   return (
     <li
       onClick={() => navigate("/channels/@me/" + conversation.id)}
@@ -33,13 +40,24 @@ const ConversationItem: React.FC<Props> = ({ conversation }) => {
       }`}
     >
       <Avatar
-        online={online}
-        offline={!online}
-        image={`https://cdn.discordapp.com/embed/avatars/${
-          parseInt(toShow?.u_name.split("#")[1]!) % 5
-        }.png`}
+        online={group ? false : online}
+        offline={group ? false : !online}
+        image={
+          group
+            ? "/images/group-avatar.png"
+            : `https://cdn.discordapp.com/embed/avatars/${
+                parseInt(toShow?.u_name.split("#")[1]!) % 5
+              }.png`
+        }
       />
-      <h2>{toShow?.username}</h2>
+      <div className="flex flex-col justify-center">
+        <h2>{group ? groupName : toShow?.username}</h2>
+        {group && (
+          <h3 className="-mt-1 text-xs">
+            {conversation.participants.length} members
+          </h3>
+        )}
+      </div>
     </li>
   );
 };

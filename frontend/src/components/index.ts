@@ -19,3 +19,4 @@ export { default as ConversationInput } from "./ConversationInput";
 export { default as MessageItem } from "./MessageItem";
 export { default as ConversationItem } from "./ConversationItem";
 export { default as TypingIndicator } from "./TypingIndicator";
+export { default as SelectableFriend } from "./SelectableFriend";

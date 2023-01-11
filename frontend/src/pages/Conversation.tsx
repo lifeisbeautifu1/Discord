@@ -23,7 +23,6 @@ import {
 } from "../features/conversations/conversations.thunks";
 import { toShowFromConversation } from "../util";
 import { useSocketContext } from "../contexts/SocketContext";
-import { OnMessageData } from "../types/onFriendRequestAcceptedData";
 import { Message } from "../types";
 
 const Conversation = () => {
@@ -92,6 +91,13 @@ const Conversation = () => {
 
   const toShow = toShowFromConversation(user?.id!, selectedConversation);
 
+  const group = selectedConversation?.participants.length > 2;
+
+  const groupName = selectedConversation?.participants
+    .filter((p) => p.userId !== user?.id)
+    .map((p) => p.user?.username)
+    .join(", ");
+
   return (
     <div className="flex flex-1 flex-col">
       <EmailVerifyPopup />
@@ -117,32 +123,47 @@ const Conversation = () => {
                   "MMMM d, yyyy"
                 )}
               </div>
-              <div className="mt-4 flex items-center px-4 text-sm">
-                <p className="text-d-gray">No servers in common</p>
-                <div className="mx-4 h-1 w-1 rounded-full bg-[#4f545c]" />
-                <button className="mr-2 rounded bg-[#4f545c] px-3.5 py-1 font-medium text-d-white transition ease-out hover:bg-[#686d73]">
-                  Remove Friend
-                </button>
-                <button className="mr-2 rounded bg-[#4f545c] px-3.5 py-1 font-medium text-d-white transition ease-out hover:bg-[#686d73]">
-                  Block
-                </button>
-              </div>
+              {!group && (
+                <div className="mt-4 flex items-center px-4 text-sm">
+                  <p className="text-d-gray">No servers in common</p>
+                  <div className="mx-4 h-1 w-1 rounded-full bg-[#4f545c]" />
+                  <button className="mr-2 rounded bg-[#4f545c] px-3.5 py-1 font-medium text-d-white transition ease-out hover:bg-[#686d73]">
+                    Remove Friend
+                  </button>
+                  <button className="mr-2 rounded bg-[#4f545c] px-3.5 py-1 font-medium text-d-white transition ease-out hover:bg-[#686d73]">
+                    Block
+                  </button>
+                </div>
+              )}
               <div className="p-4 pb-0">
                 <img
-                  src={`https://cdn.discordapp.com/embed/avatars/${
-                    parseInt(toShow?.u_name.split("#")[1]!) % 5
-                  }.png`}
+                  src={
+                    group
+                      ? "/images/group-avatar.png"
+                      : `https://cdn.discordapp.com/embed/avatars/${
+                          parseInt(toShow?.u_name.split("#")[1]!) % 5
+                        }.png`
+                  }
                   width={80}
                   className="rounded-full"
                   height={80}
                   alt="avatar"
                 />
                 <h2 className="mt-2 text-[32px] font-bold text-d-white">
-                  {toShow?.username}
+                  {group ? groupName : toShow?.username}
                 </h2>
                 <p className="text-d-gray">
-                  This is the beginning of your direct message history with{" "}
-                  <span className="font-bold">@{toShow?.username}</span>.
+                  {group ? (
+                    <p>
+                      Welcome to the beginning of the{" "}
+                      <strong>{groupName}</strong> group.
+                    </p>
+                  ) : (
+                    <p>
+                      This is the beginning of your direct message history with{" "}
+                      <strong>@{toShow?.username}</strong>.
+                    </p>
+                  )}
                 </p>
               </div>
             </div>

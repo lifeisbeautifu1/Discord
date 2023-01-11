@@ -68,6 +68,13 @@ const ConversationInput = () => {
     setContent("");
   };
 
+  const group = selectedConversation?.participants.length > 2;
+
+  const groupName = selectedConversation?.participants
+    .filter((p) => p.userId !== user?.id)
+    .map((p) => p.user?.username)
+    .join(", ");
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -81,7 +88,7 @@ const ConversationInput = () => {
         onChange={handleTyping}
         type="text"
         autoFocus
-        placeholder={`Message @${toShow?.username}`}
+        placeholder={`Message ${group ? groupName : `@${toShow?.username}`}`}
         className="mr-4 flex-1 resize-none border-none bg-transparent text-d-gray outline-none placeholder:text-d-gray/40"
       />
       <HiGif className="mr-2 h-7 w-7 cursor-pointer text-d-gray hover:text-d-white" />
