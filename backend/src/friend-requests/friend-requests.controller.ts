@@ -34,7 +34,7 @@ export class FriendRequestController {
     @GetUser() user: User,
   ) {
     const response = await this.friendRequestsService.create(user, dto.u_name);
-    this.event.emit(ServerEvents.FRIEND_REQUEST_CREATE, response);
+    this.event.emit(ServerEvents.FRIEND_REQUEST_CREATED, response);
     return response;
   }
 
@@ -47,7 +47,7 @@ export class FriendRequestController {
   @Delete(":id/cancel")
   async cancelFriendRequest(@GetUser() user: User, @Param("id") id: string) {
     const response = await this.friendRequestsService.cancel(user, id);
-    this.event.emit(ServerEvents.FRIEND_REQUEST_CANCEL, response);
+    this.event.emit(ServerEvents.FRIEND_REQUEST_CANCELED, response);
     return response;
   }
 
@@ -56,16 +56,16 @@ export class FriendRequestController {
   async acceptFriendRequest(@GetUser() user: User, @Param("id") id: string) {
     const response = await this.friendRequestsService.accept(user, id);
     this.event.emit(ServerEvents.FRIEND_REQUEST_ACCEPTED, response);
-    const isConversation = await this.conversationsService.isCreated(
-      user.id,
+    const isConversation = await this.conversationsService.isCreated([
       response.friendRequest.senderId,
-    );
+      response.friendRequest.receiverId,
+    ]);
     if (!isConversation) {
       const conversation = await this.conversationsService.createConversation(
         user,
-        response.friendRequest.sender.u_name,
+        [response.friendRequest.senderId, response.friendRequest.receiverId],
       );
-      this.event.emit(ServerEvents.CONVERSATION_CREATE, conversation);
+      this.event.emit(ServerEvents.CONVERSATION_CREATED, conversation);
     }
     return response;
   }

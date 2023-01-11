@@ -1,13 +1,14 @@
 export enum ServerEvents {
-  FRIEND_REQUEST_CREATE = "friendrequest.create",
-  FRIEND_REQUEST_CANCEL = "friendrequest.cancel",
+  FRIEND_REQUEST_CREATED = "friendrequest.create",
+  FRIEND_REQUEST_CANCELED = "friendrequest.cancel",
   FRIEND_REQUEST_ACCEPTED = "friendrequest.accepted",
   FRIEND_REQUEST_REJECTED = "friendrequest.rejected",
   FRIEND_REMOVED = "friend.removed",
-  CONVERSATION_CREATE = "conversation.create",
-  MESSAGE_CREATE = "message.create",
-  MESSAGE_DELETE = "message.delete",
-  MESSAGE_UPDATE = "message.update",
+  CONVERSATION_CREATED = "conversation.create",
+  CONVERSATION_UPDATED = "conversation.update",
+  MESSAGE_CREATED = "message.create",
+  MESSAGE_DELETED = "message.delete",
+  MESSAGE_UPDATED = "message.update",
   GET_ONLINE_FRIENDS = "onlineFriends.get",
 }
 
@@ -24,9 +25,10 @@ export enum WebsocketEvents {
   FRIEND_REQUEST_REJECTED = "onFriendRequestRejected",
   FRIEND_REMOVED = "onFriendRemoved",
   CONVERSATION_CREATED = "onConversation",
+  CONVERSATION_UPDATED = "onConversationUpdate",
   MESSAGE_CREATED = "onMessage",
-  MESSAGE_DELETE = "onMessageDelete",
-  MESSAGE_UPDATE = "onMessageUpdate",
+  MESSAGE_DELETED = "onMessageDelete",
+  MESSAGE_UPDATED = "onMessageUpdate",
   ON_TYPING_START = "onTypingStart",
   ON_TYPING_STOP = "onTypingStop",
 }

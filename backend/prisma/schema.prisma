@@ -24,10 +24,9 @@ model User {
     receivedFriendRequests FriendRequest[] @relation("receiver")
     sendFriends            Friend[]        @relation("sender")
     receivedFriends        Friend[]        @relation("receiver")
-    messages               Message[]
 
-    createdConversations  Conversation[] @relation("creator")
-    acceptedConversations Conversation[] @relation("recipient")
+    ConversationParticipant ConversationParticipant[]
+    messages                Message[]
 
     @@map("users")
 }
@@ -62,38 +61,44 @@ model Friend {
     @@map("friends")
 }
 
-model Message {
-    id String @id @default(uuid())
-
-    content String
-
-    authorId String
-    author   User?  @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-    conversationId String
-    conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-
-    lastInConversation Conversation? @relation("last_message_sent")
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
 model Conversation {
     id String @id @default(uuid())
 
-    creatorId String
-    creator   User?  @relation(name: "creator", fields: [creatorId], references: [id], onDelete: Cascade)
+    latestMessageId String?  @unique
+    latestMessage   Message? @relation(name: "latestMessage", fields: [latestMessageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-    recipientId String
-    recipient   User?  @relation(name: "recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+    participants ConversationParticipant[]
+    messages     Message[]
 
     createdAt DateTime @default(now())
+    updateAt  DateTime @updatedAt
+}
 
-    messages Message[]
+model ConversationParticipant {
+    id String @id @default(uuid())
 
-    messageId       String?  @unique
-    lastMessageSent Message? @relation(name: "last_message_sent", fields: [messageId], references: [id])
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
 
-    lastMessageSentAt DateTime @updatedAt
+    conversationId String
+    conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+    hasSeenLatestMessage Boolean
+}
+
+model Message {
+    id String @id @default(uuid())
+
+    conversationId String
+    conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+    authorId String
+    author   User   @relation(fields: [authorId], references: [id])
+
+    content String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    isLatestIn Conversation? @relation(name: "latestMessage")
 }

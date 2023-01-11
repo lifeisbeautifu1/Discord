@@ -29,24 +29,21 @@ export class MessagesController {
   @Post()
   async createMessage(
     @GetUser() user: User,
-    @Param("id") id: string,
+    @Param("id") conversationId: string,
     @Body() dto: CreateMessageDto,
   ) {
     const response = await this.messagesService.createMessage(
-      user,
+      user.id,
       dto.content,
-      id,
+      conversationId,
     );
-    this.event.emit(ServerEvents.MESSAGE_CREATE, response);
+    this.event.emit(ServerEvents.MESSAGE_CREATED, response);
     return;
   }
 
   @SkipThrottle()
   @Get()
-  async getMessagesFromConversation(
-    @GetUser() user: User,
-    @Param("id") id: string,
-  ) {
+  async getMessagesFromConversation(@Param("id") id: string) {
     const messages = await this.messagesService.getMessages(id);
     return messages;
   }
@@ -62,12 +59,12 @@ export class MessagesController {
       user.id,
       messageId,
     );
-    this.event.emit(ServerEvents.MESSAGE_DELETE, {
+    this.event.emit(ServerEvents.MESSAGE_DELETED, {
       userId: user.id,
       conversation,
       messageId,
     });
-    return { conversationId, messageId };
+    return;
   }
 
   @Patch(":messageId")
@@ -82,7 +79,7 @@ export class MessagesController {
       user.id,
       messageId,
     );
-    this.event.emit(ServerEvents.MESSAGE_UPDATE, message);
-    return message;
+    this.event.emit(ServerEvents.MESSAGE_UPDATED, message);
+    return;
   }
 }

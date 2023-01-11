@@ -24,9 +24,9 @@ export class ConversationsController {
   ) {
     const conversation = await this.conversationsService.createConversation(
       user,
-      dto.u_name,
+      dto.participantsIds,
     );
-    this.event.emit(ServerEvents.CONVERSATION_CREATE, conversation);
+    this.event.emit(ServerEvents.CONVERSATION_CREATED, conversation);
     return conversation;
   }
 

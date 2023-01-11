@@ -1,100 +1,84 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { Message, User } from "@prisma/client";
-import { FriendsService } from "src/friends/friends.service";
 import { PrismaService } from "src/prisma/prisma.service";
-import { UserService } from "src/user/user.service";
 import { userSelectedFields } from "src/utils/constants/userSelectedFields";
 
 @Injectable()
 export class ConversationsService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly userService: UserService,
-    private readonly friendsService: FriendsService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  getConversations(id: string) {
-    return this.prisma.conversation.findMany({
-      where: {
-        OR: [
-          {
-            creatorId: id,
-          },
-          {
-            recipientId: id,
-          },
-        ],
-      },
+  async getConversations(userId: string) {
+    const conversations = await this.prisma.conversation.findMany({
       include: {
-        creator: {
-          select: {
-            ...userSelectedFields,
+        participants: {
+          include: {
+            user: {
+              select: {
+                ...userSelectedFields,
+              },
+            },
           },
         },
-        recipient: {
-          select: {
-            ...userSelectedFields,
-          },
-        },
-        lastMessageSent: true,
       },
     });
+    return conversations.filter(
+      (conversation) =>
+        !!conversation.participants.find((p) => p.userId === userId),
+    );
   }
 
-  async createConversation(creator: User, u_name: string) {
-    const recipient = await this.userService.findUserByUName(u_name);
-
-    if (!recipient) throw new BadRequestException("User not found");
-
-    if (creator.id === recipient.id)
-      throw new BadRequestException("Cannot create conversation with yourself");
-
-    const isFriends = await this.friendsService.isFriends(
-      creator.id,
-      recipient.id,
-    );
-    if (!isFriends) throw new BadRequestException("Not friends");
-
-    const exist = await this.isCreated(creator.id, recipient.id);
+  async createConversation(user: User, participantsIds: Array<string>) {
+    const exist = await this.isCreated(participantsIds);
 
     if (exist) throw new BadRequestException("Conversation already exist");
 
-    const newConversation = await this.prisma.conversation.create({
+    const conversation = await this.prisma.conversation.create({
       data: {
-        creatorId: creator.id,
-        recipientId: recipient.id,
+        participants: {
+          createMany: {
+            data: participantsIds.map((id) => ({
+              userId: id,
+              hasSeenLatestMessage: id == user.id,
+            })),
+          },
+        },
       },
       include: {
-        creator: {
+        participants: {
           select: {
-            ...userSelectedFields,
-          },
-        },
-        recipient: {
-          select: {
-            ...userSelectedFields,
+            user: {
+              select: {
+                ...userSelectedFields,
+              },
+            },
           },
         },
       },
     });
-    return newConversation;
+    return conversation;
   }
 
-  async isCreated(creatorId: string, recipientId: string) {
-    return this.prisma.conversation.findFirst({
-      where: {
-        OR: [
-          {
-            creatorId,
-            recipientId,
+  async isCreated(participantsIds: Array<string>) {
+    const conversations = await this.prisma.conversation.findMany({
+      include: {
+        participants: {
+          include: {
+            user: {
+              select: {
+                ...userSelectedFields,
+              },
+            },
           },
-          {
-            recipientId: creatorId,
-            creatorId: recipientId,
-          },
-        ],
+        },
       },
     });
+    return (
+      conversations.filter((conversation) =>
+        conversation.participants.every((p) =>
+          participantsIds.includes(p.userId),
+        ),
+      ).length !== 0
+    );
   }
 
   findById(id: string) {
@@ -103,39 +87,72 @@ export class ConversationsService {
         id,
       },
       include: {
-        creator: {
-          select: {
-            ...userSelectedFields,
+        participants: {
+          include: {
+            user: {
+              select: {
+                ...userSelectedFields,
+              },
+            },
           },
         },
-        recipient: {
-          select: {
-            ...userSelectedFields,
-          },
-        },
-        lastMessageSent: true,
+        latestMessage: true,
       },
     });
   }
 
-  async hasAccess(id: string, userId: string) {
-    const conversation = await this.findById(id);
+  async hasAccess(conversationId: string, userId: string) {
+    const conversation = await this.findById(conversationId);
 
     if (!conversation)
       throw new BadRequestException("Conversation doesn't exist");
 
-    return (
-      conversation.creatorId === userId || conversation.recipientId === userId
-    );
+    return conversation.participants.some((p) => p.userId === userId);
   }
 
-  update(id: string, lastMessageSent: Message) {
+  update(
+    participantId: string,
+    userId: string,
+    conversationId: string,
+    message: Message,
+  ) {
     return this.prisma.conversation.update({
       where: {
-        id,
+        id: conversationId,
       },
       data: {
-        messageId: lastMessageSent.id,
+        latestMessageId: message.id,
+        participants: {
+          update: {
+            where: {
+              id: participantId,
+            },
+            data: {
+              hasSeenLatestMessage: true,
+            },
+          },
+          updateMany: {
+            where: {
+              NOT: {
+                userId,
+              },
+            },
+            data: {
+              hasSeenLatestMessage: false,
+            },
+          },
+        },
+      },
+      include: {
+        participants: {
+          include: {
+            user: {
+              select: {
+                ...userSelectedFields,
+              },
+            },
+          },
+        },
       },
     });
   }

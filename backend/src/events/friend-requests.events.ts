@@ -8,18 +8,18 @@ import { ServerEvents, WebsocketEvents } from "src/utils/constants";
 export class FriendRequestsEvents {
   constructor(private readonly gateway: MessagingGateway) {}
 
-  @OnEvent(ServerEvents.FRIEND_REQUEST_CREATE)
+  @OnEvent(ServerEvents.FRIEND_REQUEST_CREATED)
   friendRequestCreate(payload: FriendRequest) {
-    console.log(ServerEvents.FRIEND_REQUEST_CREATE);
+    console.log(ServerEvents.FRIEND_REQUEST_CREATED);
     const receiverSocket = this.gateway.sessions.getUserSocket(
       payload.receiverId,
     );
     receiverSocket?.emit(WebsocketEvents.FRIEND_REQUEST_RECEIVED, payload);
   }
 
-  @OnEvent(ServerEvents.FRIEND_REQUEST_CANCEL)
+  @OnEvent(ServerEvents.FRIEND_REQUEST_CANCELED)
   handleFriendRequestCancel(payload: FriendRequest) {
-    console.log(ServerEvents.FRIEND_REQUEST_CANCEL);
+    console.log(ServerEvents.FRIEND_REQUEST_CANCELED);
     const receiverSocket = this.gateway.sessions.getUserSocket(
       payload.receiverId,
     );

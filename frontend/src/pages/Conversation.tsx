@@ -42,7 +42,7 @@ const Conversation = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    socket?.on("onMessage", ({ message }: OnMessageData) => {
+    socket?.on("onMessage", (message: Message) => {
       console.log("got new message!");
       dispatch(addMessage(message));
     });
