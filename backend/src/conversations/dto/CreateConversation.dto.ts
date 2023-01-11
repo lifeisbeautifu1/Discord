@@ -1,7 +1,16 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import {
+  IsArray,
+  ArrayMinSize,
+  ArrayUnique,
+  ArrayNotContains,
+} from "class-validator";
 
 export class CreateConversationDto {
-  @IsString()
-  @IsNotEmpty()
-  u_name: string;
+  @IsArray()
+  @ArrayMinSize(2)
+  @ArrayUnique()
+  @ArrayNotContains([""], {
+    message: "Shouldn't contain empty strings",
+  })
+  participantsIds: Array<string>;
 }
