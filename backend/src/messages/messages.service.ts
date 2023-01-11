@@ -11,21 +11,12 @@ export class MessagesService {
     private readonly conversationsService: ConversationsService,
   ) {}
 
-  async createMessage(user: User, content: string, id: string) {
-    const conversation = await this.conversationsService.findById(id);
-
-    if (!conversation) throw new BadRequestException("Conversation not found");
-
-    const { creatorId, recipientId } = conversation;
-
-    if (user.id !== creatorId && user.id !== recipientId)
-      throw new BadRequestException("Can't send message");
-
+  async createMessage(userId: string, content: string, conversationId: string) {
     const message = await this.prisma.message.create({
       data: {
         content,
-        conversationId: conversation.id,
-        authorId: user.id,
+        conversationId,
+        authorId: userId,
       },
       include: {
         author: {
@@ -35,22 +26,28 @@ export class MessagesService {
         },
       },
     });
-
+    const participant = await this.prisma.conversationParticipant.findFirst({
+      where: {
+        userId,
+        conversationId,
+      },
+    });
     const updatedConversation = await this.conversationsService.update(
-      conversation.id,
+      participant.id,
+      userId,
+      conversationId,
       message,
     );
-
     return {
       message,
       conversation: updatedConversation,
     };
   }
 
-  getMessages(id: string) {
+  getMessages(conversationId: string) {
     return this.prisma.message.findMany({
       where: {
-        conversationId: id,
+        conversationId,
       },
       include: {
         author: {
@@ -70,11 +67,22 @@ export class MessagesService {
     userId: string,
     messageId: string,
   ) {
-    const conversation = await this.conversationsService.findById(
-      conversationId,
-    );
-    if (!conversation) throw new BadRequestException("Conversation not found");
-
+    const conversation = await this.prisma.conversation.findFirst({
+      where: {
+        id: conversationId,
+      },
+      include: {
+        participants: {
+          include: {
+            user: {
+              select: {
+                ...userSelectedFields,
+              },
+            },
+          },
+        },
+      },
+    });
     const message = await this.prisma.message.findFirst({
       where: {
         id: messageId,
@@ -82,10 +90,8 @@ export class MessagesService {
         conversationId,
       },
     });
-
     if (!message) throw new BadRequestException("Message not found");
-
-    if (messageId !== conversation.messageId) {
+    if (messageId !== conversation.latestMessageId) {
       await this.prisma.message.delete({
         where: {
           id: messageId,
@@ -119,10 +125,10 @@ export class MessagesService {
           id: conversationId,
         },
         data: {
-          messageId: null,
+          latestMessageId: null,
         },
       });
-      return this.prisma.message.delete({
+      await this.prisma.message.delete({
         where: {
           id: message.id,
         },
@@ -134,10 +140,10 @@ export class MessagesService {
           id: conversationId,
         },
         data: {
-          messageId: newLastMessage.id,
+          latestMessageId: newLastMessage.id,
         },
       });
-      return this.prisma.message.delete({
+      await this.prisma.message.delete({
         where: {
           id: message.id,
         },
@@ -161,7 +167,17 @@ export class MessagesService {
         content,
       },
       include: {
-        conversation: true,
+        conversation: {
+          include: {
+            participants: {
+              include: {
+                user: {
+                  select: { ...userSelectedFields },
+                },
+              },
+            },
+          },
+        },
       },
     });
   }

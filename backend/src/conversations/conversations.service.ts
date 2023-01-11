@@ -1,8 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { Message, User } from "@prisma/client";
-import { FriendsService } from "src/friends/friends.service";
 import { PrismaService } from "src/prisma/prisma.service";
-import { UserService } from "src/user/user.service";
 import { userSelectedFields } from "src/utils/constants/userSelectedFields";
 
 @Injectable()
@@ -112,13 +110,49 @@ export class ConversationsService {
     return conversation.participants.some((p) => p.userId === userId);
   }
 
-  update(id: string, lastMessageSent: Message) {
+  update(
+    participantId: string,
+    userId: string,
+    conversationId: string,
+    message: Message,
+  ) {
     return this.prisma.conversation.update({
       where: {
-        id,
+        id: conversationId,
       },
       data: {
-        latestMessageId: lastMessageSent.id,
+        latestMessageId: message.id,
+        participants: {
+          update: {
+            where: {
+              id: participantId,
+            },
+            data: {
+              hasSeenLatestMessage: true,
+            },
+          },
+          updateMany: {
+            where: {
+              NOT: {
+                userId,
+              },
+            },
+            data: {
+              hasSeenLatestMessage: false,
+            },
+          },
+        },
+      },
+      include: {
+        participants: {
+          include: {
+            user: {
+              select: {
+                ...userSelectedFields,
+              },
+            },
+          },
+        },
       },
     });
   }

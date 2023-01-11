@@ -26,7 +26,7 @@ export class ConversationsController {
       user,
       dto.participantsIds,
     );
-    this.event.emit(ServerEvents.CONVERSATION_CREATE, conversation);
+    this.event.emit(ServerEvents.CONVERSATION_CREATED, conversation);
     return conversation;
   }
 

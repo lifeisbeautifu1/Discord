@@ -16,7 +16,10 @@ import {
   ServerEvents,
   WebsocketEvents,
 } from "src/utils/constants";
-import { AuthenticatedSocket } from "src/utils/interfaces";
+import {
+  AuthenticatedSocket,
+  ConversationPopulated,
+} from "src/utils/interfaces";
 import { GatewaySessionManager } from "./gateway.session";
 
 @WebSocketGateway({
@@ -70,68 +73,62 @@ export class MessagingGateway
     }
   }
 
-  @OnEvent(ServerEvents.CONVERSATION_CREATE)
-  handleConversationEvent(
-    conversation: Conversation & {
-      participants: {
-        user: {
-          id: string;
-          username: string;
-          u_name: string;
-          image: string;
-        };
-      }[];
-    },
-  ) {
-    console.log(ServerEvents.CONVERSATION_CREATE);
+  @OnEvent(ServerEvents.CONVERSATION_CREATED)
+  handleConversationEvent(conversation: ConversationPopulated) {
+    console.log(ServerEvents.CONVERSATION_CREATED);
     conversation.participants.forEach((participant) => {
       const socket = this.sessions.getUserSocket(participant.user.id);
       socket?.emit(WebsocketEvents.CONVERSATION_CREATED, conversation);
     });
   }
 
-  @OnEvent(ServerEvents.MESSAGE_CREATE)
-  handleMessageCreate(payload: {
-    message: Message;
-    conversation: Conversation;
-  }) {
-    console.log(ServerEvents.MESSAGE_CREATE);
-    // const { authorId } = payload.message;
-    // const { creatorId, recipientId } = payload.conversation;
-    // const authorSocket = this.sessions.getUserSocket(authorId);
-    // authorSocket?.emit(WebsocketEvents.MESSAGE_CREATED, payload);
-    // const recipientSocket =
-    //   authorId === creatorId
-    //     ? this.sessions.getUserSocket(recipientId)
-    //     : this.sessions.getUserSocket(creatorId);
-    // recipientSocket?.emit(WebsocketEvents.MESSAGE_CREATED, payload);
+  @OnEvent(ServerEvents.CONVERSATION_UPDATED)
+  handleConversationUpdateEvent(conversation: ConversationPopulated) {
+    console.log(ServerEvents.CONVERSATION_UPDATED);
+    conversation.participants.forEach((participant) => {
+      const socket = this.sessions.getUserSocket(participant.user.id);
+      socket?.emit(WebsocketEvents.CONVERSATION_UPDATED, conversation);
+    });
   }
 
-  @OnEvent(ServerEvents.MESSAGE_DELETE)
+  @OnEvent(ServerEvents.MESSAGE_CREATED)
+  handleMessageCreate(payload: {
+    message: Message;
+    conversation: ConversationPopulated;
+  }) {
+    console.log(ServerEvents.MESSAGE_CREATED);
+    const { conversation, message } = payload;
+    conversation.participants.forEach((participant) => {
+      const socket = this.sessions.getUserSocket(participant.user.id);
+      socket?.emit(WebsocketEvents.MESSAGE_CREATED, message);
+    });
+  }
+
+  @OnEvent(ServerEvents.MESSAGE_DELETED)
   handleMessageDelete(payload: {
-    conversation: Conversation;
+    conversation: ConversationPopulated;
     userId: string;
     messageId: string;
   }) {
-    // const recipientSocket =
-    //   payload.conversation.creatorId === payload.userId
-    //     ? this.sessions.getUserSocket(payload.conversation.recipientId)
-    //     : this.sessions.getUserSocket(payload.conversation.creatorId);
-    // recipientSocket?.emit(WebsocketEvents.MESSAGE_DELETE, payload.messageId);
+    console.log(ServerEvents.MESSAGE_DELETED);
+    const { conversation, messageId } = payload;
+    conversation.participants.forEach((participant) => {
+      const socket = this.sessions.getUserSocket(participant.user.id);
+      socket?.emit(WebsocketEvents.MESSAGE_DELETED, messageId);
+    });
   }
 
-  @OnEvent(ServerEvents.MESSAGE_UPDATE)
+  @OnEvent(ServerEvents.MESSAGE_UPDATED)
   handleMessageUpdate(
     message: Message & {
-      conversation: Conversation;
+      conversation: ConversationPopulated;
     },
   ) {
-    // const { authorId, conversation } = message;
-    // const recipientSocket =
-    //   authorId === conversation.creatorId
-    //     ? this.sessions.getUserSocket(conversation.recipientId)
-    //     : this.sessions.getUserSocket(conversation.creatorId);
-    // recipientSocket?.emit(WebsocketEvents.MESSAGE_UPDATE, message);
+    console.log(ServerEvents.MESSAGE_UPDATED);
+    message.conversation.participants.forEach((participant) => {
+      const socket = this.sessions.getUserSocket(participant.user.id);
+      socket?.emit(WebsocketEvents.MESSAGE_UPDATED, message);
+    });
   }
 
   @OnEvent(ServerEvents.GET_ONLINE_FRIENDS)
