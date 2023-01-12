@@ -109,6 +109,10 @@
   .fr:hover .fr-icon {
     @apply bg-d-dark-black;
   }
+
+  .action-icon {
+    @apply flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-secondary-alt text-xl text-d-white transition ease-out hover:bg-d-dark-black;
+  }
 }
 
 .triangle::before {

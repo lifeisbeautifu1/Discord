@@ -66,3 +66,14 @@ export type Participant = {
   conversation: Conversation;
   isTyping: boolean;
 };
+
+export type CallInitiatePayload = {
+  localStream: MediaStream;
+  isCalling: boolean;
+  activeConversationId: number;
+  caller: User;
+  receiver: User;
+  callType: CallType;
+};
+
+export type CallType = "video" | "audio";

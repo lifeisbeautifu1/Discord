@@ -4,6 +4,7 @@ import { Socket } from "socket.io";
 
 export interface AuthenticatedSocket extends Socket {
   userId?: string;
+  user: User;
 }
 
 export interface AuthenticatedRequest extends Request {
@@ -24,4 +25,18 @@ export type ConversationPopulated = Conversation & {
 export type TypingPayload = {
   userId: string;
   conversationId: string;
+};
+
+export type CallPayload = {
+  recipientId: string;
+  conversationId: string;
+};
+
+export type CallAcceptedPayload = {
+  callerId: string;
+};
+
+export type CallHangUpPayload = {
+  receiverId: string;
+  callerId: string;
 };

@@ -8,6 +8,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
+import { ConversationsService } from "src/conversations/conversations.service";
 import { Message } from "@prisma/client";
 import { Server } from "socket.io";
 import { FriendsService } from "src/friends/friends.service";
@@ -18,6 +19,9 @@ import {
 } from "src/utils/constants";
 import {
   AuthenticatedSocket,
+  CallAcceptedPayload,
+  CallHangUpPayload,
+  CallPayload,
   ConversationPopulated,
   TypingPayload,
 } from "src/utils/interfaces";
@@ -36,6 +40,7 @@ export class MessagingGateway
     readonly sessions: GatewaySessionManager,
     private readonly event: EventEmitter2,
     private readonly friendsService: FriendsService,
+    private readonly conversationService: ConversationsService,
   ) {}
 
   @WebSocketServer()
@@ -188,5 +193,130 @@ export class MessagingGateway
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
     this.event.emit(ServerEvents.GET_ONLINE_FRIENDS, socket);
+  }
+
+  @SubscribeMessage(ClientEvents.VIDEO_CALL_INITIATE)
+  async handleVideoCall(
+    @MessageBody() data: CallPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    console.log(ClientEvents.VIDEO_CALL_INITIATE);
+    const caller = socket.userId;
+    const receiverSocket = this.sessions.getUserSocket(data.recipientId);
+    if (!receiverSocket) socket.emit(WebsocketEvents.USER_UNAVAILABLE);
+    receiverSocket.emit(WebsocketEvents.VIDEO_CALL, { ...data, caller });
+  }
+
+  @SubscribeMessage(ClientEvents.VIDEO_CALL_ACCEPTED)
+  async handleVideoCallAccepted(
+    @MessageBody() data: CallAcceptedPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    console.log(ClientEvents.VIDEO_CALL_ACCEPTED);
+    const callerSocket = this.sessions.getUserSocket(data.callerId);
+    const conversation = await this.conversationService.isCreated([
+      data.callerId,
+      socket?.userId,
+    ]);
+    if (!conversation) return console.log("No conversation found");
+    if (callerSocket) {
+      const payload = { ...data, conversation, acceptor: socket.userId };
+      callerSocket.emit(WebsocketEvents.VIDEO_CALL_ACCEPTED, payload);
+      socket.emit(WebsocketEvents.VIDEO_CALL_ACCEPTED, payload);
+    }
+  }
+
+  @SubscribeMessage(ClientEvents.VIDEO_CALL_REJECTED)
+  async handleVideoCallRejected(
+    @MessageBody() data: CallAcceptedPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    console.log(ClientEvents.VIDEO_CALL_REJECTED);
+    const receiver = socket.userId;
+    const callerSocket = this.sessions.getUserSocket(data.callerId);
+    callerSocket &&
+      callerSocket.emit(WebsocketEvents.VIDEO_CALL_REJECTED, { receiver });
+    socket.emit(WebsocketEvents.VIDEO_CALL_REJECTED, { receiver });
+  }
+
+  @SubscribeMessage(ClientEvents.VOICE_CALL_HANG_UP)
+  async handleVideoCallHangUp(
+    @MessageBody() { callerId, receiverId }: CallHangUpPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    console.log(ClientEvents.VOICE_CALL_HANG_UP);
+    if (socket?.userId === callerId) {
+      const receiverSocket = this.sessions.getUserSocket(receiverId);
+      socket.emit(WebsocketEvents.VIDEO_CALL_HANG_UP);
+      return (
+        receiverSocket &&
+        receiverSocket.emit(WebsocketEvents.VIDEO_CALL_HANG_UP)
+      );
+    }
+    socket.emit(WebsocketEvents.VIDEO_CALL_HANG_UP);
+    const callerSocket = this.sessions.getUserSocket(callerId);
+    callerSocket && callerSocket.emit(WebsocketEvents.VIDEO_CALL_HANG_UP);
+  }
+
+  @SubscribeMessage(ClientEvents.VOICE_CALL_INITIATE)
+  async handleVoiceCallInitiate(
+    @MessageBody() payload: CallPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    const callerId = socket.userId;
+    const receiverSocket = this.sessions.getUserSocket(payload.recipientId);
+    if (!receiverSocket) socket.emit(WebsocketEvents.USER_UNAVAILABLE);
+    receiverSocket.emit(WebsocketEvents.VOICE_CALL, { ...payload, callerId });
+  }
+
+  @SubscribeMessage(ClientEvents.VOICE_CALL_ACCEPTED)
+  async handleVoiceCallAccepted(
+    @MessageBody() payload: CallAcceptedPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    console.log(WebsocketEvents.VOICE_CALL_ACCEPTED);
+    const callerSocket = this.sessions.getUserSocket(payload.callerId);
+    const conversation = await this.conversationService.isCreated([
+      payload.callerId,
+      socket.userId,
+    ]);
+    if (!conversation) return console.log("No conversation found");
+    if (callerSocket) {
+      const callPayload = { ...payload, conversation, acceptor: socket.userId };
+      callerSocket.emit(WebsocketEvents.VOICE_CALL_ACCEPTED, callPayload);
+      socket.emit(WebsocketEvents.VOICE_CALL_ACCEPTED, callPayload);
+    }
+  }
+
+  @SubscribeMessage(ClientEvents.VOICE_CALL_HANG_UP)
+  async handleVoiceCallHangUp(
+    @MessageBody() { callerId, receiverId }: CallHangUpPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    console.log(ClientEvents.VOICE_CALL_HANG_UP);
+    if (socket.userId === callerId) {
+      const receiverSocket = this.sessions.getUserSocket(receiverId);
+      socket.emit(WebsocketEvents.VOICE_CALL_HANG_UP);
+      return (
+        receiverSocket &&
+        receiverSocket.emit(WebsocketEvents.VOICE_CALL_HANG_UP)
+      );
+    }
+    socket.emit(WebsocketEvents.VOICE_CALL_HANG_UP);
+    const callerSocket = this.sessions.getUserSocket(callerId);
+    callerSocket && callerSocket.emit(WebsocketEvents.VOICE_CALL_HANG_UP);
+  }
+
+  @SubscribeMessage(ClientEvents.VOICE_CALL_REJECTED)
+  async handleVoiceCallRejected(
+    @MessageBody() data: CallAcceptedPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    console.log(ClientEvents.VOICE_CALL_REJECTED);
+    const receiverId = socket.userId;
+    const callerSocket = this.sessions.getUserSocket(data.callerId);
+    callerSocket &&
+      callerSocket.emit(WebsocketEvents.VOICE_CALL_REJECTED, { receiverId });
+    socket.emit(WebsocketEvents.VOICE_CALL_REJECTED, { receiverId });
   }
 }
