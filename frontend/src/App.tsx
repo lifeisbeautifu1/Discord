@@ -54,8 +54,6 @@ function App() {
   useEffect(() => {
     socket?.emit("getOnlineFriends");
 
-    const interval = setInterval(() => socket?.emit("getOnlineFriends"), 10000);
-
     socket?.on("onFriendRequestReceived", (data: FriendRequest) => {
       console.log("someone sent me friend request");
       dispatch(addIncomingFriendRequest(data));
@@ -105,8 +103,6 @@ function App() {
       socket.off("onFriendRequestReceived");
       socket.off("onFriendRemoved");
       socket.off("onConversation");
-
-      clearInterval(interval);
     };
   }, [socket]);
 

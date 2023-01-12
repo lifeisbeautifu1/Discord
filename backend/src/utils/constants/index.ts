@@ -10,12 +10,15 @@ export enum ServerEvents {
   MESSAGE_DELETED = "message.delete",
   MESSAGE_UPDATED = "message.update",
   GET_ONLINE_FRIENDS = "onlineFriends.get",
+  NOTIFY_FRIENDS = "notifyFriends",
 }
 
 export enum ClientEvents {
   GET_ONLINE_FRIENDS = "getOnlineFriends",
   TYPING_START = "typingStart",
   TYPING_STOP = "typingStop",
+  CONVERSATION_JOIN = "onConversationJoin",
+  CONVERSATION_LEAVE = "onConversationLeave",
 }
 
 export enum WebsocketEvents {

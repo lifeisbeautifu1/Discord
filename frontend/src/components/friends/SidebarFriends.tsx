@@ -1,4 +1,4 @@
-import { FriendIcon } from "./icons";
+import { FriendIcon } from "../icons";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";
 import { Menu, Transition } from "@headlessui/react";
@@ -10,15 +10,15 @@ import {
   Skeleton,
   ConversationItem,
   SelectableFriend,
-} from "./";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { toShowFromFriend } from "../util";
-import { selectUser } from "../features/auth/auth";
+} from "..";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { toShowFromFriend } from "../../util";
+import { selectUser } from "../../features/auth/auth";
 import {
   resetSelectedFriends,
   toggleSelectedFriend,
-} from "../features/friends/friends";
-import { createConversation } from "../features/conversations/conversations.thunks";
+} from "../../features/friends/friends";
+import { createConversation } from "../../features/conversations/conversations.thunks";
 
 const SidebarFriends = () => {
   const { converastions } = useAppSelector((state) => state.conversations);

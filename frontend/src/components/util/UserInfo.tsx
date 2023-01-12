@@ -1,10 +1,10 @@
-import { Avatar } from "./";
-import { Icon } from "./icons";
+import { Avatar } from "..";
+import { Icon } from "../icons";
 import { FaMicrophone } from "react-icons/fa";
 import { MdHeadphones } from "react-icons/md";
 import { IoSettingsSharp } from "react-icons/io5";
-import { useAppSelector } from "../app/hooks";
-import { selectUser } from "../features/auth/auth";
+import { useAppSelector } from "../../app/hooks";
+import { selectUser } from "../../features/auth/auth";
 
 const UserInfo = () => {
   const user = useAppSelector(selectUser);

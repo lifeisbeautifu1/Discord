@@ -1,10 +1,10 @@
 import { IoSearchOutline } from "react-icons//io5";
 import { RxCross1 } from "react-icons/rx";
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import { useEffect, useState } from "react";
-import { FriendItem } from "./";
-import { Friend } from "../types";
-import { selectUser } from "../features/auth/auth";
+import { FriendItem } from "..";
+import { Friend } from "../../types";
+import { selectUser } from "../../features/auth/auth";
 
 const OnlineFriends = () => {
   const { onlineFriends } = useAppSelector((state) => state.friends);

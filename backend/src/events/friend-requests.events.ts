@@ -1,12 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { OnEvent } from "@nestjs/event-emitter";
+import { EventEmitter2, OnEvent } from "@nestjs/event-emitter";
 import { Friend, FriendRequest } from "@prisma/client";
 import { MessagingGateway } from "src/gateway/gateway";
 import { ServerEvents, WebsocketEvents } from "src/utils/constants";
 
 @Injectable()
 export class FriendRequestsEvents {
-  constructor(private readonly gateway: MessagingGateway) {}
+  constructor(
+    private readonly gateway: MessagingGateway,
+    private readonly event: EventEmitter2,
+  ) {}
 
   @OnEvent(ServerEvents.FRIEND_REQUEST_CREATED)
   friendRequestCreate(payload: FriendRequest) {
@@ -36,6 +39,8 @@ export class FriendRequestsEvents {
       payload.friendRequest.senderId,
     );
     senderSocket?.emit(WebsocketEvents.FRIEND_REQUEST_ACCEPTED, payload);
+    this.event.emit(ServerEvents.NOTIFY_FRIENDS, senderSocket);
+    this.event.emit(ServerEvents.GET_ONLINE_FRIENDS, senderSocket);
   }
 
   @OnEvent(ServerEvents.FRIEND_REQUEST_REJECTED)

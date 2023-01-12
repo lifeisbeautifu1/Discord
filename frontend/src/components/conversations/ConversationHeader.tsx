@@ -1,4 +1,4 @@
-import { Tooltip } from "../components";
+import { Tooltip } from "..";
 import { MdOutlineAlternateEmail, MdGroup } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 import { BsFillPinAngleFill } from "react-icons/bs";
@@ -9,9 +9,9 @@ import {
   HiQuestionMarkCircle,
   HiVideoCamera,
 } from "react-icons/hi2";
-import { useAppSelector } from "../app/hooks";
-import { selectUser } from "../features/auth/auth";
-import { isOnline, toShowFromConversation } from "../util";
+import { useAppSelector } from "../../app/hooks";
+import { selectUser } from "../../features/auth/auth";
+import { isOnline, toShowFromConversation } from "../../util";
 
 const ConversationHeader = () => {
   const { selectedConversation } = useAppSelector(

@@ -1,8 +1,8 @@
 import { FaDiscord, FaCompass } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
-import { ServerIcon } from "./icons";
+import { ServerIcon } from "../icons";
 import { TbDownload } from "react-icons/tb";
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 
 const Navbar: React.FC = () => {
   const { incomingFriendRequests } = useAppSelector((state) => state.friends);

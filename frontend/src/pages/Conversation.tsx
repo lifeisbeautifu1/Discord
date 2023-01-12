@@ -14,7 +14,7 @@ import {
   addMessage,
   removeMessage,
   setError,
-  setIsTyping,
+  setUserTyping,
   updateMessage,
 } from "../features/conversations/conversations";
 import {
@@ -24,6 +24,7 @@ import {
 import { toShowFromConversation } from "../util";
 import { useSocketContext } from "../contexts/SocketContext";
 import { Message } from "../types";
+import { TypingPayload } from "../types/TypingPayload";
 
 const Conversation = () => {
   const { error, selectedConversation, messages } = useAppSelector(
@@ -46,12 +47,22 @@ const Conversation = () => {
       dispatch(addMessage(message));
     });
 
-    socket?.on("onTypingStart", () => {
-      dispatch(setIsTyping(true));
+    socket?.on("onTypingStart", (payload: TypingPayload) => {
+      dispatch(
+        setUserTyping({
+          isTyping: true,
+          ...payload,
+        })
+      );
     });
 
-    socket?.on("onTypingStop", () => {
-      dispatch(setIsTyping(false));
+    socket?.on("onTypingStop", (payload: TypingPayload) => {
+      dispatch(
+        setUserTyping({
+          isTyping: false,
+          ...payload,
+        })
+      );
     });
 
     socket?.on("onMessageDelete", (messageId: string) => {
@@ -76,8 +87,12 @@ const Conversation = () => {
     if (id) {
       dispatch(getConversation(id));
       dispatch(getMessages(id));
+      socket?.emit("onConversationJoin", id);
     }
-  }, [id]);
+    return () => {
+      socket?.emit("onConversationLeave", id);
+    };
+  }, [id, socket]);
 
   useEffect(() => {
     if (error) {
@@ -168,7 +183,21 @@ const Conversation = () => {
               </div>
             </div>
             <ConversationInput />
-            <TypingIndicator />
+            <div
+              className={`mx-4 mt-1 ${
+                selectedConversation.participants.filter(
+                  (participant) => participant.isTyping
+                ).length > 0
+                  ? "mb-3"
+                  : "mb-5"
+              }  flex items-center space-x-2`}
+            >
+              {selectedConversation.participants
+                .filter((participant) => participant.isTyping)
+                .map((participant) => (
+                  <TypingIndicator name={participant.user?.username} />
+                ))}
+            </div>
           </main>
         </div>
       </div>

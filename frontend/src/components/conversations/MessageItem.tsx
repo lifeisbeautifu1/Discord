@@ -1,4 +1,4 @@
-import { Message } from "../types";
+import { Message } from "../../types";
 import { EmojiHappyIcon } from "@heroicons/react/solid";
 import { BsReplyFill, BsPinAngleFill } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
@@ -7,17 +7,17 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { format, formatRelative } from "date-fns";
-import { Tooltip } from "./";
-import { useAppSelector } from "../app/hooks";
-import { sameDay } from "../util";
-import { useAppDispatch } from "../app/hooks";
-import { selectUser } from "../features/auth/auth";
+import { Tooltip } from "..";
+import { useAppSelector } from "../../app/hooks";
+import { sameDay } from "../../util";
+import { useAppDispatch } from "../../app/hooks";
+import { selectUser } from "../../features/auth/auth";
 import {
   setIsDeleteMessageModalOpen,
   setIsEdit,
   setSelectedMessage,
-} from "../features/conversations/conversations";
-import { editMessage } from "../features/conversations/conversations.thunks";
+} from "../../features/conversations/conversations";
+import { editMessage } from "../../features/conversations/conversations.thunks";
 
 type Props = {
   message: Message;

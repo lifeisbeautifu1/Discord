@@ -1,7 +1,7 @@
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useState } from "react";
-import { selectUser, setEmailModal } from "../features/auth/auth";
-import { resendEmailVerification } from "../features/auth/auth.thunks";
+import { selectUser, setEmailModal } from "../../features/auth/auth";
+import { resendEmailVerification } from "../../features/auth/auth.thunks";
 
 const EmailVerifyPopup = () => {
   const [isVerifyEmail, setIsVerifyEmail] = useState(true);

@@ -5,21 +5,22 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/solid";
 import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { sendMessage } from "../features/conversations/conversations.thunks";
-import { toShowFromConversation } from "../util";
-import { selectUser } from "../features/auth/auth";
-import { useSocketContext } from "../contexts/SocketContext";
-import { setTyping } from "../features/conversations/conversations";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { sendMessage } from "../../features/conversations/conversations.thunks";
+import { toShowFromConversation } from "../../util";
+import { selectUser } from "../../features/auth/auth";
+import { useSocketContext } from "../../contexts/SocketContext";
 
 const ConversationInput = () => {
   const [content, setContent] = useState("");
 
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
 
+  const [typing, setTyping] = useState(false);
+
   const socket = useSocketContext();
 
-  const { selectedConversation, isTyping, typing } = useAppSelector(
+  const { selectedConversation } = useAppSelector(
     (state) => state.conversations
   );
 
@@ -39,18 +40,27 @@ const ConversationInput = () => {
       setTimer(
         setTimeout(() => {
           console.log("User stopped typing");
-          socket.emit("typingStop", toShow?.id);
-          dispatch(setTyping(false));
+          socket.emit("typingStop", {
+            conversationId: selectedConversation.id,
+            userId: user.id,
+          });
+          setTyping(false);
         }, 2000)
       );
     } else {
-      dispatch(setTyping(true));
-      socket.emit("typingStart", toShow?.id);
+      setTyping(true);
+      socket.emit("typingStart", {
+        conversationId: selectedConversation.id,
+        userId: user.id,
+      });
       setTimer(
         setTimeout(() => {
           console.log("User stopped typing");
-          socket.emit("typingStop", toShow?.id);
-          dispatch(setTyping(false));
+          socket.emit("typingStop", {
+            conversationId: selectedConversation.id,
+            userId: user.id,
+          });
+          setTyping(false);
         }, 2000)
       );
     }
@@ -63,7 +73,10 @@ const ConversationInput = () => {
 
     dispatch(sendMessage({ id: selectedConversation?.id!, content }));
 
-    socket?.emit("typingStop", toShow?.id);
+    socket?.emit("typingStop", {
+      conversationId: selectedConversation.id,
+      userId: user.id,
+    });
 
     setContent("");
   };
@@ -78,9 +91,7 @@ const ConversationInput = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className={`mx-4 ${
-        !isTyping && "mb-6"
-      } -mt-2 flex items-center rounded-lg bg-d-input-bg px-4 py-2`}
+      className={`mx-4 -mt-2 flex items-center rounded-lg bg-d-input-bg px-4 py-2`}
     >
       <PlusCircleIcon className="mr-4 h-6 w-6 cursor-pointer text-d-gray hover:text-d-white" />
       <input

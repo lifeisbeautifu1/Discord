@@ -1,15 +1,15 @@
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { HiChatBubbleLeft, HiEllipsisVertical } from "react-icons/hi2";
-import { ActionIcon } from "./icons";
-import { selectUser } from "../features/auth/auth";
-import { Friend } from "../types";
-import { Avatar } from "./";
+import { ActionIcon } from "../icons";
+import { selectUser } from "../../features/auth/auth";
+import { Friend } from "../../types";
+import { Avatar } from "..";
 import {
   setFriendToDelete,
   setRemoveFriendModal,
-} from "../features/friends/friends";
+} from "../../features/friends/friends";
 import { useNavigate } from "react-router-dom";
 
 type Props = {

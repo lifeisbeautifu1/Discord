@@ -1,7 +1,7 @@
 import { useState, FormEvent, useRef, ChangeEvent, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { reset } from "../features/friends/friends";
-import { sendFriendRequest } from "../features/friends/friends.thunks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { reset } from "../../features/friends/friends";
+import { sendFriendRequest } from "../../features/friends/friends.thunks";
 
 const AddFriend = () => {
   const [searchTag, setSearchTag] = useState("");
@@ -53,7 +53,7 @@ const AddFriend = () => {
           <button
             type="submit"
             disabled={!searchTag.trim().length}
-            className="h-full rounded bg-brand py-1.5 px-4 text-sm text-d-white hover:bg-d-brand-hover disabled:cursor-not-allowed disabled:bg-brand/70"
+            className="h-full rounded bg-brand py-1.5 px-4 text-sm text-d-white disabled:cursor-not-allowed disabled:bg-brand/70 hover:bg-d-brand-hover"
           >
             Send Friend Request
           </button>

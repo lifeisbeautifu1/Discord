@@ -1,9 +1,9 @@
-import { Avatar } from ".";
-import { useAppSelector } from "../app/hooks";
-import { selectUser } from "../features/auth/auth";
+import { Avatar } from "..";
+import { useAppSelector } from "../../app/hooks";
+import { selectUser } from "../../features/auth/auth";
 import { useNavigate } from "react-router-dom";
-import { Conversation } from "../types";
-import { isOnline, toShowFromConversation, toShowFromFriend } from "../util";
+import { Conversation } from "../../types";
+import { isOnline, toShowFromConversation, toShowFromFriend } from "../../util";
 
 type Props = {
   conversation: Conversation;

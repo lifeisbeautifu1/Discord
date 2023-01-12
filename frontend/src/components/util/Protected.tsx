@@ -1,4 +1,4 @@
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import { Navigate, useLocation } from "react-router-dom";
 
 type Props = {

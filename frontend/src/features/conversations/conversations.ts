@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Conversation, Message } from "../../types";
+import { TypingPayload } from "../../types/TypingPayload";
 import {
   getConversations,
   getConversation,
@@ -19,8 +20,6 @@ export type ConversationsState = {
   selectedMessage: Message | null;
   isEdit: boolean;
   messages: Array<Message>;
-  isTyping: boolean;
-  typing: boolean;
 };
 
 const initialState: ConversationsState = {
@@ -32,8 +31,6 @@ const initialState: ConversationsState = {
   selectedMessage: null,
   isEdit: false,
   messages: [],
-  isTyping: false,
-  typing: false,
 };
 
 export const conversationsSlice = createSlice({
@@ -77,11 +74,28 @@ export const conversationsSlice = createSlice({
     setIsEdit: (state, action: PayloadAction<boolean>) => {
       state.isEdit = action.payload;
     },
-    setIsTyping: (state, action: PayloadAction<boolean>) => {
-      state.isTyping = action.payload;
-    },
-    setTyping: (state, action: PayloadAction<boolean>) => {
-      state.typing = action.payload;
+    setUserTyping: (
+      state,
+      action: PayloadAction<
+        TypingPayload & {
+          isTyping: boolean;
+        }
+      >
+    ) => {
+      if (state.selectedConversation)
+        state.selectedConversation = {
+          ...state.selectedConversation,
+          participants: state.selectedConversation.participants.map(
+            (participant) => {
+              return participant?.userId === action.payload.userId
+                ? {
+                    ...participant,
+                    isTyping: action.payload.isTyping,
+                  }
+                : participant;
+            }
+          ),
+        };
     },
   },
   extraReducers: (builder) => {
@@ -182,8 +196,7 @@ export const {
   setIsDeleteMessageModalOpen,
   setSelectedMessage,
   setIsEdit,
-  setIsTyping,
-  setTyping,
+  setUserTyping,
 } = conversationsSlice.actions;
 
 export default conversationsSlice.reducer;

@@ -1,10 +1,10 @@
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { AiOutlineCheck } from "react-icons/ai";
-import { selectUser } from "../features/auth/auth";
-import { toggleSelectedFriend } from "../features/friends/friends";
-import { Friend } from "../types";
-import { isOnline, toShowFromFriend } from "../util";
-import Avatar from "./Avatar";
+import { selectUser } from "../../features/auth/auth";
+import { toggleSelectedFriend } from "../../features/friends/friends";
+import { Friend } from "../../types";
+import { isOnline, toShowFromFriend } from "../../util";
+import Avatar from "../util/Avatar";
 
 type Props = {
   friend: Friend;

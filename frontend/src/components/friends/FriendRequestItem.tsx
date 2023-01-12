@@ -1,15 +1,15 @@
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { ActionIcon } from "./icons";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { ActionIcon } from "../icons";
 import { RxCross1 } from "react-icons/rx";
 import { IoCheckmark } from "react-icons/io5";
-import { selectUser } from "../features/auth/auth";
-import { FriendRequest } from "../types";
-import { Avatar } from "./";
+import { selectUser } from "../../features/auth/auth";
+import { FriendRequest } from "../../types";
+import { Avatar } from "..";
 import {
   cancelFriendRequest,
   rejectFriendRequest,
   acceptFriendRequest,
-} from "../features/friends/friends.thunks";
+} from "../../features/friends/friends.thunks";
 
 type Props = {
   friendRequest: FriendRequest;

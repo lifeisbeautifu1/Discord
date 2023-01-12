@@ -8,7 +8,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
-import { Conversation, Message } from "@prisma/client";
+import { Message } from "@prisma/client";
 import { Server } from "socket.io";
 import { FriendsService } from "src/friends/friends.service";
 import {
@@ -19,6 +19,7 @@ import {
 import {
   AuthenticatedSocket,
   ConversationPopulated,
+  TypingPayload,
 } from "src/utils/interfaces";
 import { GatewaySessionManager } from "./gateway.session";
 
@@ -43,34 +44,14 @@ export class MessagingGateway
   async handleConnection(socket: AuthenticatedSocket) {
     console.log("Incoming connection");
     this.sessions.setUserSocket(socket.userId, socket);
-    const { userId } = socket;
-    if (userId) {
-      const friends = await this.friendsService.getFriends(userId);
-      friends.forEach((friend) => {
-        const friendSocket = this.sessions.getUserSocket(
-          userId === friend.receiverId ? friend.senderId : friend.receiverId,
-        );
-        friendSocket &&
-          this.event.emit(ServerEvents.GET_ONLINE_FRIENDS, friendSocket);
-      });
-    }
+    this.event.emit(ServerEvents.NOTIFY_FRIENDS, socket);
     socket.emit("connected", {});
   }
 
   async handleDisconnect(socket: AuthenticatedSocket) {
     console.log("handleDisconnect");
     this.sessions.removeUserSocket(socket.userId);
-    const { userId } = socket;
-    if (userId) {
-      const friends = await this.friendsService.getFriends(userId);
-      friends.forEach((friend) => {
-        const friendSocket = this.sessions.getUserSocket(
-          userId === friend.receiverId ? friend.senderId : friend.receiverId,
-        );
-        friendSocket &&
-          this.event.emit(ServerEvents.GET_ONLINE_FRIENDS, friendSocket);
-      });
-    }
+    this.event.emit(ServerEvents.NOTIFY_FRIENDS, socket);
   }
 
   @OnEvent(ServerEvents.CONVERSATION_CREATED)
@@ -134,6 +115,7 @@ export class MessagingGateway
   @OnEvent(ServerEvents.GET_ONLINE_FRIENDS)
   async handleGetOnlineFriends(socket: AuthenticatedSocket) {
     console.log(ServerEvents.GET_ONLINE_FRIENDS);
+    if (!socket) return;
     const { userId } = socket;
     if (userId) {
       const friends = await this.friendsService.getFriends(userId);
@@ -146,18 +128,58 @@ export class MessagingGateway
     }
   }
 
+  @OnEvent(ServerEvents.NOTIFY_FRIENDS)
+  async handleNotifyFriends(socket: AuthenticatedSocket) {
+    if (!socket) return;
+    const { userId } = socket;
+    if (userId) {
+      const friends = await this.friendsService.getFriends(userId);
+      friends.forEach((friend) => {
+        const friendSocket = this.sessions.getUserSocket(
+          userId === friend.receiverId ? friend.senderId : friend.receiverId,
+        );
+        friendSocket &&
+          this.event.emit(ServerEvents.GET_ONLINE_FRIENDS, friendSocket);
+      });
+    }
+  }
+
+  @SubscribeMessage(ClientEvents.CONVERSATION_JOIN)
+  onConversationJoin(
+    @MessageBody() conversationId: string,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    console.log(ClientEvents.CONVERSATION_JOIN);
+    socket.join(`conversation-${conversationId}`);
+  }
+
+  @SubscribeMessage(ClientEvents.CONVERSATION_LEAVE)
+  onConversationLeave(
+    @MessageBody() conversationId: string,
+    @ConnectedSocket() client: AuthenticatedSocket,
+  ) {
+    console.log(ClientEvents.CONVERSATION_LEAVE);
+    client.leave(`conversation-${conversationId}`);
+  }
+
   @SubscribeMessage(ClientEvents.TYPING_START)
-  async handleTypingStart(@MessageBody() userId: string) {
+  async handleTypingStart(
+    @MessageBody() payload: TypingPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
     console.log(ClientEvents.TYPING_START);
-    const receiverSocket = this.sessions.getUserSocket(userId);
-    receiverSocket?.emit(WebsocketEvents.ON_TYPING_START);
+    const { conversationId } = payload;
+    socket.to(`conversation-${conversationId}`).emit("onTypingStart", payload);
   }
 
   @SubscribeMessage(ClientEvents.TYPING_STOP)
-  async handleTypingEnd(@MessageBody() userId: string) {
+  async handleTypingEnd(
+    @MessageBody() payload: TypingPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
     console.log(ClientEvents.TYPING_STOP);
-    const receiverSocket = this.sessions.getUserSocket(userId);
-    receiverSocket?.emit(WebsocketEvents.ON_TYPING_STOP);
+    const { conversationId } = payload;
+    socket.to(`conversation-${conversationId}`).emit("onTypingStop", payload);
   }
 
   @SubscribeMessage(ClientEvents.GET_ONLINE_FRIENDS)
