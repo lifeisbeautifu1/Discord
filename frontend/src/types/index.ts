@@ -64,4 +64,5 @@ export type Participant = {
   user: User;
   conversationId: string;
   conversation: Conversation;
+  isTyping: boolean;
 };

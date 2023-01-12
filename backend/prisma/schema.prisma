@@ -84,6 +84,7 @@ model ConversationParticipant {
     conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
     hasSeenLatestMessage Boolean
+    isTyping             Boolean @default(false)
 }
 
 model Message {

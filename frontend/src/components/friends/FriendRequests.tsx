@@ -1,58 +1,45 @@
 import { IoSearchOutline } from "react-icons//io5";
 import { RxCross1 } from "react-icons/rx";
-import { useAppSelector } from "../app/hooks";
-import { useEffect, useState } from "react";
-import { FriendItem } from "./";
-import { Friend } from "../types";
-import { selectUser } from "../features/auth/auth";
+import { useAppSelector } from "../../app/hooks";
+import React, { useEffect, useState } from "react";
+import { FriendRequestItem } from "..";
+import { selectFriendRequests } from "../../features/friends/friends";
+import { FriendRequest } from "../../types";
+import { selectUser } from "../../features/auth/auth";
 
-const Friends = () => {
-  const { onlineFriends, offlineFriends } = useAppSelector(
-    (state) => state.friends
-  );
+const FriendRequests = () => {
+  const allFriendRequests = useAppSelector(selectFriendRequests);
 
   const user = useAppSelector(selectUser);
 
-  const [localOnlineFriends, setLocalOnlineFriends] =
-    useState<Array<Friend>>(onlineFriends);
-  const [localOfflineFriends, setLocalOfflineFriends] =
-    useState<Array<Friend>>(offlineFriends);
+  const [friendRequests, setFriendRequests] =
+    useState<Array<FriendRequest>>(allFriendRequests);
 
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    setLocalOnlineFriends(onlineFriends);
-  }, [onlineFriends]);
-
-  useEffect(() => {
-    setLocalOfflineFriends(offlineFriends);
-  }, [offlineFriends]);
+    setFriendRequests(allFriendRequests);
+  }, [allFriendRequests]);
 
   useEffect(() => {
     if (searchTerm.trim()) {
-      setLocalOnlineFriends(
-        onlineFriends.filter((friend) => {
-          const isSender = friend.sender?.id === user?.id;
-          const toShow = isSender ? friend.receiver : friend.sender;
-          return toShow?.username
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
-        })
-      );
-      setLocalOfflineFriends(
-        offlineFriends.filter((friend) => {
-          const isSender = friend.sender?.id === user?.id;
-          const toShow = isSender ? friend.receiver : friend.sender;
+      setFriendRequests(
+        allFriendRequests.filter((fr) => {
+          const isSender = fr.senderId === user?.id;
+          const toShow = isSender ? fr.receiver : fr.sender;
           return toShow?.username
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
         })
       );
     } else {
-      setLocalOnlineFriends(onlineFriends);
-      setLocalOfflineFriends(offlineFriends);
+      setFriendRequests(allFriendRequests);
     }
   }, [searchTerm]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   return (
     <div className="flex h-full w-full flex-col text-d-gray">
@@ -60,7 +47,7 @@ const Friends = () => {
         <input
           type="text"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleChange}
           placeholder="Search"
           className="w-full border-none bg-transparent outline-none"
         />
@@ -75,10 +62,10 @@ const Friends = () => {
       </div>
       <div className="ml-[30px] mr-5 mt-2">
         <h2 className="text-xs font-semibold uppercase">
-          All Friends – {localOnlineFriends.length + localOfflineFriends.length}
+          Pending – {friendRequests.length}
         </h2>
       </div>
-      {localOnlineFriends.length + localOfflineFriends.length === 0 ? (
+      {friendRequests.length === 0 ? (
         <div className="flex h-full w-full items-center justify-center">
           <div className="flex flex-col items-center">
             <div className="h-[220px] w-[420px]">
@@ -94,11 +81,8 @@ const Friends = () => {
         </div>
       ) : (
         <ul className="mt-4">
-          {localOnlineFriends.map((friend) => (
-            <FriendItem online={true} key={friend.id} friend={friend} />
-          ))}
-          {localOfflineFriends.map((friend) => (
-            <FriendItem online={false} key={friend.id} friend={friend} />
+          {friendRequests.map((fr) => (
+            <FriendRequestItem key={fr.id} friendRequest={fr} />
           ))}
         </ul>
       )}
@@ -106,4 +90,4 @@ const Friends = () => {
   );
 };
 
-export default Friends;
+export default FriendRequests;

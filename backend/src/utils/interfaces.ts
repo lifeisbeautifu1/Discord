@@ -20,3 +20,8 @@ export type ConversationPopulated = Conversation & {
     };
   }[];
 };
+
+export type TypingPayload = {
+  userId: string;
+  conversationId: string;
+};

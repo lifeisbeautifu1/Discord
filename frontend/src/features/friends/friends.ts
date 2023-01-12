@@ -22,6 +22,7 @@ export type FriendsState = {
   friends: Array<Friend>;
   onlineFriends: Array<Friend>;
   offlineFriends: Array<Friend>;
+  selectedFriends: Array<Friend>;
   isModalOpen: boolean;
   u_name: string;
   isRemoveFriendModal: boolean;
@@ -38,6 +39,7 @@ const initialState: FriendsState = {
   friends: [],
   onlineFriends: [],
   offlineFriends: [],
+  selectedFriends: [],
   isModalOpen: false,
   u_name: "",
   isRemoveFriendModal: false,
@@ -103,6 +105,18 @@ export const friendsSlice = createSlice({
         (friend) =>
           !state.onlineFriends.map((friend) => friend.id).includes(friend.id)
       );
+    },
+    resetSelectedFriends: (state) => {
+      state.selectedFriends = [];
+    },
+    toggleSelectedFriend: (state, action: PayloadAction<Friend>) => {
+      state.selectedFriends = state.selectedFriends.find(
+        (fr) => fr.id === action.payload.id
+      )
+        ? state.selectedFriends.filter(
+            (friend) => friend.id !== action.payload.id
+          )
+        : [...state.selectedFriends, action.payload];
     },
   },
   extraReducers: (builder) => {
@@ -252,6 +266,8 @@ export const {
   removeFriend,
   setOnlineFriends,
   setOfflineFriends,
+  toggleSelectedFriend,
+  resetSelectedFriends,
 } = friendsSlice.actions;
 
 export const selectAllFriends = (state: RootState) => state.friends.friends;

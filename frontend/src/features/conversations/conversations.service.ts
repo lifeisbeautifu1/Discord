@@ -12,6 +12,12 @@ const getConversation = async (id: string) => {
   return data;
 };
 
+const createConversation = async (participantsIds: Array<string>) => {
+  return axios.post("/conversations", {
+    participantsIds,
+  });
+};
+
 const getMessages = async (id: string) => {
   const { data } = await axios.get<Array<Message>>(
     `/conversations/${id}/messages`
@@ -48,6 +54,7 @@ const deleteMessage = async (converastionId: string, messageId: string) => {
 export default {
   getConversations,
   getConversation,
+  createConversation,
   getMessages,
   sendMessage,
   editMessage,

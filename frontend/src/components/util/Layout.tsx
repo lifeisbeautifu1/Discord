@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
-import { Navbar } from "./";
+import { Navbar } from "..";
 import {
   EmailModal,
   FriendRequestModal,
   RemoveFriendModal,
   DeleteMessageModal,
-} from "./Modals";
+} from "../Modals";
 
 const Layout: React.FC = () => {
   return (

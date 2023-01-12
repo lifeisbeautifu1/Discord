@@ -1,5 +1,5 @@
 import { FaDiscord } from "react-icons/fa";
-import { useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 
 type Props = {
   offline?: boolean;

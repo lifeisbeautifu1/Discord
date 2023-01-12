@@ -46,6 +46,7 @@ export class ConversationsService {
       include: {
         participants: {
           select: {
+            userId: true,
             user: {
               select: {
                 ...userSelectedFields,
@@ -72,11 +73,13 @@ export class ConversationsService {
         },
       },
     });
+
     return (
-      conversations.filter((conversation) =>
-        conversation.participants.every((p) =>
-          participantsIds.includes(p.userId),
-        ),
+      conversations.filter(
+        (conversation) =>
+          conversation.participants.every((p) =>
+            participantsIds.includes(p.userId),
+          ) && conversation.participants.length === participantsIds.length,
       ).length !== 0
     );
   }
