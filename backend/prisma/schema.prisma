@@ -28,7 +28,15 @@ model User {
     ConversationParticipant ConversationParticipant[]
     messages                Message[]
 
+    peer Peer?
+
     @@map("users")
+}
+
+model Peer {
+    id     String @id @default(uuid())
+    userId String @unique
+    user   User   @relation(fields: [userId], references: [id])
 }
 
 model FriendRequest {

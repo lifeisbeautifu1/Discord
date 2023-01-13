@@ -5,7 +5,12 @@ export type User = {
   u_name: string;
   emailVerified: string | null;
   image: string | null;
+  peer: UserPeer;
 } | null;
+
+export type UserPeer = {
+  id: string;
+};
 
 export type Errors = {
   email?: string;
@@ -70,10 +75,22 @@ export type Participant = {
 export type CallInitiatePayload = {
   localStream: MediaStream;
   isCalling: boolean;
-  activeConversationId: number;
+  activeConversationId: string;
   caller: User;
   receiver: User;
   callType: CallType;
+};
+
+export type CallPayload = {
+  recipientId: string;
+  conversationId: string;
+  caller: User;
+};
+
+export type AcceptedCallPayload = {
+  acceptor: User;
+  caller: User;
+  conversation: Conversation;
 };
 
 export type CallType = "video" | "audio";

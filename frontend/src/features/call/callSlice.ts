@@ -13,7 +13,7 @@ export interface CallState {
   isReceivingCall: boolean;
   remoteStream?: MediaStream;
   localStream?: MediaStream;
-  activeConversationId?: number;
+  activeConversationId?: string;
   callType?: CallType;
 }
 
@@ -58,7 +58,7 @@ export const callSlice = createSlice({
       state.isCallInProgress = action.payload;
       state.isCalling = false;
     },
-    setActiveConversationId: (state, action: PayloadAction<number>) => {
+    setActiveConversationId: (state, action: PayloadAction<string>) => {
       state.activeConversationId = action.payload;
     },
     setCallType: (state, action: PayloadAction<CallType>) => {

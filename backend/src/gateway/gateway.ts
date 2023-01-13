@@ -26,6 +26,7 @@ import {
   TypingPayload,
 } from "src/utils/interfaces";
 import { GatewaySessionManager } from "./gateway.session";
+import { UserService } from "src/user/user.service";
 
 @WebSocketGateway({
   cors: {
@@ -40,6 +41,7 @@ export class MessagingGateway
     readonly sessions: GatewaySessionManager,
     private readonly event: EventEmitter2,
     private readonly friendsService: FriendsService,
+    private readonly userService: UserService,
     private readonly conversationService: ConversationsService,
   ) {}
 
@@ -201,7 +203,7 @@ export class MessagingGateway
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
     console.log(ClientEvents.VIDEO_CALL_INITIATE);
-    const caller = socket.userId;
+    const caller = await this.userService.findUserById(socket.userId);
     const receiverSocket = this.sessions.getUserSocket(data.recipientId);
     if (!receiverSocket) socket.emit(WebsocketEvents.USER_UNAVAILABLE);
     receiverSocket.emit(WebsocketEvents.VIDEO_CALL, { ...data, caller });
@@ -218,9 +220,10 @@ export class MessagingGateway
       data.callerId,
       socket?.userId,
     ]);
+    const acceptor = await this.userService.findUserById(socket.userId);
     if (!conversation) return console.log("No conversation found");
     if (callerSocket) {
-      const payload = { ...data, conversation, acceptor: socket.userId };
+      const payload = { ...data, conversation, acceptor };
       callerSocket.emit(WebsocketEvents.VIDEO_CALL_ACCEPTED, payload);
       socket.emit(WebsocketEvents.VIDEO_CALL_ACCEPTED, payload);
     }
@@ -232,7 +235,7 @@ export class MessagingGateway
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
     console.log(ClientEvents.VIDEO_CALL_REJECTED);
-    const receiver = socket.userId;
+    const receiver = await this.userService.findUserById(socket.userId);
     const callerSocket = this.sessions.getUserSocket(data.callerId);
     callerSocket &&
       callerSocket.emit(WebsocketEvents.VIDEO_CALL_REJECTED, { receiver });
@@ -282,7 +285,8 @@ export class MessagingGateway
     ]);
     if (!conversation) return console.log("No conversation found");
     if (callerSocket) {
-      const callPayload = { ...payload, conversation, acceptor: socket.userId };
+      const acceptor = await this.userService.findUserById(socket.userId);
+      const callPayload = { ...payload, conversation, acceptor };
       callerSocket.emit(WebsocketEvents.VOICE_CALL_ACCEPTED, callPayload);
       socket.emit(WebsocketEvents.VOICE_CALL_ACCEPTED, callPayload);
     }
