@@ -55,6 +55,12 @@ export class UserService {
       },
     });
 
+    const peer = await this.prisma.peer.create({
+      userId: user.id,
+    });
+
+    const user.peer = peer;
+
     return user;
   }
 
@@ -114,6 +120,14 @@ export class UserService {
     return await this.prisma.user.findUnique({
       where: {
         email,
+      },
+    });
+  }
+
+  async findUserById(id: string) {
+    return await this.prisma.user.findUnique({
+      where: {
+        id,
       },
     });
   }

@@ -25,3 +25,17 @@ export type TypingPayload = {
   userId: string;
   conversationId: string;
 };
+
+export type CallPayload = {
+  recipientId: string;
+  conversationId: string;
+};
+
+export type CallAcceptedPayload = {
+  callerId: string;
+};
+
+export type CallHangUpPayload = {
+  receiverId: string;
+  callerId: string;
+};

@@ -73,15 +73,13 @@ export class ConversationsService {
         },
       },
     });
-
-    return (
-      conversations.filter(
-        (conversation) =>
-          conversation.participants.every((p) =>
-            participantsIds.includes(p.userId),
-          ) && conversation.participants.length === participantsIds.length,
-      ).length !== 0
+    const conversation = conversations.filter(
+      (conversation) =>
+        conversation.participants.every((p) =>
+          participantsIds.includes(p.userId),
+        ) && conversation.participants.length === participantsIds.length,
     );
+    return conversation.length === 0 ? null : conversation[0];
   }
 
   findById(id: string) {

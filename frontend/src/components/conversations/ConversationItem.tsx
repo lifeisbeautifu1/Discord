@@ -3,7 +3,7 @@ import { useAppSelector } from "../../app/hooks";
 import { selectUser } from "../../features/auth/auth";
 import { useNavigate } from "react-router-dom";
 import { Conversation } from "../../types";
-import { isOnline, toShowFromConversation, toShowFromFriend } from "../../util";
+import { isOnline, toShowFromConversation } from "../../util";
 
 type Props = {
   conversation: Conversation;

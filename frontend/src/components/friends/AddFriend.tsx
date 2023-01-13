@@ -48,11 +48,11 @@ const AddFriend = () => {
             value={searchTag}
             onChange={handleChange}
             placeholder="Enter a Username#0000"
-            className="flex-1 border-none bg-transparent text-d-white outline-none"
+            className="flex-1 border-none bg-transparent text-d-white shadow-inner outline-none"
           />
           <button
             type="submit"
-            disabled={!searchTag.trim().length}
+            disabled={!searchTag.match(/^\w{3,}#\d{4}$/)}
             className="h-full rounded bg-brand py-1.5 px-4 text-sm text-d-white disabled:cursor-not-allowed disabled:bg-brand/70 hover:bg-d-brand-hover"
           >
             Send Friend Request

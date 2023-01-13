@@ -19,6 +19,14 @@ export enum ClientEvents {
   TYPING_STOP = "typingStop",
   CONVERSATION_JOIN = "onConversationJoin",
   CONVERSATION_LEAVE = "onConversationLeave",
+  VIDEO_CALL_INITIATE = "videoCallInitiate",
+  VIDEO_CALL_ACCEPTED = "videoCallAccepted",
+  VIDEO_CALL_REJECTED = "videoCallRejected",
+  VIDEO_CALL_HANG_UP = "videoCallHangUp",
+  VOICE_CALL_INITIATE = "voiceCallInitiate",
+  VOICE_CALL_ACCEPTED = "voiceCallAccepted",
+  VOICE_CALL_REJECTED = "voiceCallRejected",
+  VOICE_CALL_HANG_UP = "voiceCallHangUp",
 }
 
 export enum WebsocketEvents {
@@ -34,6 +42,15 @@ export enum WebsocketEvents {
   MESSAGE_UPDATED = "onMessageUpdate",
   ON_TYPING_START = "onTypingStart",
   ON_TYPING_STOP = "onTypingStop",
+  VIDEO_CALL = "onVideoCall",
+  VOICE_CALL = "onVoiceCall",
+  USER_UNAVAILABLE = "onUserUnavailable",
+  VIDEO_CALL_ACCEPTED = "onVideoCallAccepted",
+  VIDEO_CALL_REJECTED = "onVideoCallRejected",
+  VIDEO_CALL_HANG_UP = "onVideoCallHangUp",
+  VOICE_CALL_ACCEPTED = "onVoiceCallAccepted",
+  VOICE_CALL_REJECTED = "onVoiceCallRejected",
+  VOICE_CALL_HANG_UP = "onVoiceCallHangUp",
 }
 
 export enum Routes {
