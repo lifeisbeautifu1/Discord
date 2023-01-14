@@ -52,14 +52,16 @@ export class UserService {
         u_name: true,
         image: true,
         emailVerified: true,
+        peer: true,
       },
     });
 
     const peer = await this.prisma.peer.create({
-      userId: user.id,
+      data: {
+        userId: user?.id,
+      },
     });
-
-    const user.peer = peer;
+    user.peer = peer;
 
     return user;
   }
