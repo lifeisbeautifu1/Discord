@@ -9,7 +9,7 @@ import {
 
 const Layout: React.FC = () => {
   return (
-    <div className="relative flex h-screen w-screen overflow-hidden">
+    <div className="fixed flex h-screen w-screen overflow-hidden">
       <Navbar />
       <Outlet />
       <EmailModal />
