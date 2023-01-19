@@ -1,6 +1,8 @@
 export { useSubscribeToFriends } from "./useSubscribeToFriends";
 export { useSubscribeToFriendRequests } from "./useSubscribeToFriendRequests";
 export { useSubscribeToConversations } from "./useSubscribeToConversations";
+export { useSubscribeToConversationJoin } from "./useSubscribeToConversationJoin";
+export { useSubscribeToMessages } from "./useSubscribeToMessages";
 export { useGetInitialData } from "./useGetInitialData";
 export { useVideoCall } from "./useVideoCall";
 export { useVideoCallAccept } from "./useVideoCallAccept";

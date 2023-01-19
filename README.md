@@ -68,16 +68,14 @@ npx prisma db push
 
 As a user, I can
 
-- sign up / sign in / sign out / reset pwd
+- sign up / sign in / sign out / reset pwd / confirm email
 - search for friends / add them / delete them
-- create servers / join them / leave them
-- invite users to servers
+- create conversations with other users / create group conversations
 - send messages to other user(s)
 - call other users
 - see incoming messages live
+- see notifications / friends requests / calls live
 - see online users live
-- upload files
-- edit my profile
 - see typing indicator
 - maintain privacy (can't read others chats/msgs)
 

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   ConversationHeader,
@@ -10,21 +10,12 @@ import {
   TypingIndicator,
 } from "../components";
 import { format } from "date-fns";
-import {
-  addMessage,
-  removeMessage,
-  setError,
-  setUserTyping,
-  updateMessage,
-} from "../features/conversations/conversations";
-import {
-  getConversation,
-  getMessages,
-} from "../features/conversations/conversations.thunks";
+import { setError } from "../features/conversations/conversations";
 import { toShowFromConversation } from "../util";
-import { useSocketContext } from "../contexts/SocketContext";
-import { Message } from "../types";
-import { TypingPayload } from "../types/TypingPayload";
+import {
+  useSubscribeToConversationJoin,
+  useSubscribeToMessages,
+} from "../hooks";
 
 const Conversation = () => {
   const { error, selectedConversation, messages } = useAppSelector(
@@ -33,66 +24,12 @@ const Conversation = () => {
 
   const { user } = useAppSelector((state) => state.auth);
 
-  const socket = useSocketContext();
-
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
-  const { id } = useParams();
-
-  useEffect(() => {
-    socket?.on("onMessage", (message: Message) => {
-      console.log("got new message!");
-      dispatch(addMessage(message));
-    });
-
-    socket?.on("onTypingStart", (payload: TypingPayload) => {
-      dispatch(
-        setUserTyping({
-          isTyping: true,
-          ...payload,
-        })
-      );
-    });
-
-    socket?.on("onTypingStop", (payload: TypingPayload) => {
-      dispatch(
-        setUserTyping({
-          isTyping: false,
-          ...payload,
-        })
-      );
-    });
-
-    socket?.on("onMessageDelete", (messageId: string) => {
-      console.log("message got deleted");
-      dispatch(removeMessage(messageId));
-    });
-
-    socket?.on("onMessageUpdate", (payload: Message) => {
-      console.log("message got updated");
-      dispatch(updateMessage(payload));
-    });
-    return () => {
-      socket?.off("onMessage");
-      socket?.off("onMessageDelete");
-      socket?.off("onMessageUpdate");
-      socket?.off("onTypingStart");
-      socket?.off("onTypingEnd");
-    };
-  }, [socket]);
-
-  useEffect(() => {
-    if (id) {
-      dispatch(getConversation(id));
-      dispatch(getMessages(id));
-      socket?.emit("onConversationJoin", id);
-    }
-    return () => {
-      socket?.emit("onConversationLeave", id);
-    };
-  }, [id, socket]);
+  useSubscribeToMessages();
+  useSubscribeToConversationJoin();
 
   useEffect(() => {
     if (error) {
