@@ -3,6 +3,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { CreateUserDto } from "./dtos/createUser.dto";
 import * as argon from "argon2";
 import { uniqueUsername } from "src/utils/generatesUsername";
+import { userSelectedFields } from "src/utils/constants/userSelectedFields";
 
 @Injectable()
 export class UserService {
@@ -71,6 +72,9 @@ export class UserService {
       where: {
         id: userId,
       },
+      include: {
+        peer: true,
+      },
     });
     if (!user)
       throw new BadRequestException({
@@ -87,6 +91,7 @@ export class UserService {
     });
   }
 
+  // Might breake!
   async updatePassword(password: string, userId: string) {
     const user = await this.prisma.user.findFirst({
       where: {
@@ -99,6 +104,7 @@ export class UserService {
         u_name: true,
         image: true,
         emailVerified: true,
+        peer: true,
       },
     });
     if (!user)
@@ -123,6 +129,10 @@ export class UserService {
       where: {
         email,
       },
+      select: {
+        ...userSelectedFields,
+        password: true,
+      },
     });
   }
 
@@ -131,6 +141,9 @@ export class UserService {
       where: {
         id,
       },
+      select: {
+        ...userSelectedFields,
+      },
     });
   }
 
@@ -138,6 +151,9 @@ export class UserService {
     return await this.prisma.user.findUnique({
       where: {
         u_name,
+      },
+      select: {
+        ...userSelectedFields,
       },
     });
   }

@@ -32,10 +32,10 @@ export type CallPayload = {
 };
 
 export type CallAcceptedPayload = {
-  callerId: string;
+  caller: User;
 };
 
 export type CallHangUpPayload = {
-  receiverId: string;
-  callerId: string;
+  receiver: User;
+  caller: User;
 };
