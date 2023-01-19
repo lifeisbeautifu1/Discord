@@ -150,7 +150,7 @@ const Register: React.FC = () => {
                   className="mt-1.5 mb-5 inline-block p-1 text-sm text-d-blue hover:underline"
                   to="/login"
                 >
-                  Aleardy have an account?
+                  Already have an account?
                 </Link>
                 <p className="text-xs text-d-gray">
                   By registering, you agree to Discord's{" "}
