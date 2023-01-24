@@ -45,7 +45,35 @@ export class MessagesController {
   @Get()
   async getMessagesFromConversation(@Param("id") id: string) {
     const messages = await this.messagesService.getMessages(id);
-    return messages;
+    const firstMessage = await this.messagesService.getFirstMessage(id);
+
+    return {
+      messages,
+      more:
+        messages?.length > 0 &&
+        firstMessage.id !== messages[messages.length - 1]?.id,
+    };
+  }
+
+  @SkipThrottle()
+  @Get(":messageId")
+  async getMessagesAfterMessageFromConversation(
+    @Param("id") conversationId: string,
+    @Param("messageId") messageId: string,
+  ) {
+    const messages = await this.messagesService.getMessagesAfterMessage(
+      conversationId,
+      messageId,
+    );
+    const firstMessage = await this.messagesService.getFirstMessage(
+      conversationId,
+    );
+    return {
+      messages,
+      more:
+        messages?.length > 0 &&
+        firstMessage.id !== messages[messages.length - 1]?.id,
+    };
   }
 
   @Delete(":messageId")

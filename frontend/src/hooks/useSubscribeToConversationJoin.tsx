@@ -17,6 +17,7 @@ export const useSubscribeToConversationJoin = () => {
   useEffect(() => {
     if (id) {
       dispatch(getConversation(id));
+
       dispatch(getMessages(id));
       socket?.emit("onConversationJoin", id);
     }

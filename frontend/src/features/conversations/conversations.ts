@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Conversation, Message } from "../../types";
+import { GetMessagesPayload } from "../../types/getMessagesPayload";
 import { TypingPayload } from "../../types/TypingPayload";
 import {
   getConversations,
   getConversation,
   createConversation,
   getMessages,
+  getMessagesAfterMessage,
   sendMessage,
   deleteMessage,
   editMessage,
@@ -16,10 +18,13 @@ export type ConversationsState = {
   selectedConversation: Conversation | null;
   error: boolean;
   loading: boolean;
+  loadingMessages: boolean;
   isDeleteMessageModalOpen: boolean;
   selectedMessage: Message | null;
+  lastMessage: Message | null | undefined;
   isEdit: boolean;
   messages: Array<Message>;
+  more: boolean;
 };
 
 const initialState: ConversationsState = {
@@ -27,10 +32,13 @@ const initialState: ConversationsState = {
   selectedConversation: null,
   error: false,
   loading: false,
+  loadingMessages: false,
   isDeleteMessageModalOpen: false,
   selectedMessage: null,
+  lastMessage: null,
   isEdit: false,
   messages: [],
+  more: true,
 };
 
 export const conversationsSlice = createSlice({
@@ -129,19 +137,38 @@ export const conversationsSlice = createSlice({
         state.loading = false;
       })
       .addCase(getMessages.pending, (state) => {
-        state.loading = true;
+        state.loadingMessages = true;
       })
       .addCase(
         getMessages.fulfilled,
-        (state, action: PayloadAction<Array<Message>>) => {
-          state.loading = false;
-          state.messages = action.payload;
+        (state, action: PayloadAction<GetMessagesPayload>) => {
+          state.loadingMessages = false;
+          state.messages = action.payload.messages;
+          state.lastMessage = action.payload.messages.at(-1);
+          state.more = action.payload.more;
           state.error = false;
         }
       )
       .addCase(getMessages.rejected, (state) => {
         state.error = true;
-        state.loading = false;
+        state.loadingMessages = false;
+      })
+      .addCase(getMessagesAfterMessage.pending, (state) => {
+        state.loadingMessages = true;
+      })
+      .addCase(
+        getMessagesAfterMessage.fulfilled,
+        (state, action: PayloadAction<GetMessagesPayload>) => {
+          state.loadingMessages = false;
+          state.messages = [...state.messages, ...action.payload.messages];
+          state.lastMessage = action.payload.messages.at(-1);
+          state.more = action.payload.more;
+          state.error = false;
+        }
+      )
+      .addCase(getMessagesAfterMessage.rejected, (state) => {
+        state.error = true;
+        state.loadingMessages = false;
       })
       .addCase(sendMessage.pending, (state) => {
         state.loading = true;
