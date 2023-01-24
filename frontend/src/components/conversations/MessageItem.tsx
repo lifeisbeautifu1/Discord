@@ -94,6 +94,7 @@ const MessageItem: React.FC<Props> = ({ message, index }) => {
   return (
     <>
       <li
+        id={message.id}
         className={`custom-group relative mt-4 flex items-start px-4 py-0.5 transition ease-out  hover:bg-[#2f3136]/50 ${
           type && type2 ? "mt-0" : type && !type2 ? "mt-4" : "mt-0"
         }`}

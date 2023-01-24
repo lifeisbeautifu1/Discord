@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
@@ -16,17 +16,61 @@ import {
   useSubscribeToConversationJoin,
   useSubscribeToMessages,
 } from "../hooks";
+import { getMessagesAfterMessage } from "../features/conversations/conversations.thunks";
 
 const Conversation = () => {
-  const { error, selectedConversation, messages } = useAppSelector(
-    (state) => state.conversations
-  );
+  const {
+    error,
+    selectedConversation,
+    messages,
+    more,
+    loading,
+    lastMessage,
+    loadingMessages,
+  } = useAppSelector((state) => state.conversations);
 
   const { user } = useAppSelector((state) => state.auth);
+
+  const [observedPost, setObservedPost] = useState("");
 
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
+
+  const observeElement = useCallback(
+    (element: HTMLElement) => {
+      if (!element) return;
+      console.log("creating observe event");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            console.log("reached last element");
+            if (more && !loadingMessages) {
+              dispatch(
+                getMessagesAfterMessage({
+                  conversationId: selectedConversation?.id!,
+                  messageId: lastMessage?.id!,
+                })
+              );
+            }
+            observer.unobserve(element);
+          }
+        },
+        { threshold: 1 }
+      );
+      observer.observe(element);
+    },
+    [more, selectedConversation, lastMessage]
+  );
+
+  useEffect(() => {
+    if (!lastMessage) return;
+    if (lastMessage.id !== observedPost) {
+      setObservedPost(lastMessage.id);
+
+      observeElement(document.getElementById(lastMessage.id)!);
+    }
+  }, [lastMessage]);
 
   useSubscribeToMessages();
   useSubscribeToConversationJoin();
@@ -69,6 +113,7 @@ const Conversation = () => {
                   />
                 ))}
               </ul>
+
               <div className="mt-4 mb-3 flex items-center px-4 text-xs font-semibold text-d-gray before:mr-1 before:block before:h-[1px] before:flex-1 before:bg-d-gray/10  after:ml-1 after:block after:h-[1px] after:flex-1 after:bg-d-gray/10">
                 {format(
                   new Date(selectedConversation.createdAt),

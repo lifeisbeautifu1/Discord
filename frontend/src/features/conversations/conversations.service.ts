@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Conversation, Message } from "../../types";
 import { EditMessageParams } from "../../types/editMessageParams";
+import { GetMessagesPayload } from "../../types/getMessagesPayload";
 
 const getConversations = async () => {
   const { data } = await axios.get<Array<Conversation>>("/conversations");
@@ -19,8 +20,18 @@ const createConversation = async (participantsIds: Array<string>) => {
 };
 
 const getMessages = async (id: string) => {
-  const { data } = await axios.get<Array<Message>>(
+  const { data } = await axios.get<GetMessagesPayload>(
     `/conversations/${id}/messages`
+  );
+  return data;
+};
+
+const getMessagesAfterMessage = async (
+  conversationId: string,
+  messageId: string
+) => {
+  const { data } = await axios.get<GetMessagesPayload>(
+    `/conversations/${conversationId}/messages/${messageId}`
   );
   return data;
 };
@@ -56,6 +67,7 @@ export default {
   getConversation,
   createConversation,
   getMessages,
+  getMessagesAfterMessage,
   sendMessage,
   editMessage,
   deleteMessage,

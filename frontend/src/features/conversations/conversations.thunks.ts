@@ -65,6 +65,30 @@ export const getMessages = createAsyncThunk(
   }
 );
 
+export const getMessagesAfterMessage = createAsyncThunk(
+  "conversations/getMessagesAfterMessage",
+  async (
+    {
+      conversationId,
+      messageId,
+    }: {
+      conversationId: string;
+      messageId: string;
+    },
+    thunkAPI
+  ) => {
+    try {
+      const data = await conversationsService.getMessagesAfterMessage(
+        conversationId,
+        messageId
+      );
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.response?.data?.message);
+    }
+  }
+);
+
 export const sendMessage = createAsyncThunk(
   "conversations/sendMessage",
   async ({ id, content }: { id: string; content: string }, thunkAPI) => {

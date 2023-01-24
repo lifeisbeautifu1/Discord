@@ -44,11 +44,48 @@ export class MessagesService {
     };
   }
 
-  getMessages(conversationId: string) {
+  getFirstMessage(conversationId: string) {
+    return this.prisma.message.findFirst({
+      where: {
+        conversationId,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+  }
+
+  getMessagesAfterMessage(conversationId: string, messageId: string) {
+    const take = 20;
     return this.prisma.message.findMany({
       where: {
         conversationId,
       },
+      take,
+      skip: 1,
+      cursor: {
+        id: messageId,
+      },
+      include: {
+        author: {
+          select: {
+            ...userSelectedFields,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  }
+
+  getMessages(conversationId: string) {
+    const take = 20;
+    return this.prisma.message.findMany({
+      where: {
+        conversationId,
+      },
+      take,
       include: {
         author: {
           select: {
