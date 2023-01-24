@@ -205,8 +205,11 @@ export class MessagingGateway
     console.log(ClientEvents.VIDEO_CALL_INITIATE);
     const caller = await this.userService.findUserById(socket.userId);
     const receiverSocket = this.sessions.getUserSocket(data.recipientId);
-    if (!receiverSocket) socket.emit(WebsocketEvents.USER_UNAVAILABLE);
-    receiverSocket.emit(WebsocketEvents.VIDEO_CALL, { ...data, caller });
+    if (!receiverSocket) {
+      socket?.emit(WebsocketEvents.USER_UNAVAILABLE);
+      return;
+    }
+    receiverSocket?.emit(WebsocketEvents.VIDEO_CALL, { ...data, caller });
   }
 
   @SubscribeMessage(ClientEvents.VIDEO_CALL_ACCEPTED)
@@ -215,12 +218,14 @@ export class MessagingGateway
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
     console.log(ClientEvents.VIDEO_CALL_ACCEPTED);
-    const callerSocket = this.sessions.getUserSocket(data.callerId);
+    const callerSocket = this.sessions.getUserSocket(data.caller.id);
+
     const conversation = await this.conversationService.isCreated([
-      data.callerId,
+      data.caller.id,
       socket?.userId,
     ]);
     const acceptor = await this.userService.findUserById(socket.userId);
+
     if (!conversation) return console.log("No conversation found");
     if (callerSocket) {
       const payload = { ...data, conversation, acceptor };
@@ -236,20 +241,20 @@ export class MessagingGateway
   ) {
     console.log(ClientEvents.VIDEO_CALL_REJECTED);
     const receiver = await this.userService.findUserById(socket.userId);
-    const callerSocket = this.sessions.getUserSocket(data.callerId);
+    const callerSocket = this.sessions.getUserSocket(data.caller.id);
     callerSocket &&
       callerSocket.emit(WebsocketEvents.VIDEO_CALL_REJECTED, { receiver });
     socket.emit(WebsocketEvents.VIDEO_CALL_REJECTED, { receiver });
   }
 
-  @SubscribeMessage(ClientEvents.VOICE_CALL_HANG_UP)
+  @SubscribeMessage(ClientEvents.VIDEO_CALL_HANG_UP)
   async handleVideoCallHangUp(
-    @MessageBody() { callerId, receiverId }: CallHangUpPayload,
+    @MessageBody() { caller, receiver }: CallHangUpPayload,
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
-    console.log(ClientEvents.VOICE_CALL_HANG_UP);
-    if (socket?.userId === callerId) {
-      const receiverSocket = this.sessions.getUserSocket(receiverId);
+    console.log(ClientEvents.VIDEO_CALL_HANG_UP);
+    if (socket?.userId === caller.id) {
+      const receiverSocket = this.sessions.getUserSocket(receiver.id);
       socket.emit(WebsocketEvents.VIDEO_CALL_HANG_UP);
       return (
         receiverSocket &&
@@ -257,7 +262,7 @@ export class MessagingGateway
       );
     }
     socket.emit(WebsocketEvents.VIDEO_CALL_HANG_UP);
-    const callerSocket = this.sessions.getUserSocket(callerId);
+    const callerSocket = this.sessions.getUserSocket(caller.id);
     callerSocket && callerSocket.emit(WebsocketEvents.VIDEO_CALL_HANG_UP);
   }
 
@@ -278,9 +283,9 @@ export class MessagingGateway
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
     console.log(WebsocketEvents.VOICE_CALL_ACCEPTED);
-    const callerSocket = this.sessions.getUserSocket(payload.callerId);
+    const callerSocket = this.sessions.getUserSocket(payload.caller.id);
     const conversation = await this.conversationService.isCreated([
-      payload.callerId,
+      payload.caller.id,
       socket.userId,
     ]);
     if (!conversation) return console.log("No conversation found");
@@ -294,12 +299,12 @@ export class MessagingGateway
 
   @SubscribeMessage(ClientEvents.VOICE_CALL_HANG_UP)
   async handleVoiceCallHangUp(
-    @MessageBody() { callerId, receiverId }: CallHangUpPayload,
+    @MessageBody() { caller, receiver }: CallHangUpPayload,
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
     console.log(ClientEvents.VOICE_CALL_HANG_UP);
-    if (socket.userId === callerId) {
-      const receiverSocket = this.sessions.getUserSocket(receiverId);
+    if (socket.userId === caller.id) {
+      const receiverSocket = this.sessions.getUserSocket(receiver.id);
       socket.emit(WebsocketEvents.VOICE_CALL_HANG_UP);
       return (
         receiverSocket &&
@@ -307,8 +312,25 @@ export class MessagingGateway
       );
     }
     socket.emit(WebsocketEvents.VOICE_CALL_HANG_UP);
-    const callerSocket = this.sessions.getUserSocket(callerId);
+    const callerSocket = this.sessions.getUserSocket(caller.id);
     callerSocket && callerSocket.emit(WebsocketEvents.VOICE_CALL_HANG_UP);
+  }
+
+  @SubscribeMessage(ClientEvents.UPDATE_REMOTE_STREAM)
+  async handleUpdateRemoteStream(
+    @MessageBody() { caller, receiver }: CallHangUpPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    console.log(ClientEvents.UPDATE_REMOTE_STREAM);
+    if (socket.userId === caller.id) {
+      const receiverSocket = this.sessions.getUserSocket(receiver.id);
+      return (
+        receiverSocket &&
+        receiverSocket.emit(WebsocketEvents.UPDATE_REMOTE_STREAM)
+      );
+    }
+    const callerSocket = this.sessions.getUserSocket(caller.id);
+    callerSocket && callerSocket.emit(WebsocketEvents.UPDATE_REMOTE_STREAM);
   }
 
   @SubscribeMessage(ClientEvents.VOICE_CALL_REJECTED)
@@ -318,7 +340,7 @@ export class MessagingGateway
   ) {
     console.log(ClientEvents.VOICE_CALL_REJECTED);
     const receiverId = socket.userId;
-    const callerSocket = this.sessions.getUserSocket(data.callerId);
+    const callerSocket = this.sessions.getUserSocket(data.caller.id);
     callerSocket &&
       callerSocket.emit(WebsocketEvents.VOICE_CALL_REJECTED, { receiverId });
     socket.emit(WebsocketEvents.VOICE_CALL_REJECTED, { receiverId });

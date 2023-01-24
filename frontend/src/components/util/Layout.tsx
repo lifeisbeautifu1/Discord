@@ -5,6 +5,7 @@ import {
   FriendRequestModal,
   RemoveFriendModal,
   DeleteMessageModal,
+  IncomingCallModal,
 } from "../Modals";
 
 const Layout: React.FC = () => {
@@ -16,6 +17,7 @@ const Layout: React.FC = () => {
       <FriendRequestModal />
       <RemoveFriendModal />
       <DeleteMessageModal />
+      <IncomingCallModal />
     </div>
   );
 };

@@ -104,7 +104,7 @@ const Conversation = () => {
                 <h2 className="mt-2 text-[32px] font-bold text-d-white">
                   {group ? groupName : toShow?.username}
                 </h2>
-                <p className="text-d-gray">
+                <div className="text-d-gray">
                   {group ? (
                     <p>
                       Welcome to the beginning of the{" "}
@@ -116,7 +116,7 @@ const Conversation = () => {
                       <strong>@{toShow?.username}</strong>.
                     </p>
                   )}
-                </p>
+                </div>
               </div>
             </div>
             <ConversationInput />

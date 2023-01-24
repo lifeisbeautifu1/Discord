@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PassportSerializer } from "@nestjs/passport";
 import { User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
+import { userSelectedFields } from "src/utils/constants/userSelectedFields";
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {
@@ -19,12 +20,8 @@ export class SessionSerializer extends PassportSerializer {
         id: payload,
       },
       select: {
-        id: true,
-        username: true,
-        email: true,
-        u_name: true,
-        image: true,
-        emailVerified: true,
+        ...userSelectedFields,
+        password: true,
       },
     });
     // Will be appended to req.user

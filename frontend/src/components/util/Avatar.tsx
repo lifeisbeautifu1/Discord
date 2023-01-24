@@ -9,6 +9,7 @@ type Props = {
   hoverBgColor?: string;
   hoverBorderColor?: string;
   image?: string;
+  size?: "big";
 };
 
 const Avatar: React.FC<Props> = ({
@@ -19,9 +20,12 @@ const Avatar: React.FC<Props> = ({
   hoverBgColor = "group-hover:bg-dark",
   hoverBorderColor = "group-hover:border-dark",
   image = "https://cdn.discordapp.com/embed/avatars/0.png",
+  size,
 }) => {
   return (
-    <div className="relative flex h-8 w-8">
+    <div
+      className={`relative flex  ${size === "big" ? "h-20 w-20" : "h-8 w-8"}`}
+    >
       <img
         src={image}
         className="h-full w-full rounded-full object-cover"

@@ -11,16 +11,32 @@ import {
   HiQuestionMarkCircle,
   HiVideoCamera,
 } from "react-icons/hi2";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectUser } from "../../features/auth/auth";
 import { isOnline, toShowFromConversation } from "../../util";
+import { useSocketContext } from "../../contexts/SocketContext";
+import {
+  setActiveConversationId,
+  setCaller,
+  setLocalStream,
+  setMicrophoneEnabled,
+  setReceiver,
+  setVideoEnabled,
+} from "../../features/call/callSlice";
 
 const ConversationHeader = () => {
   const { selectedConversation } = useAppSelector(
     (state) => state.conversations
   );
 
+  const { isReceivingCall, isCallInProgress, activeConversationId, callType } =
+    useAppSelector((state) => state.call);
+
   const [isCall, setIsCall] = useState(false);
+
+  const socket = useSocketContext();
+
+  const dispatch = useAppDispatch();
 
   const { onlineFriends } = useAppSelector((state) => state.friends);
 
@@ -39,10 +55,39 @@ const ConversationHeader = () => {
     .map((p) => p.user?.username)
     .join(", ");
 
+  const callUser = async () => {
+    socket?.emit("videoCallInitiate", {
+      conversationId: selectedConversation.id,
+      recipientId: toShow?.id,
+    });
+    dispatch(setActiveConversationId(selectedConversation.id));
+    dispatch(setReceiver(toShow));
+    dispatch(setCaller(user));
+    setIsCall(true);
+    console.log(callType);
+    const constraints = {
+      video: {
+        width: { min: 640, ideal: 1920, max: 1920 },
+        height: { min: 480, ideal: 1080, max: 1080 },
+      },
+      audio: true,
+    };
+    console.log(constraints);
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    console.log("Receiving Call & Got Local Stream:", stream.id);
+    dispatch(setLocalStream(stream));
+    // dispatch(setVideoEnabled(true));
+    dispatch(setMicrophoneEnabled(true));
+  };
+
+  const callHeader =
+    (isCall || isReceivingCall || isCallInProgress) &&
+    activeConversationId === selectedConversation.id;
+
   return (
     <header
       className={`flex flex-col ${
-        isCall && "h-60	bg-[#18191c]"
+        callHeader && "h-auto bg-[#18191c]	py-4"
       } h-12 w-full flex-shrink-0 border-b border-d-black px-3.5 pr-6 shadow`}
     >
       <div className="flex h-12 w-full items-center justify-between">
@@ -63,16 +108,19 @@ const ConversationHeader = () => {
             ))}
         </div>
         <div className="flex items-center space-x-4 text-d-gray">
-          {!isCall && (
+          {!callHeader && !group && (
             <>
               <Tooltip text="Start Voice Call" position="bottom">
                 <HiPhoneArrowUpRight
-                  onClick={() => setIsCall(!isCall)}
+                  onClick={callUser}
                   className="cursor-pointer text-xl hover:text-d-white"
                 />
               </Tooltip>
               <Tooltip text="Start Video Call" position="bottom">
-                <HiVideoCamera className="cursor-pointer text-2xl hover:text-d-white" />
+                <HiVideoCamera
+                  onClick={callUser}
+                  className="cursor-pointer text-2xl hover:text-d-white"
+                />
               </Tooltip>
             </>
           )}
@@ -95,7 +143,7 @@ const ConversationHeader = () => {
           </Tooltip>
           <div
             className={`flex w-full max-w-[130px] items-center rounded bg-d-dark-black ${
-              isCall && "!bg-secondary-alt"
+              callHeader && "!bg-secondary-alt"
             } py-0.5 pl-1.5 pr-2 text-sm text-d-gray transition-all duration-300 ease-out placeholder:text-d-gray focus-within:max-w-[200px]`}
           >
             <input
@@ -111,13 +159,13 @@ const ConversationHeader = () => {
           <Tooltip position="bottom" text="Help">
             <HiQuestionMarkCircle
               className={`h-[25px] w-[25px] cursor-pointer text-green-600 ${
-                isCall && "!text-d-gray"
+                callHeader && "!text-d-gray"
               }`}
             />
           </Tooltip>
         </div>
       </div>
-      {isCall && <ConverastionCall />}
+      {callHeader && <ConverastionCall />}
     </header>
   );
 };
