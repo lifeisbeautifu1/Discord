@@ -56,7 +56,7 @@ export class MessagesService {
   }
 
   getMessagesAfterMessage(conversationId: string, messageId: string) {
-    const take = 20;
+    const take = 50;
     return this.prisma.message.findMany({
       where: {
         conversationId,
@@ -80,7 +80,7 @@ export class MessagesService {
   }
 
   getMessages(conversationId: string) {
-    const take = 20;
+    const take = 50;
     return this.prisma.message.findMany({
       where: {
         conversationId,
