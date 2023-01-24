@@ -316,6 +316,23 @@ export class MessagingGateway
     callerSocket && callerSocket.emit(WebsocketEvents.VOICE_CALL_HANG_UP);
   }
 
+  @SubscribeMessage(ClientEvents.UPDATE_REMOTE_STREAM)
+  async handleUpdateRemoteStream(
+    @MessageBody() { caller, receiver }: CallHangUpPayload,
+    @ConnectedSocket() socket: AuthenticatedSocket,
+  ) {
+    console.log(ClientEvents.UPDATE_REMOTE_STREAM);
+    if (socket.userId === caller.id) {
+      const receiverSocket = this.sessions.getUserSocket(receiver.id);
+      return (
+        receiverSocket &&
+        receiverSocket.emit(WebsocketEvents.UPDATE_REMOTE_STREAM)
+      );
+    }
+    const callerSocket = this.sessions.getUserSocket(caller.id);
+    callerSocket && callerSocket.emit(WebsocketEvents.UPDATE_REMOTE_STREAM);
+  }
+
   @SubscribeMessage(ClientEvents.VOICE_CALL_REJECTED)
   async handleVoiceCallRejected(
     @MessageBody() data: CallAcceptedPayload,

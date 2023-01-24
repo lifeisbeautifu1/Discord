@@ -14,6 +14,13 @@ import {
   useSubscribeToFriendRequests,
   useSubscribeToFriends,
   useGetInitialData,
+  useVideoCall,
+  useVoiceCall,
+  useVideoCallAccepted,
+  useVideoCallRejected,
+  useVideoCallHangUp,
+  useSetPeer,
+  useSetCall,
 } from "./hooks";
 
 function App() {
@@ -21,6 +28,13 @@ function App() {
   useSubscribeToFriendRequests();
   useSubscribeToFriends();
   useSubscribeToConversations();
+  useSetPeer();
+  useSetCall();
+  useVideoCall();
+  useVoiceCall();
+  useVideoCallAccepted();
+  useVideoCallRejected();
+  useVideoCallHangUp();
 
   return (
     <Routes>

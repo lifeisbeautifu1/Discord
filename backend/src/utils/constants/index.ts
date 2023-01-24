@@ -27,6 +27,7 @@ export enum ClientEvents {
   VOICE_CALL_ACCEPTED = "voiceCallAccepted",
   VOICE_CALL_REJECTED = "voiceCallRejected",
   VOICE_CALL_HANG_UP = "voiceCallHangUp",
+  UPDATE_REMOTE_STREAM = "updateRemoteStream",
 }
 
 export enum WebsocketEvents {
@@ -51,6 +52,7 @@ export enum WebsocketEvents {
   VOICE_CALL_ACCEPTED = "onVoiceCallAccepted",
   VOICE_CALL_REJECTED = "onVoiceCallRejected",
   VOICE_CALL_HANG_UP = "onVoiceCallHangUp",
+  UPDATE_REMOTE_STREAM = "onUpdateRemoteStream",
 }
 
 export enum Routes {

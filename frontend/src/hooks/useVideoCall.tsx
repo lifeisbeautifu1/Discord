@@ -1,14 +1,15 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   setCaller,
   setReceiver,
   setIsReceivingCall,
   setCallType,
+  setActiveConversationId,
+  setUpdateRemoteStream,
 } from "../features/call/callSlice";
 import { useSocketContext } from "../contexts/SocketContext";
 import { CallPayload } from "../types/";
-import { selectUser } from "../features/auth/auth";
 import { RootState } from "../app/store";
 
 export function useVideoCall() {
@@ -16,9 +17,11 @@ export function useVideoCall() {
 
   const dispatch = useAppDispatch();
 
-  const user = useAppSelector(selectUser);
+  const { user } = useAppSelector((state) => state.auth);
 
-  const { isReceivingCall } = useAppSelector((state: RootState) => state.call);
+  const { isReceivingCall, updateRemoteStream } = useAppSelector(
+    (state: RootState) => state.call
+  );
 
   useEffect(() => {
     socket.on("onVideoCall", (data: CallPayload) => {
@@ -26,13 +29,19 @@ export function useVideoCall() {
       console.log(data);
       if (isReceivingCall) return;
       dispatch(setCaller(data.caller));
+      dispatch(setActiveConversationId(data.conversationId));
       dispatch(setReceiver(user!));
       dispatch(setIsReceivingCall(true));
       dispatch(setCallType("video"));
     });
 
+    socket?.on("onUpdateRemoteStream", () => {
+      dispatch(setUpdateRemoteStream(!updateRemoteStream));
+    });
+
     return () => {
       socket.off("onVideoCall");
+      socket.off("onUpdateRemoteStream");
     };
-  }, [isReceivingCall]);
+  }, [isReceivingCall, user, updateRemoteStream]);
 }

@@ -15,12 +15,18 @@ export interface CallState {
   localStream?: MediaStream;
   activeConversationId?: string;
   callType?: CallType;
+  microphoneEnabled?: boolean;
+  videoEnabled?: boolean;
+  updateRemoteStream?: boolean;
 }
 
 const initialState: CallState = {
   isCalling: false,
   isCallInProgress: false,
   isReceivingCall: false,
+  microphoneEnabled: false,
+  videoEnabled: false,
+  updateRemoteStream: false,
 };
 
 export const callSlice = createSlice({
@@ -64,6 +70,15 @@ export const callSlice = createSlice({
     setCallType: (state, action: PayloadAction<CallType>) => {
       state.callType = action.payload;
     },
+    setMicrophoneEnabled: (state, action: PayloadAction<boolean>) => {
+      state.microphoneEnabled = action.payload;
+    },
+    setVideoEnabled: (state, action: PayloadAction<boolean>) => {
+      state.videoEnabled = action.payload;
+    },
+    setUpdateRemoteStream: (state, action: PayloadAction<boolean>) => {
+      state.updateRemoteStream = action.payload;
+    },
     resetState: (state) => {
       state.isCalling = false;
       state.isCallInProgress = false;
@@ -76,6 +91,9 @@ export const callSlice = createSlice({
       state.activeConversationId = undefined;
       state.receiver = undefined;
       state.callType = undefined;
+      state.microphoneEnabled = false;
+      state.videoEnabled = false;
+      state.updateRemoteStream = false;
     },
     initiateCallState: (state, action: PayloadAction<CallInitiatePayload>) => ({
       ...state,
@@ -99,6 +117,9 @@ export const {
   setReceiver,
   initiateCallState,
   setCallType,
+  setVideoEnabled,
+  setMicrophoneEnabled,
+  setUpdateRemoteStream,
 } = callSlice.actions;
 
 export default callSlice.reducer;
