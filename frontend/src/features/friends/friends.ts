@@ -96,6 +96,12 @@ export const friendsSlice = createSlice({
       state.friends = state.friends.filter(
         (friend) => friend.id !== action.payload.id
       );
+      state.onlineFriends = state.onlineFriends.filter(
+        (friend) => friend.id !== action.payload.id
+      );
+      state.offlineFriends = state.offlineFriends.filter(
+        (friend) => friend.id !== action.payload.id
+      );
     },
     setOnlineFriends: (state, action: PayloadAction<Array<Friend>>) => {
       state.onlineFriends = action.payload;
@@ -223,7 +229,12 @@ export const friendsSlice = createSlice({
         getFriends.fulfilled,
         (state, action: PayloadAction<Array<Friend>>) => {
           state.friends = action.payload;
-          state.offlineFriends = action.payload;
+          state.offlineFriends = action.payload.filter(
+            (friend) =>
+              !state.onlineFriends
+                .map((friend) => friend.id)
+                .includes(friend.id)
+          );
           state.loading = false;
         }
       )

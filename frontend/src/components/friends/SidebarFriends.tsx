@@ -29,13 +29,13 @@ const SidebarFriends = () => {
 
   const user = useAppSelector(selectUser);
 
-  if (!user) return null;
-
   const dispatch = useAppDispatch();
 
   const listRef = useRef<HTMLUListElement>(null);
 
   const [isScrolled, setIsScrolled] = useState(false);
+
+  if (!user) return null;
 
   const handleScroll = (e: React.UIEvent<HTMLUListElement, UIEvent>) => {
     if (listRef?.current?.scrollTop) {

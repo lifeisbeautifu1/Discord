@@ -57,7 +57,7 @@ const OnlineFriends = () => {
       </div>
       <div className="ml-[30px] mr-5 mt-2">
         <h2 className="text-xs font-semibold uppercase">
-          Online Friends – {localOnlineFriends.length}
+          Online Friends - {localOnlineFriends.length}
         </h2>
       </div>
       {localOnlineFriends.length === 0 ? (
