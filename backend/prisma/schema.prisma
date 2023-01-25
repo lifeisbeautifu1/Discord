@@ -28,7 +28,8 @@ model User {
     ConversationParticipant ConversationParticipant[]
     messages                Message[]
 
-    peer Peer?
+    peer                Peer?
+    MessageNotification MessageNotification[]
 
     @@map("users")
 }
@@ -78,8 +79,9 @@ model Conversation {
     participants ConversationParticipant[]
     messages     Message[]
 
-    createdAt DateTime @default(now())
-    updateAt  DateTime @updatedAt
+    createdAt           DateTime              @default(now())
+    updateAt            DateTime              @updatedAt
+    MessageNotification MessageNotification[]
 }
 
 model ConversationParticipant {
@@ -109,5 +111,22 @@ model Message {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    isLatestIn Conversation? @relation(name: "latestMessage")
+    isLatestIn          Conversation?        @relation(name: "latestMessage")
+    MessageNotification MessageNotification?
+}
+
+model MessageNotification {
+    id String @id @default(uuid())
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
+    conversationId String
+    conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+    messageId String  @unique
+    message   Message @relation(fields: [messageId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

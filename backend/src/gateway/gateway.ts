@@ -9,7 +9,7 @@ import {
   WebSocketServer,
 } from "@nestjs/websockets";
 import { ConversationsService } from "src/conversations/conversations.service";
-import { Message } from "@prisma/client";
+import { Message, MessageNotification } from "@prisma/client";
 import { Server } from "socket.io";
 import { FriendsService } from "src/friends/friends.service";
 import {
@@ -67,6 +67,15 @@ export class MessagingGateway
     conversation.participants.forEach((participant) => {
       const socket = this.sessions.getUserSocket(participant.user.id);
       socket?.emit(WebsocketEvents.CONVERSATION_CREATED, conversation);
+    });
+  }
+
+  @OnEvent(ServerEvents.NEW_NOTIFICATIONS)
+  hadleNewNotifications(notifications: Array<MessageNotification>) {
+    console.log(ServerEvents.NEW_NOTIFICATIONS);
+    notifications.forEach((notification) => {
+      const socket = this.sessions.getUserSocket(notification.userId);
+      socket && socket.emit(WebsocketEvents.NEW_NOTIFICATIONS, notification);
     });
   }
 

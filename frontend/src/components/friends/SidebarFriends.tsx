@@ -22,7 +22,7 @@ import { createConversation } from "../../features/conversations/conversations.t
 import { Friend } from "../../types";
 
 const SidebarFriends = () => {
-  const { converastions } = useAppSelector((state) => state.conversations);
+  const { conversations } = useAppSelector((state) => state.conversations);
 
   const { incomingFriendRequests, friends, selectedFriends } = useAppSelector(
     (state) => state.friends
@@ -182,9 +182,9 @@ const SidebarFriends = () => {
           </Transition>
         </Menu>
       </div>
-      {converastions.length > 0 ? (
+      {conversations.length > 0 ? (
         <ul className="mt-2 space-y-1">
-          {converastions.map((conversation) => (
+          {conversations.map((conversation) => (
             <ConversationItem
               key={conversation.id}
               conversation={conversation}

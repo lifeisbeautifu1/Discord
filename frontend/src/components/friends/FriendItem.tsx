@@ -10,7 +10,6 @@ import {
   setFriendToDelete,
   setRemoveFriendModal,
 } from "../../features/friends/friends";
-import { useNavigate } from "react-router-dom";
 
 type Props = {
   friend: Friend;
@@ -20,20 +19,11 @@ type Props = {
 const FriendItem: React.FC<Props> = ({ friend, online = false }) => {
   const user = useAppSelector(selectUser);
 
-  const { converastions } = useAppSelector((state) => state.conversations);
-
-  const navigate = useNavigate();
-
   const dispatch = useAppDispatch();
 
   const isSender = friend?.sender?.id === user?.id;
 
   const toShow = isSender ? friend.receiver : friend.sender;
-
-  // const conversation = converastions.find(
-  //   (conversation) =>
-  //     conversation.participants.find((toSho))
-  // );
 
   const handleDelete = () => {
     dispatch(setRemoveFriendModal(true));
@@ -65,9 +55,6 @@ const FriendItem: React.FC<Props> = ({ friend, online = false }) => {
       <div className="ml-auto flex items-center space-x-3">
         <ActionIcon
           tooltip="Message"
-          // onClick={() => {
-          //   conversation && navigate("/channels/@me/" + conversation.id);
-          // }}
           hoverColor="hover:text-d-white"
           icon={<HiChatBubbleLeft />}
         />

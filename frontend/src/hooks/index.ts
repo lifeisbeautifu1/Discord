@@ -11,3 +11,4 @@ export { useVideoCallHangUp } from "./useVideoCallHangUp";
 export { useVoiceCall } from "./useVoiceCall";
 export { useSetPeer } from "./useSetPeer";
 export { useSetCall } from "./useSetCall";
+export { useSubscribeToNotifications } from "./useSubscribeToNotifications";

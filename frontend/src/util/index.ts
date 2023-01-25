@@ -1,4 +1,3 @@
-import { useAppSelector } from "../app/hooks";
 import { Friend, Conversation } from "../types";
 
 export const toShowFromFriend = (id: string, friend: Friend) => {

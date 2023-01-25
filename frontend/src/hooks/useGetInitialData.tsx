@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { selectIsAuth } from "../features/auth/auth";
 import { getMe } from "../features/auth/auth.thunks";
-import { getConversations } from "../features/conversations/conversations.thunks";
+import {
+  getConversations,
+  getNotifications,
+} from "../features/conversations/conversations.thunks";
 import {
   getFriendRequests,
   getFriends,
@@ -22,6 +25,7 @@ export function useGetInitialData() {
       dispatch(getFriendRequests());
       dispatch(getFriends());
       dispatch(getConversations());
+      dispatch(getNotifications());
     }
   }, [isAuth]);
 }
