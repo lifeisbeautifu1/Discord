@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Conversation, Message } from "../../types";
+import { Conversation, Message, Notification } from "../../types";
 import { GetMessagesPayload } from "../../types/getMessagesPayload";
 import { TypingPayload } from "../../types/TypingPayload";
 import {
@@ -10,11 +10,18 @@ import {
   getMessagesAfterMessage,
   sendMessage,
   deleteMessage,
+  clearNotifications,
   editMessage,
+  getNotifications,
 } from "./conversations.thunks";
 
 export type ConversationsState = {
-  converastions: Array<Conversation>;
+  conversations: Array<Conversation>;
+  notifications: Array<
+    Notification & {
+      amount: number;
+    }
+  >;
   selectedConversation: Conversation | null;
   error: boolean;
   loading: boolean;
@@ -28,7 +35,8 @@ export type ConversationsState = {
 };
 
 const initialState: ConversationsState = {
-  converastions: [],
+  conversations: [],
+  notifications: [],
   selectedConversation: null,
   error: false,
   loading: false,
@@ -52,10 +60,29 @@ export const conversationsSlice = createSlice({
       state.selectedConversation = null;
     },
     addConversation: (state, action: PayloadAction<Conversation>) => {
-      state.converastions.push(action.payload);
+      state.conversations.push(action.payload);
     },
     addMessage: (state, action: PayloadAction<Message>) => {
       state.messages.unshift(action.payload);
+    },
+    addNotification: (state, action: PayloadAction<Notification>) => {
+      if (
+        state.selectedConversation &&
+        state.selectedConversation.id === action.payload.conversationId
+      )
+        return;
+
+      const index = state.notifications.findIndex(
+        (nt) => nt.conversationId === action.payload.conversationId
+      );
+      if (index == -1) {
+        state.notifications.push({
+          ...action.payload,
+          amount: 1,
+        });
+      } else {
+        state.notifications[index].amount += 1;
+      }
     },
     updateMessage: (state, action: PayloadAction<Message>) => {
       state.messages = state.messages.map((message) =>
@@ -115,10 +142,47 @@ export const conversationsSlice = createSlice({
         getConversations.fulfilled,
         (state, action: PayloadAction<Array<Conversation>>) => {
           state.loading = false;
-          state.converastions = action.payload;
+          state.conversations = action.payload;
         }
       )
       .addCase(getConversations.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(getNotifications.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        getNotifications.fulfilled,
+        (state, action: PayloadAction<Array<Notification>>) => {
+          state.loading = false;
+          state.notifications = action.payload.reduce(
+            (
+              acc: Array<
+                Notification & {
+                  amount: number;
+                }
+              >,
+              value
+            ) => {
+              const index = acc.findIndex(
+                (nt) => nt.conversationId === value.conversationId
+              );
+              if (index == -1) {
+                acc.push({
+                  ...value,
+                  amount: 1,
+                });
+                return acc;
+              } else {
+                acc[index].amount += 1;
+                return acc;
+              }
+            },
+            []
+          );
+        }
+      )
+      .addCase(getNotifications.rejected, (state) => {
         state.loading = false;
       })
       .addCase(getConversation.pending, (state) => {
@@ -134,6 +198,19 @@ export const conversationsSlice = createSlice({
       )
       .addCase(getConversation.rejected, (state) => {
         state.error = true;
+        state.loading = false;
+      })
+      .addCase(clearNotifications.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(clearNotifications.fulfilled, (state) => {
+        state.notifications = state.notifications.filter(
+          (notification) =>
+            notification.conversationId !== state.selectedConversation?.id
+        );
+        state.loading = false;
+      })
+      .addCase(clearNotifications.rejected, (state) => {
         state.loading = false;
       })
       .addCase(getMessages.pending, (state) => {
@@ -223,6 +300,7 @@ export const {
   setIsDeleteMessageModalOpen,
   setSelectedMessage,
   setIsEdit,
+  addNotification,
   setUserTyping,
 } = conversationsSlice.actions;
 

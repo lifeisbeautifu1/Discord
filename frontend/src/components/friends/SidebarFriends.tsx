@@ -2,7 +2,7 @@ import { FriendIcon } from "../icons";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useState, useRef } from "react";
+import { Fragment, useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Tooltip,
@@ -19,23 +19,44 @@ import {
   toggleSelectedFriend,
 } from "../../features/friends/friends";
 import { createConversation } from "../../features/conversations/conversations.thunks";
+import { Friend } from "../../types";
 
 const SidebarFriends = () => {
-  const { converastions } = useAppSelector((state) => state.conversations);
+  const { conversations } = useAppSelector((state) => state.conversations);
 
   const { incomingFriendRequests, friends, selectedFriends } = useAppSelector(
     (state) => state.friends
   );
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [localFriends, setLocalFriends] = useState<Array<Friend>>([]);
+
+  useEffect(() => {
+    setLocalFriends(friends);
+  }, [friends]);
+
   const user = useAppSelector(selectUser);
 
-  if (!user) return null;
+  useEffect(() => {
+    if (searchTerm.trim())
+      setLocalFriends((prev) =>
+        prev.filter((friend) =>
+          toShowFromFriend(user?.id!, friend)
+            ?.username.toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+      );
+    else setLocalFriends(friends);
+  }, [searchTerm]);
 
   const dispatch = useAppDispatch();
 
   const listRef = useRef<HTMLUListElement>(null);
 
   const [isScrolled, setIsScrolled] = useState(false);
+
+  if (!user) return null;
 
   const handleScroll = (e: React.UIEvent<HTMLUListElement, UIEvent>) => {
     if (listRef?.current?.scrollTop) {
@@ -119,6 +140,8 @@ const SidebarFriends = () => {
                   </ul>
                   <input
                     type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     autoFocus
                     className="my-1 flex-1 border-none bg-transparent pl-2 text-base font-normal outline-none placeholder:text-d-gray"
                     placeholder="Type the username of friend"
@@ -130,7 +153,7 @@ const SidebarFriends = () => {
                 onScroll={handleScroll}
                 className="flex flex-1 flex-col space-y-1 overflow-y-scroll px-2 py-1 pb-4"
               >
-                {friends.map((friend) => (
+                {localFriends.map((friend) => (
                   <SelectableFriend key={friend.id} friend={friend} />
                 ))}
               </ul>
@@ -159,9 +182,9 @@ const SidebarFriends = () => {
           </Transition>
         </Menu>
       </div>
-      {converastions.length > 0 ? (
+      {conversations.length > 0 ? (
         <ul className="mt-2 space-y-1">
-          {converastions.map((conversation) => (
+          {conversations.map((conversation) => (
             <ConversationItem
               key={conversation.id}
               conversation={conversation}

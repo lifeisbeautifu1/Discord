@@ -11,6 +11,7 @@ export enum ServerEvents {
   MESSAGE_UPDATED = "message.update",
   GET_ONLINE_FRIENDS = "onlineFriends.get",
   NOTIFY_FRIENDS = "notifyFriends",
+  NEW_NOTIFICATIONS = "notifications",
 }
 
 export enum ClientEvents {
@@ -53,6 +54,7 @@ export enum WebsocketEvents {
   VOICE_CALL_REJECTED = "onVoiceCallRejected",
   VOICE_CALL_HANG_UP = "onVoiceCallHangUp",
   UPDATE_REMOTE_STREAM = "onUpdateRemoteStream",
+  NEW_NOTIFICATIONS = "onMessageNotifications",
 }
 
 export enum Routes {
@@ -63,4 +65,5 @@ export enum Routes {
   UPLOAD = "upload",
   CONVERSATIONS = "conversations",
   MESSAGES = "conversations/:id/messages",
+  NOTIFICATIONS = "notifications",
 }

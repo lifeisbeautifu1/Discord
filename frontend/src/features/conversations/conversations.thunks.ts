@@ -15,6 +15,30 @@ export const getConversations = createAsyncThunk(
   }
 );
 
+export const getNotifications = createAsyncThunk(
+  "conversations/getNotifications",
+  async (_, thunkAPI) => {
+    try {
+      const data = await conversationsService.getNotifications();
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.response?.data?.message);
+    }
+  }
+);
+
+export const clearNotifications = createAsyncThunk(
+  "conversations/clearNotifications",
+  async (conversationId: string, thunkAPI) => {
+    try {
+      await conversationsService.clearNotifications(conversationId);
+      return;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.response?.data?.message);
+    }
+  }
+);
+
 export const getConversation = createAsyncThunk(
   "conversations/getConversation",
   async (id: string, thunkAPI) => {

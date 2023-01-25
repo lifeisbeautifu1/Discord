@@ -16,7 +16,10 @@ import {
   useSubscribeToConversationJoin,
   useSubscribeToMessages,
 } from "../hooks";
-import { getMessagesAfterMessage } from "../features/conversations/conversations.thunks";
+import {
+  clearNotifications,
+  getMessagesAfterMessage,
+} from "../features/conversations/conversations.thunks";
 
 const Conversation = () => {
   const {
@@ -81,6 +84,11 @@ const Conversation = () => {
       dispatch(setError(false));
     }
   }, [error]);
+
+  useEffect(() => {
+    selectedConversation &&
+      dispatch(clearNotifications(selectedConversation.id));
+  }, [selectedConversation]);
 
   if (error || !selectedConversation)
     return <div className="flex flex-1 bg-dark"></div>;
@@ -177,7 +185,10 @@ const Conversation = () => {
               {selectedConversation.participants
                 .filter((participant) => participant.isTyping)
                 .map((participant) => (
-                  <TypingIndicator name={participant.user?.username} />
+                  <TypingIndicator
+                    key={participant.id}
+                    name={participant.user?.username}
+                  />
                 ))}
             </div>
           </main>

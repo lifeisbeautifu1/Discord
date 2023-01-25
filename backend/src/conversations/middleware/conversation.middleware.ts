@@ -11,7 +11,7 @@ import { ConversationsService } from "../conversations.service";
 export class ConversationMiddleware implements NestMiddleware {
   constructor(private readonly conversationsService: ConversationsService) {}
 
-  async use(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  async use(req: AuthenticatedRequest, _: Response, next: NextFunction) {
     const { id: userId } = req.user;
     const isReadable = await this.conversationsService.hasAccess(
       req.params.id,

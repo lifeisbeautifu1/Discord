@@ -12,6 +12,13 @@ export type UserPeer = {
   id: string;
 };
 
+export type Notification = {
+  id: string;
+  userId: string;
+  conversationId: string;
+  messageId: string;
+};
+
 export type Errors = {
   email?: string;
   username?: string;

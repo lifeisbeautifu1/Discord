@@ -21,7 +21,6 @@ import {
   setLocalStream,
   setMicrophoneEnabled,
   setReceiver,
-  setVideoEnabled,
 } from "../../features/call/callSlice";
 
 const ConversationHeader = () => {
@@ -65,6 +64,7 @@ const ConversationHeader = () => {
     dispatch(setCaller(user));
     setIsCall(true);
     console.log(callType);
+
     const constraints = {
       video: {
         width: { min: 640, ideal: 1920, max: 1920 },
@@ -72,6 +72,7 @@ const ConversationHeader = () => {
       },
       audio: true,
     };
+
     console.log(constraints);
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
     console.log("Receiving Call & Got Local Stream:", stream.id);
@@ -87,7 +88,7 @@ const ConversationHeader = () => {
   return (
     <header
       className={`flex flex-col ${
-        callHeader && "h-auto bg-[#18191c]	py-4"
+        callHeader && "h-auto bg-[#18191c]	pb-4"
       } h-12 w-full flex-shrink-0 border-b border-d-black px-3.5 pr-6 shadow`}
     >
       <div className="flex h-12 w-full items-center justify-between">

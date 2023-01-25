@@ -21,6 +21,7 @@ import {
   useVideoCallHangUp,
   useSetPeer,
   useSetCall,
+  useSubscribeToNotifications,
 } from "./hooks";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
   useSubscribeToFriendRequests();
   useSubscribeToFriends();
   useSubscribeToConversations();
+  useSubscribeToNotifications();
   useSetPeer();
   useSetCall();
   useVideoCall();

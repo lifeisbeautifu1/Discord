@@ -12,6 +12,7 @@ import { EventEmitter2 } from "@nestjs/event-emitter";
 import { SkipThrottle, Throttle } from "@nestjs/throttler";
 import { User } from "@prisma/client";
 import { AuthenticatedGuard } from "src/auth/utils/guards";
+import { NotificationsService } from "src/notifications/notifications.service";
 import { Routes, ServerEvents } from "src/utils/constants";
 import { GetUser } from "src/utils/decorators";
 import { CreateMessageDto } from "./dto/CreateMessage.dto";
@@ -23,6 +24,7 @@ import { MessagesService } from "./messages.service";
 export class MessagesController {
   constructor(
     private readonly messagesService: MessagesService,
+    private readonly notificationsService: NotificationsService,
     private readonly event: EventEmitter2,
   ) {}
 
@@ -37,6 +39,12 @@ export class MessagesController {
       dto.content,
       conversationId,
     );
+    const notifications = await this.notificationsService.createNotification({
+      userId: user.id,
+      messageId: response.message.id,
+      conversationId,
+    });
+    this.event.emit(ServerEvents.NEW_NOTIFICATIONS, notifications);
     this.event.emit(ServerEvents.MESSAGE_CREATED, response);
     return;
   }

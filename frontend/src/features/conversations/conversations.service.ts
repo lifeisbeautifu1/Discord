@@ -1,7 +1,18 @@
 import axios from "axios";
 import { Conversation, Message } from "../../types";
+import { Notification } from "../../types";
 import { EditMessageParams } from "../../types/editMessageParams";
 import { GetMessagesPayload } from "../../types/getMessagesPayload";
+
+const getNotifications = async () => {
+  const { data } = await axios.get<Array<Notification>>("/notifications");
+  return data;
+};
+
+const clearNotifications = async (conversationId: string) => {
+  await axios.delete("/notifications/" + conversationId);
+  return;
+};
 
 const getConversations = async () => {
   const { data } = await axios.get<Array<Conversation>>("/conversations");
@@ -63,6 +74,8 @@ const deleteMessage = async (converastionId: string, messageId: string) => {
 };
 
 export default {
+  getNotifications,
+  clearNotifications,
   getConversations,
   getConversation,
   createConversation,
