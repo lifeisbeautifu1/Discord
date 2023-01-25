@@ -30,6 +30,11 @@ const NotificationIcon: React.FC<Props> = ({ notification }) => {
         parseInt(toShow?.u_name.split("#")[1]!) % 5
       }.png`;
 
+  const groupName = conversation.participants
+    .filter((p) => p.userId !== user?.id)
+    .map((p) => p.user?.username)
+    .join(", ");
+
   return (
     <NavLink
       to={"/channels/@me/" + notification.conversationId}
@@ -41,7 +46,7 @@ const NotificationIcon: React.FC<Props> = ({ notification }) => {
         alt="avatar"
       />
       <span className="absolute left-16 z-[20] m-2 min-w-max origin-left scale-0 rounded-md bg-[#111] px-3 py-2 text-sm font-bold text-white shadow-md transition-all duration-100 before:absolute before:top-1/2 before:-left-2.5 before:w-0 before:translate-y-[-50%] before:border-[5px] before:border-solid before:border-t-transparent before:border-l-transparent before:border-b-transparent before:border-r-[#111] before:bg-transparent group-hover:scale-100">
-        {toShow?.username}
+        {group ? groupName : toShow?.username}
       </span>
       <span className="pill absolute -bottom-1 -right-1 z-20 box-content border-4 border-d-dark-black p-[1px]">
         {notification.amount}
