@@ -2,6 +2,8 @@
 
 > Note, this project is under construction 🚧 🏗️ ⛔
 
+[Photos of the project](https://imgur.com/a/SR5MRUh)
+
 # Installation & Setup
 
 ## Setting up the Backend
