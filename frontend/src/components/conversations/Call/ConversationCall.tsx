@@ -15,6 +15,7 @@ const ConversationCall = () => {
   } = useAppSelector((state) => state.call);
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
+
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -70,7 +71,7 @@ const ConversationCall = () => {
             />
           </>
         )}
-        {localStream && updateRemoteStream ? (
+        {remoteStream && updateRemoteStream ? (
           <video
             className="h-40 w-72 rounded-lg"
             ref={remoteVideoRef}
