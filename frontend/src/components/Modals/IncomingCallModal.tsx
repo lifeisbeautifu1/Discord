@@ -71,7 +71,7 @@ function IncomingCallModal() {
           leaveTo="transform scale-50 opacity-0"
         >
           <Dialog.Panel className="flex w-[200px] flex-col items-start overflow-hidden rounded bg-[#18191c] shadow">
-            <Dialog.Description className="mt-4 flex w-full flex-col items-center px-4 pt-4 pb-6 text-d-white">
+            <div className="mt-4 flex w-full flex-col items-center px-4 pt-4 pb-6 text-d-white">
               <Avatar
                 size="big"
                 image={`https://cdn.discordapp.com/embed/avatars/${
@@ -100,7 +100,7 @@ function IncomingCallModal() {
                   </div>
                 </Tooltip>
               </div>
-            </Dialog.Description>
+            </div>
           </Dialog.Panel>
         </Transition.Child>
       </Dialog>

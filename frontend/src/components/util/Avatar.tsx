@@ -1,6 +1,3 @@
-import { FaDiscord } from "react-icons/fa";
-import { useAppSelector } from "../../app/hooks";
-
 type Props = {
   offline?: boolean;
   online?: boolean;
@@ -9,6 +6,7 @@ type Props = {
   hoverBgColor?: string;
   hoverBorderColor?: string;
   image?: string;
+
   size?: "big";
 };
 
@@ -24,7 +22,9 @@ const Avatar: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className={`relative flex  ${size === "big" ? "h-20 w-20" : "h-8 w-8"}`}
+      className={`pointer-events-none relative flex  ${
+        size === "big" ? "h-20 w-20" : "h-8 w-8"
+      }`}
     >
       <img
         src={image}
