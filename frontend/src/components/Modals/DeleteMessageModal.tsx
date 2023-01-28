@@ -63,7 +63,7 @@ function DeleteMessageModal() {
             <Dialog.Title className="px-4 pt-4 text-xl font-semibold text-white">
               Delete Message
             </Dialog.Title>
-            <Dialog.Description className="mt-4 w-full px-4 pb-6 text-d-gray">
+            <div className="mt-4 w-full px-4 pb-6 text-d-gray">
               Are you sure you want to delete this message?
               <div className="mt-3 flex w-full items-center rounded border-[0.5px] border-gray-800 bg-dark px-4 py-3 shadow">
                 <img
@@ -91,7 +91,7 @@ function DeleteMessageModal() {
                   </p>
                 </div>
               </div>
-            </Dialog.Description>
+            </div>
             <div className="flex w-full items-center justify-end space-x-2 bg-d-black/60 px-4 py-4">
               <button
                 onClick={handleClose}

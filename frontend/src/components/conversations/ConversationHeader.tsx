@@ -18,6 +18,7 @@ import { useSocketContext } from "../../contexts/SocketContext";
 import {
   setActiveConversationId,
   setCaller,
+  setIsCalling,
   setLocalStream,
   setMicrophoneEnabled,
   setReceiver,
@@ -62,6 +63,7 @@ const ConversationHeader = () => {
     dispatch(setActiveConversationId(selectedConversation.id));
     dispatch(setReceiver(toShow));
     dispatch(setCaller(user));
+    dispatch(setIsCalling(true));
     setIsCall(true);
     console.log(callType);
 

@@ -63,7 +63,7 @@ const CallActions = () => {
     }
   };
   return (
-    <div className="mt-6 flex items-center space-x-4">
+    <div className="flex items-center space-x-4">
       {isReceivingCall ? (
         <>
           <Tooltip text="Join Video Call">

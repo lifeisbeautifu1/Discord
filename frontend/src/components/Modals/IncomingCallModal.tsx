@@ -72,12 +72,16 @@ function IncomingCallModal() {
         >
           <Dialog.Panel className="flex w-[200px] flex-col items-start overflow-hidden rounded bg-[#18191c] shadow">
             <div className="mt-4 flex w-full flex-col items-center px-4 pt-4 pb-6 text-d-white">
-              <Avatar
-                size="big"
-                image={`https://cdn.discordapp.com/embed/avatars/${
-                  parseInt(caller?.u_name.split("#")[1]!) % 5
-                }.png`}
-              />
+              <div className="relative">
+                <div className="absolute inset-0 h-20 w-20 animate-ping rounded-full bg-gray-500" />
+                <Avatar
+                  size="big"
+                  image={`https://cdn.discordapp.com/embed/avatars/${
+                    parseInt(caller?.u_name.split("#")[1]!) % 5
+                  }.png`}
+                />
+              </div>
+
               <h2 className="mt-2 text-lg font-bold text-white">
                 {caller?.username}
               </h2>
