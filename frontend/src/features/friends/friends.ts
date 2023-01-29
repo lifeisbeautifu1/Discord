@@ -215,7 +215,7 @@ export const friendsSlice = createSlice({
             (fr) => fr.id !== action.payload.friendRequest.id
           );
           state.friends.unshift(action.payload.newFriend);
-          state.offlineFriends.unshift(action.payload.newFriend);
+          // state.offlineFriends.unshift(action.payload.newFriend);
           state.loading = false;
         }
       )
