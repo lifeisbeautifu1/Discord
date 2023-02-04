@@ -21,7 +21,7 @@ export class SessionSerializer extends PassportSerializer {
       },
       select: {
         ...userSelectedFields,
-        password: true,
+        // password: true,
       },
     });
     // Will be appended to req.user
