@@ -38,6 +38,8 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 365,
       },
       store: new RedisStore({ client: redisClient }),
