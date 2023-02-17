@@ -82,44 +82,46 @@ export class FriendRequestService {
       throw new BadRequestException("Can't accept somebody elses request");
     if (friendRequest.status !== "pending")
       throw new BadRequestException("Friend request expired");
-    const updatedFriendRequest = await this.prisma.friendRequest.update({
-      where: {
-        id,
-      },
-      data: {
-        status: "accepted",
-      },
-      include: {
-        receiver: {
-          select: {
-            ...userSelectedFields,
+    const [updatedFriendRequest, newFriend] = await this.prisma.$transaction([
+      this.prisma.friendRequest.update({
+        where: {
+          id,
+        },
+        data: {
+          status: "accepted",
+        },
+        include: {
+          receiver: {
+            select: {
+              ...userSelectedFields,
+            },
+          },
+          sender: {
+            select: {
+              ...userSelectedFields,
+            },
           },
         },
-        sender: {
-          select: {
-            ...userSelectedFields,
+      }),
+      this.prisma.friend.create({
+        data: {
+          senderId: friendRequest.senderId,
+          receiverId: friendRequest.receiverId,
+        },
+        include: {
+          receiver: {
+            select: {
+              ...userSelectedFields,
+            },
+          },
+          sender: {
+            select: {
+              ...userSelectedFields,
+            },
           },
         },
-      },
-    });
-    const newFriend = await this.prisma.friend.create({
-      data: {
-        senderId: friendRequest.senderId,
-        receiverId: friendRequest.receiverId,
-      },
-      include: {
-        receiver: {
-          select: {
-            ...userSelectedFields,
-          },
-        },
-        sender: {
-          select: {
-            ...userSelectedFields,
-          },
-        },
-      },
-    });
+      }),
+    ]);
     return {
       newFriend,
       friendRequest: updatedFriendRequest,
