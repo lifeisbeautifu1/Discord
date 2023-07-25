@@ -58,6 +58,14 @@
 }
 
 @layer components {
+  .mask {
+    -webkit-mask-image: radial-gradient(
+      circle 8px at calc(100% - 4px) calc(100% - 4px),
+      transparent 8px,
+      #000 0
+    );
+  }
+
   .container {
     @apply w-full max-w-[1260px] px-5 py-20 md:px-[40px] md:py-[120px];
   }

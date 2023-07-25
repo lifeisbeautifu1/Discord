@@ -91,7 +91,7 @@ export class UserService {
     });
   }
 
-  // Might breake!
+  // Might break!
   async updatePassword(password: string, userId: string) {
     const user = await this.prisma.user.findFirst({
       where: {

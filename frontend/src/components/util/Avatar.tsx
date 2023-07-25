@@ -22,19 +22,20 @@ const Avatar: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className={`pointer-events-none relative flex  ${
+      className={`pointer-events-none relative flex ${
         size === "big" ? "h-20 w-20" : "h-8 w-8"
       }`}
     >
       <img
         src={image}
-        className="h-full w-full rounded-full object-cover"
+        className={`h-full  w-full rounded-full object-cover ${
+          (online || offline) && "mask"
+        }`}
         alt="avatar"
       />
-
       {(online || offline) && (
         <span
-          className={`absolute -bottom-1 -right-1 box-content flex h-2.5 w-2.5 items-center justify-center rounded-full border-[3px] ${hoverBorderColor} ${borderColor}`}
+          className={`absolute -bottom-[1px] -right-[1px] box-content flex h-2 w-2 items-center justify-center rounded-full`}
         >
           {online ? (
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 hover:bg-green-500" />
