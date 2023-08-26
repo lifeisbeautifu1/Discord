@@ -101,7 +101,9 @@ As a user, I can
 - Docker + docker-compose
 
   ### Current list of TODO's
-  
+
+  - [ ] Switch from `axios` to `ReactQuery`
+  - [ ] Update dependencies
   - [ ] Switch to yarn
   - [ ] Add commitizen
   - [ ] Cover app with tests (Both Unit and Integration Tests)(Playwright, Jest, etc.)
