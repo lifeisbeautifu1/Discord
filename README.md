@@ -29,25 +29,25 @@ npx prisma db push
 
 8. Create a `.env` file in the root directory and paste the following:
 
-   ```
-   DATABASE_URL=
+```
+DATABASE_URL=
 
-   SESSION_SECRET=
+SESSION_SECRET=
 
-   CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_CLOUD_NAME=
 
-   CLOUDINARY_API_KEY=
+CLOUDINARY_API_KEY=
 
-   CLOUDINARY_API_SECRET=
+CLOUDINARY_API_SECRET=
 
-   MAILGUN_API_KEY=
+MAILGUN_API_KEY=
 
-   MAILGUN_DOMAIN=
+MAILGUN_DOMAIN=
 
-   PREFIX=
+PREFIX=
 
-   CLIENT_URL=http://localhost:5173
-   ```
+CLIENT_URL=http://localhost:5173
+```
 
    - **`DATABASE_URL`** The hostname for your PostgreSQL database server (you can use the one from the example file)
    - **`SESSION_SECRET`** Can be any string that can be used to encrypt & decrypt your cookie for sessions.
