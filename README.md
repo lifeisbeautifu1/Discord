@@ -100,14 +100,14 @@ As a user, I can
 
 - Docker + docker-compose
 
-  ### Current list of TODO's
+## Current list of TODO's
 
-  - [ ] Switch from `axios` to `ReactQuery`
-  - [ ] Update dependencies
-  - [ ] Switch to yarn
-  - [ ] Add commitizen
-  - [ ] Cover app with tests (Both Unit and Integration Tests)(Playwright, Jest, etc.)
-  - [ ] Add husky to run linters and tests before commit
-  - [ ] Frontend portion need performance improvement, add `useCallback`, `memo`, `useMemo` etc.
-  - [ ] Implement custom servers
-  - [ ] Implement file upload (Both Avatar and in message, attachments)
+- [ ] Switch from `axios` to `ReactQuery`
+- [ ] Update dependencies
+- [ ] Switch to yarn
+- [ ] Add commitizen
+- [ ] Cover app with tests (Both Unit and Integration Tests)(Playwright, Jest, etc.)
+- [ ] Add husky to run linters and tests before commit
+- [ ] Frontend portion need performance improvement, add `useCallback`, `memo`, `useMemo` etc.
+- [ ] Implement custom servers
+- [ ] Implement file upload (Both Avatar and in message, attachments)
