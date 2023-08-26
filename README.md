@@ -102,6 +102,7 @@ As a user, I can
 
   ### Current list of TODO's
   
+  - [ ] Switch to yarn
   - [ ] Add commitizen
   - [ ] Cover app with tests (Both Unit and Integration Tests)(Playwright, Jest, etc.)
   - [ ] Add husky to run linters and tests before commit
