@@ -106,8 +106,8 @@ As a user, I can
 - [ ] Update dependencies
 - [ ] Switch to yarn
 - [ ] Add commitizen
-- [ ] Cover app with tests (Both Unit and Integration Tests)(Playwright, Jest, etc.)
-- [ ] Add husky to run linters and tests before commit
+- [ ] Cover app with tests (`Playwright`, `Jest`, etc.)
+- [ ] Add `husky` to run linters and tests before commit
 - [ ] Frontend portion need performance improvement, add `useCallback`, `memo`, `useMemo` etc.
 - [ ] Implement custom servers
-- [ ] Implement file upload (Both Avatar and in message, attachments)
+- [ ] Implement file upload (avatars, attachments)
