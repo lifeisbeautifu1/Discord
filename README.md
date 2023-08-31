@@ -111,4 +111,4 @@ As a user, I can
 - [ ] Frontend portion need performance improvement, add `useCallback`, `memo`, `useMemo` etc.
 - [ ] Implement custom servers
 - [ ] Implement file upload (avatars, attachments)
-- [ ] Check app for vulnerability (OWASP Top 10)
+- [ ] Check app for vulnerabilities (OWASP Top 10)
