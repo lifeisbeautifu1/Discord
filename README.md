@@ -103,7 +103,7 @@ As a user, I can
 
 ## Current list of TODO's
 
-- [ ] Switch from `axios` to `ReactQuery`
+- [ ] Switch to `ReactQuery`
 - [ ] Update dependencies
 - [ ] Switch to yarn
 - [ ] Add commitizen
